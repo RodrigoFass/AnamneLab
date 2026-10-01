@@ -1,0 +1,57 @@
+{
+  "id": "geral",
+  "nome": "Checklist geral (teste)",
+  "tipo": "geral",
+  "queixa": null,
+  "versao": 3,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "secoes": [
+    {
+      "id": "identificacao",
+      "titulo": "Identificação",
+      "itens": [
+        {
+          "id": "nome",
+          "texto": "Nome do paciente",
+          "faltou": "Faltou perguntar o nome do paciente.",
+          "peso": 2,
+          "palavras_chave": ["nome"],
+          "fonte": {"tipo": "web", "referencia": "Material de teste", "url": null}
+        },
+        {
+          "id": "idade",
+          "texto": "Idade",
+          "faltou": "Faltou perguntar a idade.",
+          "peso": 3,
+          "palavras_chave": ["quantos anos"],
+          "fonte": {"tipo": "web", "referencia": "Material de teste", "url": null}
+        }
+      ]
+    },
+    {
+      "id": "habitos-e-antecedentes",
+      "titulo": "Hábitos e antecedentes",
+      "itens": [
+        {
+          "id": "tabagismo",
+          "texto": "Tabagismo e carga tabágica",
+          "faltou": "Faltou perguntar se fuma e quanto.",
+          "peso": 3,
+          "palavras_chave": ["fuma"],
+          "fonte": {"tipo": "web", "referencia": "Material de teste", "url": null}
+        },
+        {
+          "id": "alergias",
+          "texto": "Alergias",
+          "faltou": "Faltou perguntar sobre alergias.",
+          "peso": 2,
+          "palavras_chave": ["alergia"],
+          "fonte": {"tipo": "web", "referencia": "Material de teste", "url": null}
+        }
+      ]
+    }
+  ]
+}

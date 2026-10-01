@@ -1,0 +1,13 @@
+{
+  "versao": 1,
+  "cartoes": [
+    {
+      "id": "dor-toracica-teste-1",
+      "queixa": "dor-toracica",
+      "idade": 58,
+      "sexo": "masculino",
+      "resumo": "Dor no peito há 2 horas",
+      "detalhes": ["Começou subindo escada.", "Fuma há 40 anos."]
+    }
+  ]
+}

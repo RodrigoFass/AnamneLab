@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anamnelab.local/schema/checklist.schema.json",
+  "title": "Checklist do AnamneLab",
+  "description": "Um checklist de anamnese (geral ou de uma queixa). Só checklist com status 'aprovado' conta na nota; rascunho aparece como sugestão.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "nome", "tipo", "queixa", "versao", "status", "origem", "validado_por", "validado_em", "secoes"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Identificador estável, igual ao nome do arquivo sem .json (ex.: 'geral', 'dor-toracica')."
+    },
+    "nome": { "type": "string", "minLength": 1 },
+    "tipo": { "enum": ["geral", "queixa"] },
+    "queixa": {
+      "type": ["string", "null"],
+      "description": "Id da queixa em queixas.json. Nulo no checklist geral."
+    },
+    "versao": { "type": "integer", "minimum": 1 },
+    "status": { "enum": ["rascunho", "aprovado"] },
+    "origem": {
+      "enum": ["fontes-publicas", "livros"],
+      "description": "fontes-publicas: rascunho provisório montado a partir de material aberto na internet. livros: rascunho a partir de Porto, Bates e Rocco, com página."
+    },
+    "validado_por": {
+      "type": ["string", "null"],
+      "description": "Nome do professor que assinou. Obrigatório quando status é 'aprovado'."
+    },
+    "validado_em": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Data da assinatura (AAAA-MM-DD). Obrigatória quando status é 'aprovado'."
+    },
+    "observacoes": { "type": "string" },
+    "secoes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/secao" }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "aprovado" } } },
+      "then": {
+        "properties": {
+          "validado_por": { "type": "string", "minLength": 1 },
+          "validado_em": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "tipo": { "const": "geral" } } },
+      "then": { "properties": { "queixa": { "type": "null" } } },
+      "else": { "properties": { "queixa": { "type": "string", "minLength": 1 } } }
+    }
+  ],
+  "$defs": {
+    "secao": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "titulo", "itens"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "titulo": { "type": "string", "minLength": 1 },
+        "itens": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/item" }
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "texto", "faltou", "peso", "fonte"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Único em todo o conteúdo. O mesmo id em dois checklists significa o mesmo item e conta uma vez só."
+        },
+        "texto": {
+          "type": "string",
+          "minLength": 1,
+          "description": "O que o entrevistador deve investigar, em uma frase curta (ex.: 'Irradiação da dor')."
+        },
+        "pergunta_exemplo": {
+          "type": "string",
+          "description": "Uma pergunta que cumpre o item, como o aluno diria (ex.: 'Essa dor vai para algum outro lugar?')."
+        },
+        "faltou": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Frase de preceptor mostrada quando o item não foi feito (ex.: 'Faltou perguntar se a dor irradia.')."
+        },
+        "peso": { "type": "integer", "minimum": 1, "maximum": 3 },
+        "palavras_chave": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Opcional. Usadas só pelo corretor falso de desenvolvimento, nunca na correção real."
+        },
+        "fonte": { "$ref": "#/$defs/fonte" }
+      }
+    },
+    "fonte": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "referencia"],
+      "properties": {
+        "tipo": { "enum": ["livro", "web"] },
+        "referencia": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Livro (autor, título, edição) ou título do material da web."
+        },
+        "pagina": { "type": ["string", "null"], "description": "Obrigatória quando tipo é 'livro'." },
+        "url": { "type": ["string", "null"], "format": "uri", "description": "Só URLs que existem de verdade." }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "tipo": { "const": "livro" } } },
+          "then": { "required": ["pagina"], "properties": { "pagina": { "type": "string", "minLength": 1 } } }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,343 @@
+{
+  "versao": 1,
+  "cartoes": [
+    {
+      "id": "dor-toracica-1",
+      "queixa": "dor-toracica",
+      "idade": 58,
+      "sexo": "masculino",
+      "resumo": "Dor no peito há 2 horas, um aperto forte.",
+      "detalhes": [
+        "Começou quando subia a escada do trabalho.",
+        "Estou suando frio.",
+        "Fumo desde os 20 anos."
+      ]
+    },
+    {
+      "id": "dor-toracica-2",
+      "queixa": "dor-toracica",
+      "idade": 24,
+      "sexo": "feminino",
+      "resumo": "Dor no peito do lado esquerdo há 3 dias.",
+      "detalhes": [
+        "Piora quando respiro fundo.",
+        "Tive gripe na semana passada."
+      ]
+    },
+    {
+      "id": "dor-toracica-3",
+      "queixa": "dor-toracica",
+      "idade": 41,
+      "sexo": "masculino",
+      "resumo": "Queimação no meio do peito há 1 mês.",
+      "detalhes": [
+        "Vem depois do almoço e quando deito.",
+        "Melhora um pouco com leite.",
+        "Tenho tomado muito café."
+      ]
+    },
+    {
+      "id": "dispneia-1",
+      "queixa": "dispneia",
+      "idade": 67,
+      "sexo": "feminino",
+      "resumo": "Falta de ar que vem piorando há 2 semanas.",
+      "detalhes": [
+        "Agora canso só de ir ao banheiro.",
+        "Preciso dormir com dois travesseiros.",
+        "Os pés estão inchados."
+      ]
+    },
+    {
+      "id": "dispneia-2",
+      "queixa": "dispneia",
+      "idade": 19,
+      "sexo": "masculino",
+      "resumo": "Falta de ar e chiado no peito desde ontem à noite.",
+      "detalhes": [
+        "Começou depois que limparam o sótão.",
+        "Já tive isso quando era criança."
+      ]
+    },
+    {
+      "id": "dispneia-3",
+      "queixa": "dispneia",
+      "idade": 35,
+      "sexo": "feminino",
+      "resumo": "Falta de ar de repente hoje de manhã.",
+      "detalhes": [
+        "Voltei ontem de uma viagem de 12 horas de ônibus.",
+        "Tomo anticoncepcional.",
+        "A panturrilha direita está doendo."
+      ]
+    },
+    {
+      "id": "dor-abdominal-1",
+      "queixa": "dor-abdominal",
+      "idade": 22,
+      "sexo": "masculino",
+      "resumo": "Dor na barriga há 1 dia.",
+      "detalhes": [
+        "Começou em volta do umbigo e agora está do lado direito, embaixo.",
+        "Não tenho fome.",
+        "Vomitei uma vez."
+      ]
+    },
+    {
+      "id": "dor-abdominal-2",
+      "queixa": "dor-abdominal",
+      "idade": 47,
+      "sexo": "feminino",
+      "resumo": "Dor forte na parte de cima da barriga há 6 horas.",
+      "detalhes": [
+        "Começou depois de uma feijoada.",
+        "A dor vai para as costas, do lado direito."
+      ]
+    },
+    {
+      "id": "dor-abdominal-3",
+      "queixa": "dor-abdominal",
+      "idade": 72,
+      "sexo": "masculino",
+      "resumo": "Dor de estômago que vai e volta há 3 meses.",
+      "detalhes": [
+        "Perdi uns 5 quilos sem fazer dieta.",
+        "Fico cheio comendo pouco."
+      ]
+    },
+    {
+      "id": "cefaleia-1",
+      "queixa": "cefaleia",
+      "idade": 29,
+      "sexo": "feminino",
+      "resumo": "Dor de cabeça forte desde ontem à tarde.",
+      "detalhes": [
+        "Lateja de um lado só.",
+        "A luz incomoda muito.",
+        "Já tive crises parecidas antes."
+      ]
+    },
+    {
+      "id": "cefaleia-2",
+      "queixa": "cefaleia",
+      "idade": 55,
+      "sexo": "masculino",
+      "resumo": "Dor de cabeça há 2 semanas, todo dia.",
+      "detalhes": [
+        "É pior quando acordo.",
+        "Parei de tomar o remédio da pressão."
+      ]
+    },
+    {
+      "id": "cefaleia-3",
+      "queixa": "cefaleia",
+      "idade": 38,
+      "sexo": "feminino",
+      "resumo": "Dor de cabeça há 4 dias, como uma faixa apertando.",
+      "detalhes": [
+        "Piora no fim do dia de trabalho.",
+        "Estou dormindo muito mal."
+      ]
+    },
+    {
+      "id": "febre-1",
+      "queixa": "febre",
+      "idade": 4,
+      "sexo": "masculino",
+      "resumo": "Febre há 2 dias, meu filho está bem quentinho.",
+      "detalhes": [
+        "Ele puxa a orelha direita.",
+        "Está comendo menos que o normal."
+      ]
+    },
+    {
+      "id": "febre-2",
+      "queixa": "febre",
+      "idade": 33,
+      "sexo": "feminino",
+      "resumo": "Febre e calafrio há 3 dias.",
+      "detalhes": [
+        "Arde para fazer xixi.",
+        "Dói um pouco nas costas, do lado esquerdo."
+      ]
+    },
+    {
+      "id": "febre-3",
+      "queixa": "febre",
+      "idade": 61,
+      "sexo": "masculino",
+      "resumo": "Febre baixa todo fim de tarde há 1 mês.",
+      "detalhes": [
+        "Suo muito à noite.",
+        "Emagreci e estou sem apetite."
+      ]
+    },
+    {
+      "id": "tosse-1",
+      "queixa": "tosse",
+      "idade": 45,
+      "sexo": "masculino",
+      "resumo": "Tosse com catarro amarelo há 5 dias.",
+      "detalhes": [
+        "Tive febre de 38,5 ontem.",
+        "Dói do lado direito quando tusso."
+      ]
+    },
+    {
+      "id": "tosse-2",
+      "queixa": "tosse",
+      "idade": 28,
+      "sexo": "feminino",
+      "resumo": "Tosse seca há 6 semanas.",
+      "detalhes": [
+        "Piora à noite, quando deito.",
+        "Às vezes sinto um gosto azedo na boca."
+      ]
+    },
+    {
+      "id": "tosse-3",
+      "queixa": "tosse",
+      "idade": 68,
+      "sexo": "masculino",
+      "resumo": "Tosse há 3 meses que não passa.",
+      "detalhes": [
+        "Vi um pouco de sangue no catarro esta semana.",
+        "Fumei por 40 anos."
+      ]
+    },
+    {
+      "id": "dor-lombar-1",
+      "queixa": "dor-lombar",
+      "idade": 36,
+      "sexo": "masculino",
+      "resumo": "Dor nas costas, na parte de baixo, há 3 dias.",
+      "detalhes": [
+        "Começou quando levantei uma caixa pesada.",
+        "Às vezes desce pela perna esquerda."
+      ]
+    },
+    {
+      "id": "dor-lombar-2",
+      "queixa": "dor-lombar",
+      "idade": 26,
+      "sexo": "feminino",
+      "resumo": "Dor forte nas costas, do lado direito, há 4 horas.",
+      "detalhes": [
+        "A dor vem em ondas e desce para a virilha.",
+        "Não consigo achar posição."
+      ]
+    },
+    {
+      "id": "dor-lombar-3",
+      "queixa": "dor-lombar",
+      "idade": 70,
+      "sexo": "feminino",
+      "resumo": "Dor nas costas há 2 meses, pior à noite.",
+      "detalhes": [
+        "Não melhora deitada.",
+        "Perdi peso nesse tempo."
+      ]
+    },
+    {
+      "id": "sincope-1",
+      "queixa": "sincope",
+      "idade": 17,
+      "sexo": "feminino",
+      "resumo": "Desmaiei hoje de manhã na fila da escola.",
+      "detalhes": [
+        "Antes, a vista escureceu e fiquei enjoada.",
+        "Estava em jejum.",
+        "Acordei em menos de um minuto."
+      ]
+    },
+    {
+      "id": "sincope-2",
+      "queixa": "sincope",
+      "idade": 74,
+      "sexo": "masculino",
+      "resumo": "Desmaiei ontem enquanto caminhava.",
+      "detalhes": [
+        "Não senti nada antes, simplesmente apaguei.",
+        "Às vezes sinto o peito apertar quando ando."
+      ]
+    },
+    {
+      "id": "sincope-3",
+      "queixa": "sincope",
+      "idade": 52,
+      "sexo": "feminino",
+      "resumo": "Desmaiei há 3 dias ao levantar da cama.",
+      "detalhes": [
+        "Comecei um remédio novo para a pressão na semana passada.",
+        "Fiquei tonta outras vezes ao ficar em pé."
+      ]
+    },
+    {
+      "id": "edema-1",
+      "queixa": "edema",
+      "idade": 63,
+      "sexo": "feminino",
+      "resumo": "Pernas inchadas há 1 mês.",
+      "detalhes": [
+        "Incham mais no fim do dia.",
+        "Estou com falta de ar para subir ladeira."
+      ]
+    },
+    {
+      "id": "edema-2",
+      "queixa": "edema",
+      "idade": 8,
+      "sexo": "masculino",
+      "resumo": "Meu filho está com o rosto inchado há 4 dias.",
+      "detalhes": [
+        "Incha mais ao acordar, perto dos olhos.",
+        "O xixi está com muita espuma."
+      ]
+    },
+    {
+      "id": "edema-3",
+      "queixa": "edema",
+      "idade": 49,
+      "sexo": "masculino",
+      "resumo": "Perna esquerda inchada e doída há 2 dias.",
+      "detalhes": [
+        "A perna direita está normal.",
+        "Fiquei uma semana de cama com uma gripe forte."
+      ]
+    },
+    {
+      "id": "diarreia-1",
+      "queixa": "diarreia",
+      "idade": 31,
+      "sexo": "feminino",
+      "resumo": "Diarreia há 2 dias, umas 6 vezes por dia.",
+      "detalhes": [
+        "Comecei depois de comer num restaurante novo.",
+        "Tenho cólica e enjoo."
+      ]
+    },
+    {
+      "id": "diarreia-2",
+      "queixa": "diarreia",
+      "idade": 2,
+      "sexo": "masculino",
+      "resumo": "Meu filho está com diarreia há 3 dias.",
+      "detalhes": [
+        "Está fazendo pouco xixi.",
+        "Chora sem lágrima."
+      ]
+    },
+    {
+      "id": "diarreia-3",
+      "queixa": "diarreia",
+      "idade": 42,
+      "sexo": "masculino",
+      "resumo": "Diarreia que vai e volta há 4 meses.",
+      "detalhes": [
+        "Às vezes vem com sangue.",
+        "Emagreci 6 quilos.",
+        "Acordo à noite para ir ao banheiro."
+      ]
+    }
+  ]
+}

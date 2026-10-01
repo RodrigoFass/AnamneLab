@@ -1,0 +1,618 @@
+{
+  "id": "dor-toracica",
+  "nome": "Dor torácica",
+  "tipo": "queixa",
+  "queixa": "dor-toracica",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-dor-toracica",
+      "titulo": "Caracterização da dor torácica",
+      "itens": [
+        {
+          "id": "localizacao-precisa-dor",
+          "texto": "Localização exata da dor no tórax",
+          "pergunta_exemplo": "Pode me mostrar com a mão onde dói? É num ponto só ou espalhado?",
+          "faltou": "Faltou perguntar o local exato da dor no peito.",
+          "peso": 3,
+          "palavras_chave": [
+            "mostrar",
+            "onde dói",
+            "ponto",
+            "espalhado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "irradiacao-braco-mandibula-dorso",
+          "texto": "Irradiação para braço, mandíbula ou costas",
+          "pergunta_exemplo": "Essa dor vai para o braço, o queixo ou as costas?",
+          "faltou": "Faltou perguntar se a dor vai para o braço, a mandíbula ou as costas.",
+          "peso": 3,
+          "palavras_chave": [
+            "braço",
+            "queixo",
+            "mandíbula",
+            "costas",
+            "vai para"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "relacao-esforco",
+          "texto": "Relação com esforço",
+          "pergunta_exemplo": "A dor aparece quando você faz esforço, como subir escada ou andar rápido?",
+          "faltou": "Faltou perguntar se a dor aparece com esforço.",
+          "peso": 3,
+          "palavras_chave": [
+            "esforço",
+            "escada",
+            "andar",
+            "caminhar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "alivio-repouso",
+          "texto": "Alívio com repouso",
+          "pergunta_exemplo": "Quando você para e descansa, a dor passa?",
+          "faltou": "Faltou perguntar se a dor melhora com repouso.",
+          "peso": 3,
+          "palavras_chave": [
+            "descansa",
+            "repouso",
+            "para",
+            "passa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "relacao-respiracao-tosse",
+          "texto": "Relação com respiração e tosse",
+          "pergunta_exemplo": "A dor piora quando você respira fundo ou tosse?",
+          "faltou": "Faltou perguntar se a dor muda com a respiração ou a tosse.",
+          "peso": 2,
+          "palavras_chave": [
+            "respira fundo",
+            "respirar",
+            "tosse",
+            "tossir"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "relacao-posicao",
+          "texto": "Relação com a posição do corpo",
+          "pergunta_exemplo": "A dor muda se você deita, senta ou se inclina para frente?",
+          "faltou": "Faltou perguntar se a dor muda com a posição.",
+          "peso": 2,
+          "palavras_chave": [
+            "posição",
+            "deita",
+            "deitado",
+            "inclina",
+            "senta"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "relacao-palpacao",
+          "texto": "Dor que piora ao apertar o local",
+          "pergunta_exemplo": "Se você aperta o lugar com o dedo, dói mais?",
+          "faltou": "Faltou perguntar se a dor piora quando se aperta o local.",
+          "peso": 1,
+          "palavras_chave": [
+            "aperta",
+            "apertar",
+            "toca",
+            "encosta"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "relacao-alimentacao-degluticao",
+          "texto": "Relação com alimentação e com engolir",
+          "pergunta_exemplo": "A dor tem a ver com as refeições ou aparece quando você engole?",
+          "faltou": "Faltou perguntar se a dor tem relação com comer ou engolir.",
+          "peso": 2,
+          "palavras_chave": [
+            "comer",
+            "refeição",
+            "engolir",
+            "comida"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "inicio-subito-lancinante",
+          "texto": "Início súbito e dor muito forte, como rasgando",
+          "pergunta_exemplo": "A dor começou de repente, muito forte, como se estivesse rasgando?",
+          "faltou": "Faltou perguntar se a dor começou de repente e muito forte, como uma rasgada.",
+          "peso": 3,
+          "palavras_chave": [
+            "de repente",
+            "rasgando",
+            "súbita",
+            "muito forte"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "RioSaúde. Protocolo clínico: assistência ao paciente com dor torácica",
+            "url": "https://riosaude.prefeitura.rio/wp-content/uploads/sites/66/2026/04/protocolo-clinico-dor-toracica-v2.pdf"
+          }
+        },
+        {
+          "id": "duracao-episodios-dor",
+          "texto": "Duração de cada episódio de dor",
+          "pergunta_exemplo": "Quando a dor vem, dura quanto tempo? Minutos, horas?",
+          "faltou": "Faltou perguntar quanto tempo dura cada episódio de dor.",
+          "peso": 3,
+          "palavras_chave": [
+            "minutos",
+            "horas",
+            "quanto tempo dura",
+            "dura"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sintomas-associados-dor-toracica",
+      "titulo": "Sintomas associados",
+      "itens": [
+        {
+          "id": "dispneia-associada",
+          "texto": "Falta de ar junto com a dor",
+          "pergunta_exemplo": "Junto com a dor, você sente falta de ar?",
+          "faltou": "Faltou perguntar se há falta de ar junto com a dor.",
+          "peso": 3,
+          "palavras_chave": [
+            "falta de ar",
+            "fôlego",
+            "cansaço para respirar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "sudorese",
+          "texto": "Suor frio",
+          "pergunta_exemplo": "Você suou frio durante a dor?",
+          "faltou": "Faltou perguntar sobre suor frio.",
+          "peso": 2,
+          "palavras_chave": [
+            "suor",
+            "suou",
+            "suando",
+            "suor frio"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "nausea-vomito",
+          "texto": "Náusea ou vômito",
+          "pergunta_exemplo": "Sentiu enjoo ou vomitou?",
+          "faltou": "Faltou perguntar sobre enjoo e vômito.",
+          "peso": 2,
+          "palavras_chave": [
+            "enjoo",
+            "náusea",
+            "vomitou",
+            "vômito"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "sincope-pre-sincope",
+          "texto": "Desmaio ou sensação de desmaio",
+          "pergunta_exemplo": "Chegou a desmaiar ou sentiu que ia desmaiar?",
+          "faltou": "Faltou perguntar se houve desmaio ou sensação de desmaio.",
+          "peso": 2,
+          "palavras_chave": [
+            "desmaiar",
+            "desmaio",
+            "apagou",
+            "escureceu"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "palpitacoes",
+          "texto": "Palpitações",
+          "pergunta_exemplo": "Sentiu o coração disparar ou bater irregular?",
+          "faltou": "Faltou perguntar sobre palpitações.",
+          "peso": 2,
+          "palavras_chave": [
+            "coração",
+            "disparar",
+            "palpitação",
+            "batendo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "febre-tosse",
+          "texto": "Febre ou tosse",
+          "pergunta_exemplo": "Teve febre ou tosse nesses dias?",
+          "faltou": "Faltou perguntar sobre febre e tosse.",
+          "peso": 1,
+          "palavras_chave": [
+            "febre",
+            "tosse",
+            "catarro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fatores-risco-cardiovascular",
+      "titulo": "Fatores de risco cardiovascular",
+      "itens": [
+        {
+          "id": "hipertensao",
+          "texto": "Hipertensão",
+          "pergunta_exemplo": "Você tem pressão alta?",
+          "faltou": "Faltou perguntar sobre pressão alta.",
+          "peso": 3,
+          "palavras_chave": [
+            "pressão alta",
+            "pressão",
+            "hipertensão"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "diabetes",
+          "texto": "Diabetes",
+          "pergunta_exemplo": "Você tem diabetes ou açúcar alto no sangue?",
+          "faltou": "Faltou perguntar sobre diabetes.",
+          "peso": 3,
+          "palavras_chave": [
+            "diabetes",
+            "açúcar",
+            "glicose"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "dislipidemia",
+          "texto": "Colesterol ou triglicérides altos",
+          "pergunta_exemplo": "Já disseram que seu colesterol é alto?",
+          "faltou": "Faltou perguntar sobre colesterol alto.",
+          "peso": 2,
+          "palavras_chave": [
+            "colesterol",
+            "triglicérides",
+            "gordura no sangue"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "tabagismo",
+          "texto": "Tabagismo e carga tabágica",
+          "pergunta_exemplo": "Você fuma ou já fumou? Quantos cigarros por dia e por quantos anos?",
+          "faltou": "Faltou perguntar sobre tabagismo e quanto e por quanto tempo fuma.",
+          "peso": 3,
+          "palavras_chave": [
+            "fuma",
+            "fumou",
+            "cigarro",
+            "maço",
+            "tabagismo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "historia-familiar-coronariana-precoce",
+          "texto": "Doença do coração precoce na família",
+          "pergunta_exemplo": "Alguém da família teve infarto ou problema no coração antes dos 55 anos, se homem, ou dos 65, se mulher?",
+          "faltou": "Faltou perguntar se há doença do coração precoce na família.",
+          "peso": 2,
+          "palavras_chave": [
+            "família",
+            "infarto",
+            "coração",
+            "pai",
+            "mãe"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "obesidade-sedentarismo",
+          "texto": "Excesso de peso e sedentarismo",
+          "pergunta_exemplo": "Você está acima do peso? Faz alguma atividade física?",
+          "faltou": "Faltou perguntar sobre peso e sedentarismo.",
+          "peso": 1,
+          "palavras_chave": [
+            "peso",
+            "sedentário",
+            "exercício",
+            "atividade física"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "uso-cocaina",
+          "texto": "Uso de cocaína ou outros estimulantes",
+          "pergunta_exemplo": "Você usa ou usou cocaína ou algum estimulante recentemente?",
+          "faltou": "Faltou perguntar sobre uso de cocaína ou outros estimulantes.",
+          "peso": 2,
+          "palavras_chave": [
+            "cocaína",
+            "estimulante",
+            "droga",
+            "crack"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "eventos-cardiovasculares-previos",
+      "titulo": "Eventos cardiovasculares prévios",
+      "itens": [
+        {
+          "id": "infarto-previo",
+          "texto": "Infarto prévio",
+          "pergunta_exemplo": "Você já teve infarto?",
+          "faltou": "Faltou perguntar se já teve infarto.",
+          "peso": 3,
+          "palavras_chave": [
+            "infarto",
+            "ataque cardíaco",
+            "já teve"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "RioSaúde. Protocolo clínico: assistência ao paciente com dor torácica",
+            "url": "https://riosaude.prefeitura.rio/wp-content/uploads/sites/66/2026/04/protocolo-clinico-dor-toracica-v2.pdf"
+          }
+        },
+        {
+          "id": "angina-previa",
+          "texto": "Dor no peito parecida antes",
+          "pergunta_exemplo": "Já teve uma dor no peito parecida antes? Algum médico falou em angina?",
+          "faltou": "Faltou perguntar se já teve dor parecida ou angina.",
+          "peso": 2,
+          "palavras_chave": [
+            "antes",
+            "parecida",
+            "angina",
+            "já teve"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "RioSaúde. Protocolo clínico: assistência ao paciente com dor torácica",
+            "url": "https://riosaude.prefeitura.rio/wp-content/uploads/sites/66/2026/04/protocolo-clinico-dor-toracica-v2.pdf"
+          }
+        },
+        {
+          "id": "cateterismo-stent-revascularizacao",
+          "texto": "Cateterismo, stent ou cirurgia do coração",
+          "pergunta_exemplo": "Já fez cateterismo, colocou stent ou fez ponte de safena?",
+          "faltou": "Faltou perguntar sobre cateterismo, stent ou cirurgia cardíaca anteriores.",
+          "peso": 2,
+          "palavras_chave": [
+            "cateterismo",
+            "stent",
+            "ponte",
+            "safena",
+            "cirurgia do coração"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "RioSaúde. Protocolo clínico: assistência ao paciente com dor torácica",
+            "url": "https://riosaude.prefeitura.rio/wp-content/uploads/sites/66/2026/04/protocolo-clinico-dor-toracica-v2.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fatores-risco-tromboembolismo",
+      "titulo": "Fatores de risco para tromboembolismo",
+      "itens": [
+        {
+          "id": "imobilizacao",
+          "texto": "Imobilização ou acamado recentemente",
+          "pergunta_exemplo": "Ficou muito tempo de cama ou com a perna imobilizada nas últimas semanas?",
+          "faltou": "Faltou perguntar se o paciente ficou imobilizado recentemente.",
+          "peso": 2,
+          "palavras_chave": [
+            "cama",
+            "acamado",
+            "imobilizado",
+            "gesso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "cirurgia-recente",
+          "texto": "Cirurgia recente",
+          "pergunta_exemplo": "Fez alguma cirurgia no último mês?",
+          "faltou": "Faltou perguntar sobre cirurgia recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "cirurgia",
+            "operou",
+            "último mês",
+            "recente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "viagem-longa",
+          "texto": "Viagem longa recente",
+          "pergunta_exemplo": "Fez alguma viagem longa de avião, ônibus ou carro há pouco tempo?",
+          "faltou": "Faltou perguntar sobre viagem longa recente.",
+          "peso": 1,
+          "palavras_chave": [
+            "viagem",
+            "viajou",
+            "avião",
+            "ônibus"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fatores de risco para tromboembolismo venoso, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "hormonios-anticoncepcional",
+          "texto": "Uso de anticoncepcional ou hormônios",
+          "pergunta_exemplo": "Você usa anticoncepcional ou algum hormônio?",
+          "faltou": "Faltou perguntar sobre anticoncepcional ou outros hormônios.",
+          "peso": 2,
+          "palavras_chave": [
+            "anticoncepcional",
+            "pílula",
+            "hormônio",
+            "reposição"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fatores de risco para tromboembolismo venoso, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "tvp-previa",
+          "texto": "Trombose ou embolia anterior",
+          "pergunta_exemplo": "Já teve trombose na perna ou coágulo no pulmão?",
+          "faltou": "Faltou perguntar se já teve trombose ou embolia.",
+          "peso": 2,
+          "palavras_chave": [
+            "trombose",
+            "coágulo",
+            "embolia",
+            "perna inchada"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "cancer",
+          "texto": "Câncer atual ou recente",
+          "pergunta_exemplo": "Você tem ou teve câncer recentemente? Faz algum tratamento para isso?",
+          "faltou": "Faltou perguntar sobre câncer atual ou recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "câncer",
+            "tumor",
+            "quimioterapia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        }
+      ]
+    }
+  ]
+}

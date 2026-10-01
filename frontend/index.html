@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>AnamneLab</title>
+    <meta name="description" content="Treino de anamnese com correção na hora." />
+    <link rel="icon" type="image/svg+xml" href="/icone-app.svg" />
+    <link rel="apple-touch-icon" href="/icone-app-192.png" />
+    <meta name="theme-color" content="#0E5E66" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101819" media="(prefers-color-scheme: dark)" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script>
+      // Aplica o tema antes do primeiro desenho, para não piscar claro no escuro.
+      try {
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.setAttribute("data-theme", "escuro");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="raiz"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

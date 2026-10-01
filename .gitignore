@@ -1,0 +1,43 @@
+# Segredos: só o .env.example entra no git.
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Node e build do frontend
+node_modules/
+dist/
+dev-dist/
+*.log
+npm-debug.log*
+
+# Áudio temporário (nunca vai para o git; o backend apaga após a transcrição)
+temp/**/*.webm
+temp/**/*.m4a
+temp/**/*.wav
+tmp/
+anamnelab-audio/
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
