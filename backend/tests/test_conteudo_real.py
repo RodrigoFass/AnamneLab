@@ -68,7 +68,8 @@ class TestConteudoReal:
         falas = rotular_falas(TranscritorFalso().transcrever(Path("exemplo")), llm)
         assert 40 <= len(falas) <= 60
         detectada = detectar_queixa(falas, conteudo.queixas, llm)
-        assert detectada.queixas[0] == "dor-toracica"
+        # Falta de ar e inchaço aparecem depois, no interrogatório: não viram queixa principal.
+        assert detectada.queixas == ["dor-toracica"]
         resultado = corrigir(falas, ["dor-toracica"], conteudo, llm, contar_rascunho=True)
         ids = [a.item_id for a in resultado.avaliacoes]
         assert len(ids) == len(set(ids))
@@ -76,3 +77,25 @@ class TestConteudoReal:
         # A transcrição de exemplo cumpre uns 2/3 dos itens.
         assert 0.5 <= feitos / len(ids) <= 0.8, f"{feitos} de {len(ids)}"
         assert resultado.notas.provisoria is (any(c.status == "rascunho" for c in resultado.checklists_usados))
+
+    def test_toda_queixa_da_biblioteca_tem_checklist(self):
+        conteudo = carregar_conteudo(PASTA_CONTEUDO)
+        for queixa in conteudo.queixas.queixas:
+            checklist = conteudo.checklist_da_queixa(queixa.id)
+            assert checklist is not None, queixa.id
+            assert checklist.tipo == "queixa" and checklist.queixa == queixa.id
+
+    @pytest.mark.parametrize(
+        "queixa",
+        ["dispneia", "dor-abdominal", "cefaleia", "febre", "tosse", "dor-lombar", "sincope", "edema", "diarreia"],
+    )
+    def test_correcao_falsa_roda_com_cada_queixa(self, queixa):
+        conteudo = carregar_conteudo(PASTA_CONTEUDO)
+        llm = ClienteFalso()
+        falas = rotular_falas(TranscritorFalso().transcrever(Path("exemplo")), llm)
+        resultado = corrigir(falas, [queixa], conteudo, llm, contar_rascunho=True)
+        assert [c.id for c in resultado.checklists_usados] == ["geral", queixa]
+        ids_da_queixa = {i.id for s in conteudo.checklist_da_queixa(queixa).secoes for i in s.itens}
+        avaliados = {a.item_id for a in resultado.avaliacoes}
+        assert ids_da_queixa <= avaliados
+        assert resultado.notas.geral is not None and resultado.notas.queixa is not None

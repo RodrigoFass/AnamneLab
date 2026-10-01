@@ -339,7 +339,7 @@
           "id": "is-sintomas-gerais",
           "texto": "Sintomas gerais (febre, perda de peso, cansaço)",
           "pergunta_exemplo": "Teve febre, perdeu peso sem querer ou anda mais cansado?",
-          "faltou": "Faltou revisar os sintomas gerais: febre, perda de peso e cansaço.",
+          "faltou": "Faltou perguntar sobre sintomas gerais, como febre, perda de peso e cansaço.",
           "peso": 2,
           "palavras_chave": [
             "febre",
@@ -357,7 +357,7 @@
           "id": "is-pele",
           "texto": "Pele e anexos",
           "pergunta_exemplo": "Notou manchas, coceira ou feridas na pele?",
-          "faltou": "Faltou revisar a pele.",
+          "faltou": "Faltou perguntar sobre a pele, como manchas, coceira ou feridas.",
           "peso": 1,
           "palavras_chave": [
             "pele",
@@ -375,7 +375,7 @@
           "id": "is-cabeca-pescoco",
           "texto": "Cabeça, olhos, ouvidos, nariz e garganta",
           "pergunta_exemplo": "Alguma alteração na visão, na audição, no nariz ou na garganta?",
-          "faltou": "Faltou revisar cabeça e pescoço: visão, audição, nariz e garganta.",
+          "faltou": "Faltou perguntar sobre visão, audição, nariz e garganta.",
           "peso": 1,
           "palavras_chave": [
             "visão",
@@ -394,7 +394,7 @@
           "id": "is-cardiovascular",
           "texto": "Sistema cardiovascular",
           "pergunta_exemplo": "Sente o coração disparar, dor no peito ou inchaço nas pernas?",
-          "faltou": "Faltou revisar o sistema cardiovascular.",
+          "faltou": "Faltou perguntar sobre sintomas do coração, como palpitação, dor no peito ou inchaço nas pernas.",
           "peso": 2,
           "palavras_chave": [
             "coração",
@@ -412,7 +412,7 @@
           "id": "is-respiratorio",
           "texto": "Sistema respiratório",
           "pergunta_exemplo": "Tem tosse, falta de ar ou chiado no peito?",
-          "faltou": "Faltou revisar o sistema respiratório.",
+          "faltou": "Faltou perguntar sobre sintomas respiratórios, como tosse, falta de ar ou chiado.",
           "peso": 2,
           "palavras_chave": [
             "tosse",
@@ -430,7 +430,7 @@
           "id": "is-gastrointestinal",
           "texto": "Sistema digestório",
           "pergunta_exemplo": "Como está o apetite, o intestino? Teve enjoo, azia ou sangue nas fezes?",
-          "faltou": "Faltou revisar o sistema digestório.",
+          "faltou": "Faltou perguntar sobre o sistema digestório, como apetite, intestino, enjoo e azia.",
           "peso": 2,
           "palavras_chave": [
             "intestino",
@@ -449,7 +449,7 @@
           "id": "is-geniturinario",
           "texto": "Sistema geniturinário (e ciclo menstrual quando couber)",
           "pergunta_exemplo": "Alguma dor ou ardência para urinar? E a menstruação, como está?",
-          "faltou": "Faltou revisar o sistema urinário e genital.",
+          "faltou": "Faltou perguntar sobre urina e, quando couber, sobre a menstruação.",
           "peso": 2,
           "palavras_chave": [
             "urinar",
@@ -467,7 +467,7 @@
           "id": "is-musculoesqueletico",
           "texto": "Sistema musculoesquelético",
           "pergunta_exemplo": "Sente dor nas juntas, nos músculos ou nas costas?",
-          "faltou": "Faltou revisar músculos e articulações.",
+          "faltou": "Faltou perguntar sobre dor nas articulações, nos músculos ou nas costas.",
           "peso": 1,
           "palavras_chave": [
             "juntas",
@@ -485,7 +485,7 @@
           "id": "is-neurologico",
           "texto": "Sistema nervoso",
           "pergunta_exemplo": "Tem dor de cabeça, tontura, desmaios ou formigamento?",
-          "faltou": "Faltou revisar o sistema nervoso.",
+          "faltou": "Faltou perguntar sobre sintomas neurológicos, como dor de cabeça, tontura, desmaio ou formigamento.",
           "peso": 2,
           "palavras_chave": [
             "dor de cabeça",
@@ -521,7 +521,7 @@
           "id": "is-endocrino",
           "texto": "Sistema endócrino",
           "pergunta_exemplo": "Tem sentido muita sede, urinado muito ou sentido muito calor ou frio?",
-          "faltou": "Faltou revisar sintomas endócrinos, como sede excessiva e intolerância ao calor ou ao frio.",
+          "faltou": "Faltou perguntar sobre sintomas endócrinos, como sede excessiva e intolerância ao calor ou ao frio.",
           "peso": 1,
           "palavras_chave": [
             "sede",

@@ -11,12 +11,13 @@ confirmada pelo aluno, os checklists são fixos e versionados, e a IA nunca afir
 diagnóstico: as hipóteses dela aparecem como sugestão, não gabarito, depois que você
 escreveu as suas.
 
-> **Aviso: checklists provisórios.** Os checklists atuais (geral e dor torácica) são um
-> rascunho montado a partir de fontes públicas da internet (`status: "rascunho"`,
-> `origem: "fontes-publicas"`) e **ainda não foram revisados por um professor**. Enquanto
-> nenhum checklist estiver aprovado, o protótipo roda com `CONTAR_RASCUNHO=true`: o rascunho
-> entra na conta e a nota aparece marcada como **provisória**. Use para treinar, não como
-> avaliação.
+> **Aviso: checklists provisórios.** Os checklists atuais (o geral e um para cada uma das 10
+> queixas da biblioteca: dor torácica, dispneia, dor abdominal, cefaleia, febre, tosse, dor
+> lombar, síncope, edema e diarreia) são um rascunho montado a partir de fontes públicas da
+> internet (`status: "rascunho"`, `origem: "fontes-publicas"`) e **ainda não foram revisados
+> por um professor**. Enquanto nenhum checklist estiver aprovado, o protótipo roda com
+> `CONTAR_RASCUNHO=true`: o rascunho entra na conta e a nota aparece marcada como
+> **provisória**. Use para treinar, não como avaliação.
 
 ## Estrutura
 
@@ -32,7 +33,7 @@ frontend/           PWA em React + Vite
 content/            conteúdo versionado
   schema/           JSON Schema dos checklists, cartões e queixas
   queixas.json      biblioteca fechada de queixas
-  checklists/       geral.json, dor-toracica.json
+  checklists/       geral.json + um por queixa (dor-toracica.json, cefaleia.json, ...)
   cartoes/          cartões de caso
   termo-gravacao.json
 scripts/            validar_conteudo.py e testes

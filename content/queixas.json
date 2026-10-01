@@ -19,7 +19,7 @@
     {
       "id": "dispneia",
       "nome": "Dispneia",
-      "checklist": null,
+      "checklist": "dispneia",
       "sinonimos": [
         "falta de ar",
         "cansaço para respirar",
@@ -32,7 +32,7 @@
     {
       "id": "dor-abdominal",
       "nome": "Dor abdominal",
-      "checklist": null,
+      "checklist": "dor-abdominal",
       "sinonimos": [
         "dor de barriga",
         "dor na barriga",
@@ -46,7 +46,7 @@
     {
       "id": "cefaleia",
       "nome": "Cefaleia",
-      "checklist": null,
+      "checklist": "cefaleia",
       "sinonimos": [
         "dor de cabeça",
         "dor na cabeça",
@@ -58,7 +58,7 @@
     {
       "id": "febre",
       "nome": "Febre",
-      "checklist": null,
+      "checklist": "febre",
       "sinonimos": [
         "quentura",
         "corpo quente",
@@ -71,7 +71,7 @@
     {
       "id": "tosse",
       "nome": "Tosse",
-      "checklist": null,
+      "checklist": "tosse",
       "sinonimos": [
         "tosse seca",
         "tosse com catarro",
@@ -83,7 +83,7 @@
     {
       "id": "dor-lombar",
       "nome": "Dor lombar",
-      "checklist": null,
+      "checklist": "dor-lombar",
       "sinonimos": [
         "dor nas costas",
         "dor na lombar",
@@ -97,7 +97,7 @@
     {
       "id": "sincope",
       "nome": "Síncope",
-      "checklist": null,
+      "checklist": "sincope",
       "sinonimos": [
         "desmaio",
         "desmaiou",
@@ -110,7 +110,7 @@
     {
       "id": "edema",
       "nome": "Edema",
-      "checklist": null,
+      "checklist": "edema",
       "sinonimos": [
         "inchaço",
         "inchaço nas pernas",
@@ -123,7 +123,7 @@
     {
       "id": "diarreia",
       "nome": "Diarreia",
-      "checklist": null,
+      "checklist": "diarreia",
       "sinonimos": [
         "intestino solto",
         "fezes moles",

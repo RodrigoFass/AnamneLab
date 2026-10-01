@@ -260,7 +260,7 @@
           "texto": "Desmaio ou sensação de desmaio",
           "pergunta_exemplo": "Chegou a desmaiar ou sentiu que ia desmaiar?",
           "faltou": "Faltou perguntar se houve desmaio ou sensação de desmaio.",
-          "peso": 2,
+          "peso": 3,
           "palavras_chave": [
             "desmaiar",
             "desmaio",

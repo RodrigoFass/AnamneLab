@@ -1,0 +1,672 @@
+{
+  "id": "cefaleia",
+  "nome": "Cefaleia",
+  "tipo": "queixa",
+  "queixa": "cefaleia",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-cefaleia",
+      "titulo": "Caracterização da dor de cabeça",
+      "itens": [
+        {
+          "id": "cefaleia-frequencia-dias-mes",
+          "texto": "Frequência das crises (quantos dias por mês com dor)",
+          "pergunta_exemplo": "Quantos dias por mês, mais ou menos, você fica com dor de cabeça?",
+          "faltou": "Faltou perguntar quantos dias por mês o paciente tem dor de cabeça.",
+          "peso": 3,
+          "palavras_chave": [
+            "dias por mês",
+            "quantas vezes",
+            "por mês",
+            "por semana",
+            "frequência"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Maranhão-Filho P. A anamnese das cefaleias (texto disponível no portal da UFF)",
+            "url": "https://ole.uff.br/wp-content/uploads/sites/414/2019/08/A_Anamnese_das_Cefaleias.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-duracao-crise-sem-remedio",
+          "texto": "Duração de cada crise quando não toma remédio",
+          "pergunta_exemplo": "Quando a dor vem e você não toma nada, quanto tempo ela dura? Horas, dias?",
+          "faltou": "Faltou perguntar quanto tempo dura a crise sem remédio.",
+          "peso": 2,
+          "palavras_chave": [
+            "sem remédio",
+            "não toma nada",
+            "quanto tempo dura",
+            "horas",
+            "dias"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Maranhão-Filho P. A anamnese das cefaleias (texto disponível no portal da UFF)",
+            "url": "https://ole.uff.br/wp-content/uploads/sites/414/2019/08/A_Anamnese_das_Cefaleias.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-lateralidade",
+          "texto": "Um lado ou os dois lados da cabeça, e se troca de lado",
+          "pergunta_exemplo": "A dor pega um lado só da cabeça ou os dois? É sempre do mesmo lado?",
+          "faltou": "Faltou perguntar se a dor é de um lado só ou dos dois, e se troca de lado.",
+          "peso": 2,
+          "palavras_chave": [
+            "um lado",
+            "dois lados",
+            "mesmo lado",
+            "lado só",
+            "metade da cabeça"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Malveira LC. Migrânea ou enxaqueca, especialização em Saúde da Família da UFMG (acervo ARES/UNA-SUS)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/4446/1/2561.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-pulsatil-ou-aperto",
+          "texto": "Dor latejante ou em aperto",
+          "pergunta_exemplo": "Essa dor é latejante, pulsando, ou é como um aperto, um peso na cabeça?",
+          "faltou": "Faltou perguntar se a dor é latejante ou em aperto.",
+          "peso": 2,
+          "palavras_chave": [
+            "lateja",
+            "latejante",
+            "pulsando",
+            "aperto",
+            "peso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Malveira LC. Migrânea ou enxaqueca, especialização em Saúde da Família da UFMG (acervo ARES/UNA-SUS)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/4446/1/2561.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-horario-predominante",
+          "texto": "Período do dia em que a dor costuma aparecer",
+          "pergunta_exemplo": "Tem algum horário em que a dor costuma aparecer? De manhã, à tarde, à noite?",
+          "faltou": "Faltou perguntar em que período do dia a dor costuma aparecer.",
+          "peso": 1,
+          "palavras_chave": [
+            "horário",
+            "de manhã",
+            "à tarde",
+            "à noite",
+            "hora do dia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UNA-SUS/UNIFESP. Cefaleia: caso complexo 9, Família Lima",
+            "url": "https://www.unasus.unifesp.br/biblioteca_virtual/esf/1/casos_complexos/Familia_Lima/Complexo_09_Familia_Lima_Cefaleia.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-impacto-atividades",
+          "texto": "Quanto a dor atrapalha trabalho, estudo e rotina",
+          "pergunta_exemplo": "Quando a dor vem, você consegue continuar trabalhando, ou precisa parar e deitar?",
+          "faltou": "Faltou perguntar o quanto a dor atrapalha as atividades do dia.",
+          "peso": 2,
+          "palavras_chave": [
+            "atrapalha",
+            "parar",
+            "trabalhar",
+            "deitar",
+            "faltar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Maranhão-Filho P. A anamnese das cefaleias (texto disponível no portal da UFF)",
+            "url": "https://ole.uff.br/wp-content/uploads/sites/414/2019/08/A_Anamnese_das_Cefaleias.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-desencadeantes",
+          "texto": "Desencadeantes: jejum, sono, estresse, álcool, alimentos, menstruação",
+          "pergunta_exemplo": "Tem alguma coisa que puxa a crise, como ficar sem comer, dormir mal, estresse, bebida, algum alimento ou a menstruação?",
+          "faltou": "Faltou perguntar o que desencadeia as crises, como jejum, sono ruim, estresse ou menstruação.",
+          "peso": 2,
+          "palavras_chave": [
+            "desencadeia",
+            "puxa",
+            "sem comer",
+            "dormir mal",
+            "estresse",
+            "menstruação"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Malveira LC. Migrânea ou enxaqueca, especialização em Saúde da Família da UFMG (acervo ARES/UNA-SUS)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/4446/1/2561.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sintomas-associados-cefaleia",
+      "titulo": "Sintomas que acompanham a dor",
+      "itens": [
+        {
+          "id": "nausea-vomito",
+          "texto": "Náusea ou vômito",
+          "pergunta_exemplo": "Sentiu enjoo ou vomitou?",
+          "faltou": "Faltou perguntar sobre enjoo e vômito.",
+          "peso": 2,
+          "palavras_chave": [
+            "enjoo",
+            "náusea",
+            "vomitou",
+            "vômito"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-fotofobia-fonofobia",
+          "texto": "Incômodo com luz e com barulho durante a dor",
+          "pergunta_exemplo": "Durante a dor, a luz ou o barulho incomodam? Você procura um lugar escuro e quieto?",
+          "faltou": "Faltou perguntar se a luz e o barulho incomodam durante a dor.",
+          "peso": 2,
+          "palavras_chave": [
+            "luz",
+            "claridade",
+            "barulho",
+            "escuro",
+            "som"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Maranhão-Filho P. A anamnese das cefaleias (texto disponível no portal da UFF)",
+            "url": "https://ole.uff.br/wp-content/uploads/sites/414/2019/08/A_Anamnese_das_Cefaleias.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-aura",
+          "texto": "Aura antes da dor: pontos brilhantes, borrão na vista, formigamento ou fala enrolada que passam",
+          "pergunta_exemplo": "Antes da dor começar, você vê luzes, pontos brilhantes ou um borrão na vista? Ou sente formigamento que vai subindo?",
+          "faltou": "Faltou perguntar se aparece algum aviso antes da dor, como alteração na vista ou formigamento.",
+          "peso": 2,
+          "palavras_chave": [
+            "antes da dor",
+            "luzes",
+            "pontos brilhantes",
+            "vista",
+            "aviso",
+            "formigamento"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Paglioli, Lima e Marrone. Cefaleias: diagnóstico diferencial (BVS)",
+            "url": "https://docs.bvsalud.org/biblioref/2018/03/881497/cefaleias-diagnostico-diferencial.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-sinais-autonomicos",
+          "texto": "Olho vermelho, lacrimejamento ou nariz escorrendo do lado da dor",
+          "pergunta_exemplo": "Do lado da dor, o olho fica vermelho, lacrimeja, ou o nariz escorre ou entope?",
+          "faltou": "Faltou perguntar se o olho lacrimeja ou o nariz escorre do lado da dor.",
+          "peso": 1,
+          "palavras_chave": [
+            "olho vermelho",
+            "lacrimeja",
+            "lágrima",
+            "nariz escorre",
+            "nariz entupido"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Maranhão-Filho P. A anamnese das cefaleias (texto disponível no portal da UFF)",
+            "url": "https://ole.uff.br/wp-content/uploads/sites/414/2019/08/A_Anamnese_das_Cefaleias.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-comportamento-na-crise",
+          "texto": "Comportamento durante a crise (quieto ou agitado)",
+          "pergunta_exemplo": "Na hora da dor, você prefere ficar parado, deitado, ou fica inquieto, andando de um lado para o outro?",
+          "faltou": "Faltou perguntar como o paciente fica durante a crise, quieto ou agitado.",
+          "peso": 1,
+          "palavras_chave": [
+            "parado",
+            "deitado",
+            "inquieto",
+            "agitado",
+            "andando"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Maranhão-Filho P. A anamnese das cefaleias (texto disponível no portal da UFF)",
+            "url": "https://ole.uff.br/wp-content/uploads/sites/414/2019/08/A_Anamnese_das_Cefaleias.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-historia-cefaleia",
+      "titulo": "Sinais de alarme na história da dor",
+      "itens": [
+        {
+          "id": "cefaleia-primeira-ou-pior",
+          "texto": "Primeira dor de cabeça desse tipo ou a pior da vida",
+          "pergunta_exemplo": "Você já teve uma dor de cabeça assim antes? É a pior dor de cabeça da sua vida?",
+          "faltou": "Faltou perguntar se é a primeira dor assim ou a pior dor de cabeça da vida.",
+          "peso": 3,
+          "palavras_chave": [
+            "pior dor",
+            "primeira vez",
+            "da sua vida",
+            "já teve",
+            "assim antes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Paglioli, Lima e Marrone. Cefaleias: diagnóstico diferencial (BVS)",
+            "url": "https://docs.bvsalud.org/biblioref/2018/03/881497/cefaleias-diagnostico-diferencial.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-inicio-trovoada",
+          "texto": "Início súbito, chegando ao máximo em segundos ou poucos minutos",
+          "pergunta_exemplo": "A dor chegou de uma vez, muito forte em segundos, como uma pancada? Ou foi aumentando aos poucos?",
+          "faltou": "Faltou perguntar se a dor começou de uma vez, chegando ao máximo em segundos.",
+          "peso": 3,
+          "palavras_chave": [
+            "de uma vez",
+            "de repente",
+            "segundos",
+            "pancada",
+            "explodiu"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Considerações gerais sobre a cefaleia",
+            "url": "https://www.msdmanuals.com/pt-br/casa/dist%C3%BArbios-cerebrais,-da-medula-espinal-e-dos-nervos/cefaleias/considera%C3%A7%C3%B5es-gerais-sobre-a-cefaleia"
+          }
+        },
+        {
+          "id": "cefaleia-mudanca-padrao-progressiva",
+          "texto": "Mudança recente no padrão da dor ou piora progressiva",
+          "pergunta_exemplo": "Essa dor é diferente das que você costuma ter? Ela vem ficando mais forte ou mais frequente nas últimas semanas?",
+          "faltou": "Faltou perguntar se a dor mudou de padrão ou vem piorando aos poucos.",
+          "peso": 3,
+          "palavras_chave": [
+            "diferente",
+            "mudou",
+            "mais forte",
+            "mais frequente",
+            "costuma ter"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Red flags das cefaleias na emergência: saiba quais são",
+            "url": "https://www.medway.com.br/conteudos/red-flags-das-cefaleias-na-emergencia/"
+          }
+        },
+        {
+          "id": "cefaleia-piora-tosse-esforco",
+          "texto": "Dor que começa ou piora com tosse, espirro, esforço ou ao fazer força",
+          "pergunta_exemplo": "A dor aparece ou piora quando você tosse, espirra, faz força para evacuar ou algum esforço físico?",
+          "faltou": "Faltou perguntar se a dor piora com tosse, espirro ou esforço.",
+          "peso": 3,
+          "palavras_chave": [
+            "tosse",
+            "espirra",
+            "esforço",
+            "fazer força",
+            "abaixa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Red flags das cefaleias na emergência: saiba quais são",
+            "url": "https://www.medway.com.br/conteudos/red-flags-das-cefaleias-na-emergencia/"
+          }
+        },
+        {
+          "id": "cefaleia-relacao-posicao",
+          "texto": "Dor que muda com a posição (piora em pé ou deitado)",
+          "pergunta_exemplo": "A dor muda se você está deitado ou em pé? Melhora quando deita?",
+          "faltou": "Faltou perguntar se a dor muda ao deitar ou ao ficar em pé.",
+          "peso": 3,
+          "palavras_chave": [
+            "deitado",
+            "em pé",
+            "levanta",
+            "posição",
+            "deita"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Red flags das cefaleias na emergência: saiba quais são",
+            "url": "https://www.medway.com.br/conteudos/red-flags-das-cefaleias-na-emergencia/"
+          }
+        },
+        {
+          "id": "cefaleia-acorda-a-noite",
+          "texto": "Dor que acorda o paciente durante a noite",
+          "pergunta_exemplo": "Essa dor já te acordou no meio da noite? Você acorda com ela de manhã?",
+          "faltou": "Faltou perguntar se a dor acorda o paciente à noite.",
+          "peso": 3,
+          "palavras_chave": [
+            "acorda",
+            "acordou",
+            "de noite",
+            "madrugada",
+            "dormindo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sinais de alarme em cefaleia, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "cefaleia-trauma-recente",
+          "texto": "Pancada ou trauma na cabeça recente",
+          "pergunta_exemplo": "Você bateu a cabeça, caiu ou levou alguma pancada nos últimos dias ou semanas?",
+          "faltou": "Faltou perguntar se houve pancada ou trauma recente na cabeça.",
+          "peso": 3,
+          "palavras_chave": [
+            "bateu a cabeça",
+            "caiu",
+            "queda",
+            "pancada",
+            "acidente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Paglioli, Lima e Marrone. Cefaleias: diagnóstico diferencial (BVS)",
+            "url": "https://docs.bvsalud.org/biblioref/2018/03/881497/cefaleias-diagnostico-diferencial.pdf"
+          }
+        },
+        {
+          "id": "cefaleia-tempora-mastigacao",
+          "texto": "Dor na têmpora ao pentear o cabelo ou na mandíbula ao mastigar",
+          "pergunta_exemplo": "Dói ao encostar ou pentear o cabelo do lado da cabeça? Sente dor no queixo quando mastiga?",
+          "faltou": "Faltou perguntar se dói ao tocar a têmpora ou ao mastigar.",
+          "peso": 3,
+          "palavras_chave": [
+            "têmpora",
+            "pentear",
+            "mastigar",
+            "queixo",
+            "couro cabeludo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Considerações gerais sobre a cefaleia",
+            "url": "https://www.msdmanuals.com/pt-br/casa/dist%C3%BArbios-cerebrais,-da-medula-espinal-e-dos-nervos/cefaleias/considera%C3%A7%C3%B5es-gerais-sobre-a-cefaleia"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-neurologicos-cefaleia",
+      "titulo": "Sinais de alarme neurológicos e de infecção",
+      "itens": [
+        {
+          "id": "cefaleia-febre-rigidez-nuca",
+          "texto": "Febre e rigidez de nuca junto com a dor",
+          "pergunta_exemplo": "Junto com a dor, você teve febre? Sente o pescoço duro, com dor para encostar o queixo no peito?",
+          "faltou": "Faltou perguntar sobre febre e pescoço duro junto com a dor.",
+          "peso": 3,
+          "palavras_chave": [
+            "febre",
+            "pescoço duro",
+            "nuca",
+            "queixo no peito",
+            "pescoço"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Considerações gerais sobre a cefaleia",
+            "url": "https://www.msdmanuals.com/pt-br/casa/dist%C3%BArbios-cerebrais,-da-medula-espinal-e-dos-nervos/cefaleias/considera%C3%A7%C3%B5es-gerais-sobre-a-cefaleia"
+          }
+        },
+        {
+          "id": "cefaleia-fraqueza-formigamento",
+          "texto": "Fraqueza, dormência ou formigamento em um lado do corpo",
+          "pergunta_exemplo": "Sentiu fraqueza, dormência ou formigamento em algum braço, perna ou num lado do rosto?",
+          "faltou": "Faltou perguntar sobre fraqueza ou formigamento em algum lado do corpo.",
+          "peso": 3,
+          "palavras_chave": [
+            "fraqueza",
+            "dormência",
+            "formigamento",
+            "braço",
+            "perna",
+            "um lado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Considerações gerais sobre a cefaleia",
+            "url": "https://www.msdmanuals.com/pt-br/casa/dist%C3%BArbios-cerebrais,-da-medula-espinal-e-dos-nervos/cefaleias/considera%C3%A7%C3%B5es-gerais-sobre-a-cefaleia"
+          }
+        },
+        {
+          "id": "cefaleia-alteracao-fala-visao",
+          "texto": "Alteração da fala ou da visão (visão dupla, embaçada ou perda de parte da vista)",
+          "pergunta_exemplo": "Teve dificuldade para falar, a fala ficou enrolada? E a visão, ficou dupla, embaçada ou faltando um pedaço?",
+          "faltou": "Faltou perguntar sobre alteração da fala ou da visão.",
+          "peso": 3,
+          "palavras_chave": [
+            "fala",
+            "enrolada",
+            "visão",
+            "vista dupla",
+            "embaçada",
+            "enxergar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Considerações gerais sobre a cefaleia",
+            "url": "https://www.msdmanuals.com/pt-br/casa/dist%C3%BArbios-cerebrais,-da-medula-espinal-e-dos-nervos/cefaleias/considera%C3%A7%C3%B5es-gerais-sobre-a-cefaleia"
+          }
+        },
+        {
+          "id": "cefaleia-confusao-sonolencia",
+          "texto": "Confusão, sonolência fora do comum ou mudança de comportamento",
+          "pergunta_exemplo": "Você ou alguém perto notou confusão, muito sono fora do normal ou um jeito diferente de agir?",
+          "faltou": "Faltou perguntar sobre confusão, sonolência ou mudança de comportamento.",
+          "peso": 3,
+          "palavras_chave": [
+            "confuso",
+            "confusão",
+            "sonolento",
+            "muito sono",
+            "diferente",
+            "esquecido"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Red flags das cefaleias na emergência: saiba quais são",
+            "url": "https://www.medway.com.br/conteudos/red-flags-das-cefaleias-na-emergencia/"
+          }
+        },
+        {
+          "id": "cefaleia-convulsao",
+          "texto": "Convulsão ou crise de perda de consciência",
+          "pergunta_exemplo": "Teve alguma convulsão, se debateu, ou apagou e perdeu a consciência?",
+          "faltou": "Faltou perguntar sobre convulsão ou perda de consciência.",
+          "peso": 3,
+          "palavras_chave": [
+            "convulsão",
+            "ataque",
+            "se debateu",
+            "apagou",
+            "desmaiou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Considerações gerais sobre a cefaleia",
+            "url": "https://www.msdmanuals.com/pt-br/casa/dist%C3%BArbios-cerebrais,-da-medula-espinal-e-dos-nervos/cefaleias/considera%C3%A7%C3%B5es-gerais-sobre-a-cefaleia"
+          }
+        }
+      ]
+    },
+    {
+      "id": "antecedentes-fatores-risco-cefaleia",
+      "titulo": "Antecedentes e fatores de risco ligados à dor de cabeça",
+      "itens": [
+        {
+          "id": "cefaleia-idade-inicio",
+          "texto": "Idade em que as dores de cabeça começaram (atenção quando depois dos 50 anos)",
+          "pergunta_exemplo": "Com que idade começaram essas dores de cabeça? Você já tinha esse tipo de dor quando era mais novo?",
+          "faltou": "Faltou perguntar com que idade as dores de cabeça começaram.",
+          "peso": 3,
+          "palavras_chave": [
+            "que idade",
+            "começaram",
+            "mais novo",
+            "mais nova",
+            "anos"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Considerações gerais sobre a cefaleia",
+            "url": "https://www.msdmanuals.com/pt-br/casa/dist%C3%BArbios-cerebrais,-da-medula-espinal-e-dos-nervos/cefaleias/considera%C3%A7%C3%B5es-gerais-sobre-a-cefaleia"
+          }
+        },
+        {
+          "id": "cefaleia-cancer-imunossupressao",
+          "texto": "Câncer, HIV ou outra condição ou remédio que baixa a imunidade",
+          "pergunta_exemplo": "Você tem ou já teve câncer? Tem HIV ou usa algum remédio que baixa a imunidade, como corticoide?",
+          "faltou": "Faltou perguntar sobre câncer, HIV ou uso de remédios que baixam a imunidade.",
+          "peso": 3,
+          "palavras_chave": [
+            "câncer",
+            "tumor",
+            "hiv",
+            "imunidade",
+            "corticoide",
+            "quimioterapia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Red flags das cefaleias na emergência: saiba quais são",
+            "url": "https://www.medway.com.br/conteudos/red-flags-das-cefaleias-na-emergencia/"
+          }
+        },
+        {
+          "id": "cefaleia-gestacao-puerperio",
+          "texto": "Gestação ou parto recente",
+          "pergunta_exemplo": "Você está grávida ou teve bebê nas últimas semanas?",
+          "faltou": "Faltou perguntar sobre gravidez ou parto recente.",
+          "peso": 3,
+          "palavras_chave": [
+            "grávida",
+            "gravidez",
+            "gestação",
+            "bebê",
+            "parto"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Red flags das cefaleias na emergência: saiba quais são",
+            "url": "https://www.medway.com.br/conteudos/red-flags-das-cefaleias-na-emergencia/"
+          }
+        },
+        {
+          "id": "cefaleia-dias-analgesico-mes",
+          "texto": "Quantos dias por mês usa analgésico ou remédio para a dor de cabeça",
+          "pergunta_exemplo": "Quantos dias por mês você toma remédio para dor de cabeça? Qual remédio?",
+          "faltou": "Faltou perguntar quantos dias por mês o paciente usa analgésico para a dor de cabeça.",
+          "peso": 3,
+          "palavras_chave": [
+            "dias por mês",
+            "remédio",
+            "analgésico",
+            "quantos dias",
+            "toma"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Miranda e cols. Cefaleia por uso excessivo de medicamentos (revista Infarma, CFF)",
+            "url": "https://revistas.cff.org.br/infarma/article/download/986/pdf_2/3958"
+          }
+        },
+        {
+          "id": "cefaleia-enxaqueca-familia",
+          "texto": "Enxaqueca ou dor de cabeça frequente na família",
+          "pergunta_exemplo": "Alguém da sua família, como mãe, pai ou irmãos, tem enxaqueca ou dor de cabeça com frequência?",
+          "faltou": "Faltou perguntar se há enxaqueca ou dor de cabeça frequente na família.",
+          "peso": 2,
+          "palavras_chave": [
+            "família",
+            "enxaqueca",
+            "mãe",
+            "pai",
+            "irmão"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Malveira LC. Migrânea ou enxaqueca, especialização em Saúde da Família da UFMG (acervo ARES/UNA-SUS)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/4446/1/2561.pdf"
+          }
+        },
+        {
+          "id": "hipertensao",
+          "texto": "Hipertensão",
+          "pergunta_exemplo": "Você tem pressão alta?",
+          "faltou": "Faltou perguntar sobre pressão alta.",
+          "peso": 3,
+          "palavras_chave": [
+            "pressão alta",
+            "pressão",
+            "hipertensão"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "hormonios-anticoncepcional",
+          "texto": "Uso de anticoncepcional ou hormônios",
+          "pergunta_exemplo": "Você usa anticoncepcional ou algum hormônio?",
+          "faltou": "Faltou perguntar sobre anticoncepcional ou outros hormônios.",
+          "peso": 2,
+          "palavras_chave": [
+            "anticoncepcional",
+            "pílula",
+            "hormônio",
+            "reposição"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fatores de risco para tromboembolismo venoso, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "cefaleia-preocupacao-paciente",
+          "texto": "O que o paciente acha que está causando a dor e o que mais o preocupa",
+          "pergunta_exemplo": "O que você acha que pode estar causando essa dor? Tem alguma coisa que te preocupa em especial?",
+          "faltou": "Faltou perguntar o que o paciente acha que causa a dor e o que o preocupa.",
+          "peso": 1,
+          "palavras_chave": [
+            "acha que",
+            "preocupa",
+            "medo",
+            "causando"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Maranhão-Filho P. A anamnese das cefaleias (texto disponível no portal da UFF)",
+            "url": "https://ole.uff.br/wp-content/uploads/sites/414/2019/08/A_Anamnese_das_Cefaleias.pdf"
+          }
+        }
+      ]
+    }
+  ]
+}

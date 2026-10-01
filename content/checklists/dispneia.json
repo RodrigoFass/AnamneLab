@@ -1,0 +1,667 @@
+{
+  "id": "dispneia",
+  "nome": "Dispneia",
+  "tipo": "queixa",
+  "queixa": "dispneia",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-dispneia",
+      "titulo": "Caracterização da falta de ar",
+      "itens": [
+        {
+          "id": "dispneia-circunstancia-inicio",
+          "texto": "O que fazia quando a falta de ar começou e se veio de repente",
+          "pergunta_exemplo": "A falta de ar veio de repente? O que você estava fazendo na hora em que começou?",
+          "faltou": "Faltou perguntar o que o paciente fazia quando a falta de ar começou e se ela veio de repente.",
+          "peso": 2,
+          "palavras_chave": [
+            "de repente",
+            "estava fazendo",
+            "na hora",
+            "começou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Definição, classificação e manejo da dispneia",
+            "url": "https://sanarmed.com/definicao-classificacao-e-manejo-da-dispneia-posmfc/"
+          }
+        },
+        {
+          "id": "dispneia-esforco-ou-repouso",
+          "texto": "Se a falta de ar aparece só com esforço ou também parado",
+          "pergunta_exemplo": "Essa falta de ar vem só quando você faz esforço ou aparece até parado, em repouso?",
+          "faltou": "Faltou perguntar se a falta de ar aparece só com esforço ou também em repouso.",
+          "peso": 3,
+          "palavras_chave": [
+            "esforço",
+            "parado",
+            "repouso",
+            "descansando"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Dispneia (sintomas de doenças pulmonares)",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/dispneia"
+          }
+        },
+        {
+          "id": "dispneia-tolerancia-esforco",
+          "texto": "Quanto esforço tolera antes de faltar o ar (quarteirões, andares, tarefas)",
+          "pergunta_exemplo": "Quantos quarteirões você anda ou quantos andares sobe antes de faltar o ar? Consegue tomar banho e se vestir sem cansar?",
+          "faltou": "Faltou perguntar quanto esforço o paciente aguenta antes de faltar o ar, como quarteirões ou andares.",
+          "peso": 3,
+          "palavras_chave": [
+            "quarteirões",
+            "andares",
+            "escada",
+            "quantos",
+            "banho"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Definição, classificação e manejo da dispneia",
+            "url": "https://sanarmed.com/definicao-classificacao-e-manejo-da-dispneia-posmfc/"
+          }
+        },
+        {
+          "id": "dispneia-comparacao-habitual",
+          "texto": "O que deixou de conseguir fazer por causa da falta de ar",
+          "pergunta_exemplo": "Tem alguma coisa que você fazia antes e hoje não consegue mais por causa da falta de ar?",
+          "faltou": "Faltou perguntar o que o paciente deixou de conseguir fazer por causa da falta de ar.",
+          "peso": 2,
+          "palavras_chave": [
+            "fazia antes",
+            "não consegue mais",
+            "deixou de",
+            "antes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Semana de Telemedicina: é possível avaliar a queixa de falta de ar em teleconsultas?",
+            "url": "https://portal.afya.com.br/medicina-de-familia/e-possivel-avaliar-a-queixa-de-falta-de-ar-em-consultas-por-telefone-e-video"
+          }
+        },
+        {
+          "id": "dispneia-ortopneia",
+          "texto": "Piora ao deitar e quantos travesseiros usa para dormir",
+          "pergunta_exemplo": "A falta de ar piora quando você deita? Quantos travesseiros você usa para dormir?",
+          "faltou": "Faltou perguntar se a falta de ar piora ao deitar e quantos travesseiros o paciente usa.",
+          "peso": 3,
+          "palavras_chave": [
+            "deitar",
+            "deitado",
+            "travesseiros",
+            "cabeceira"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Você sabe a diferença entre dispneia, ortopneia e dispneia paroxística noturna?",
+            "url": "https://portal.afya.com.br/cardiologia/voce-sabe-diferenca-entre-dispneia-ortopneia-e-dispneia-paroxistica-noturna"
+          }
+        },
+        {
+          "id": "dispneia-paroxistica-noturna",
+          "texto": "Se acorda à noite com falta de ar e precisa sentar ou levantar",
+          "pergunta_exemplo": "Você já acordou de noite sufocado, precisando sentar ou ir até a janela para melhorar?",
+          "faltou": "Faltou perguntar se o paciente acorda à noite com falta de ar e precisa se sentar.",
+          "peso": 3,
+          "palavras_chave": [
+            "acorda",
+            "noite",
+            "sufocado",
+            "sentar",
+            "janela"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Você sabe a diferença entre dispneia, ortopneia e dispneia paroxística noturna?",
+            "url": "https://portal.afya.com.br/cardiologia/voce-sabe-diferenca-entre-dispneia-ortopneia-e-dispneia-paroxistica-noturna"
+          }
+        },
+        {
+          "id": "dispneia-desencadeantes",
+          "texto": "Desencadeantes: poeira, mofo, animais, frio, fumaça, cheiros fortes, resfriado",
+          "pergunta_exemplo": "Alguma coisa costuma puxar a falta de ar, como poeira, mofo, bicho, frio, fumaça, perfume ou gripe?",
+          "faltou": "Faltou perguntar o que costuma desencadear a falta de ar, como poeira, frio ou fumaça.",
+          "peso": 2,
+          "palavras_chave": [
+            "poeira",
+            "mofo",
+            "frio",
+            "fumaça",
+            "perfume",
+            "gripe"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Cadernos de Atenção Básica: doenças respiratórias crônicas, cópia hospedada pela OPAS",
+            "url": "https://www.paho.org/sites/default/files/2020-03/_2009_01_15_CAB_DRC.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sintomas-associados-dispneia",
+      "titulo": "Sintomas associados",
+      "itens": [
+        {
+          "id": "dispneia-chiado",
+          "texto": "Chiado no peito",
+          "pergunta_exemplo": "Você sente ou ouve um chiado no peito quando está com falta de ar?",
+          "faltou": "Faltou perguntar se há chiado no peito.",
+          "peso": 3,
+          "palavras_chave": [
+            "chiado",
+            "chiando",
+            "gatinho",
+            "assobio"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Cadernos de Atenção Básica: doenças respiratórias crônicas, cópia hospedada pela OPAS",
+            "url": "https://www.paho.org/sites/default/files/2020-03/_2009_01_15_CAB_DRC.pdf"
+          }
+        },
+        {
+          "id": "dispneia-tosse-expectoracao",
+          "texto": "Tosse e aspecto do catarro",
+          "pergunta_exemplo": "Tem tosse? Sai catarro? De que cor e quanto?",
+          "faltou": "Faltou perguntar sobre tosse e sobre a cor e a quantidade do catarro.",
+          "peso": 2,
+          "palavras_chave": [
+            "tosse",
+            "catarro",
+            "cor",
+            "secreção"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Semiologia respiratória: principais motivos de consulta e exame físico",
+            "url": "https://sanarmed.com/semiologia-respiratoria-principais-motivos-de-consulta-e-exame-fisicocolunistas/"
+          }
+        },
+        {
+          "id": "dispneia-hemoptise",
+          "texto": "Sangue ao tossir",
+          "pergunta_exemplo": "Já saiu sangue quando você tossiu, mesmo que só um rajado no catarro?",
+          "faltou": "Faltou perguntar se saiu sangue com a tosse.",
+          "peso": 3,
+          "palavras_chave": [
+            "sangue",
+            "tossiu sangue",
+            "rajado",
+            "escarro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Semiologia respiratória: principais motivos de consulta e exame físico",
+            "url": "https://sanarmed.com/semiologia-respiratoria-principais-motivos-de-consulta-e-exame-fisicocolunistas/"
+          }
+        },
+        {
+          "id": "dispneia-febre-calafrios",
+          "texto": "Febre ou calafrios junto com a falta de ar",
+          "pergunta_exemplo": "Teve febre ou calafrio desde que começou a falta de ar?",
+          "faltou": "Faltou perguntar sobre febre e calafrios junto com a falta de ar.",
+          "peso": 2,
+          "palavras_chave": [
+            "febre",
+            "calafrio",
+            "tremedeira",
+            "quentura"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Dispneia (sintomas de doenças pulmonares)",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/dispneia"
+          }
+        },
+        {
+          "id": "dispneia-dor-ou-aperto-no-peito",
+          "texto": "Dor ou aperto no peito junto com a falta de ar",
+          "pergunta_exemplo": "Junto com a falta de ar, sente dor, peso ou aperto no peito?",
+          "faltou": "Faltou perguntar se há dor ou aperto no peito junto com a falta de ar.",
+          "peso": 3,
+          "palavras_chave": [
+            "dor no peito",
+            "aperto",
+            "peso no peito",
+            "peito"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Dispneia (sintomas de doenças pulmonares)",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/dispneia"
+          }
+        },
+        {
+          "id": "dispneia-dor-ao-respirar",
+          "texto": "Dor no peito que piora ao respirar fundo",
+          "pergunta_exemplo": "Dói o peito quando você puxa o ar fundo?",
+          "faltou": "Faltou perguntar se dói o peito ao respirar fundo.",
+          "peso": 2,
+          "palavras_chave": [
+            "respirar fundo",
+            "puxar o ar",
+            "pontada",
+            "dói"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Semiologia respiratória: principais motivos de consulta e exame físico",
+            "url": "https://sanarmed.com/semiologia-respiratoria-principais-motivos-de-consulta-e-exame-fisicocolunistas/"
+          }
+        },
+        {
+          "id": "palpitacoes",
+          "texto": "Palpitações",
+          "pergunta_exemplo": "Sentiu o coração disparar ou bater irregular?",
+          "faltou": "Faltou perguntar sobre palpitações.",
+          "peso": 2,
+          "palavras_chave": [
+            "coração",
+            "disparar",
+            "palpitação",
+            "batendo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "dispneia-edema-pernas",
+          "texto": "Inchaço nas pernas, nas duas ou só em uma",
+          "pergunta_exemplo": "Suas pernas ou pés têm inchado? As duas ou só uma?",
+          "faltou": "Faltou perguntar se as pernas incham e se é nas duas ou em uma só.",
+          "peso": 2,
+          "palavras_chave": [
+            "inchaço",
+            "inchada",
+            "pernas",
+            "pés",
+            "tornozelo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Como se atentar a um diagnóstico de insuficiência cardíaca na APS?",
+            "url": "https://portal.afya.com.br/cardiologia/como-se-atentar-a-um-diagnostico-de-insuficiencia-cardiaca-na-aps"
+          }
+        },
+        {
+          "id": "dispneia-ganho-peso-rapido",
+          "texto": "Ganho de peso rápido nos últimos dias",
+          "pergunta_exemplo": "Você ganhou peso rápido nos últimos dias, a roupa ou o sapato ficaram apertados?",
+          "faltou": "Faltou perguntar se houve ganho de peso rápido nos últimos dias.",
+          "peso": 1,
+          "palavras_chave": [
+            "ganhou peso",
+            "peso",
+            "apertado",
+            "engordou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Como se atentar a um diagnóstico de insuficiência cardíaca na APS?",
+            "url": "https://portal.afya.com.br/cardiologia/como-se-atentar-a-um-diagnostico-de-insuficiencia-cardiaca-na-aps"
+          }
+        },
+        {
+          "id": "dispneia-sangramento-anemia",
+          "texto": "Sinais de sangramento que possa causar anemia",
+          "pergunta_exemplo": "Notou fezes pretas ou menstruação muito forte nos últimos tempos?",
+          "faltou": "Faltou perguntar sobre sangramentos, como fezes pretas ou menstruação muito forte.",
+          "peso": 1,
+          "palavras_chave": [
+            "fezes pretas",
+            "sangramento",
+            "menstruação",
+            "anemia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Dispneia (sintomas de doenças pulmonares)",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/dispneia"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-dispneia",
+      "titulo": "Sinais de alarme",
+      "itens": [
+        {
+          "id": "dispneia-fala-entrecortada",
+          "texto": "Falta de ar a ponto de não completar uma frase",
+          "pergunta_exemplo": "Nas piores horas, a falta de ar chega a ponto de você não conseguir terminar uma frase?",
+          "faltou": "Faltou perguntar se a falta de ar impede o paciente de completar uma frase.",
+          "peso": 3,
+          "palavras_chave": [
+            "frase",
+            "falar",
+            "conversar",
+            "fôlego"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Semana de Telemedicina: é possível avaliar a queixa de falta de ar em teleconsultas?",
+            "url": "https://portal.afya.com.br/medicina-de-familia/e-possivel-avaliar-a-queixa-de-falta-de-ar-em-consultas-por-telefone-e-video"
+          }
+        },
+        {
+          "id": "dispneia-cianose",
+          "texto": "Lábios ou pontas dos dedos arroxeados",
+          "pergunta_exemplo": "Alguém notou seus lábios ou as pontas dos dedos ficando roxos?",
+          "faltou": "Faltou perguntar se os lábios ou os dedos ficaram arroxeados.",
+          "peso": 3,
+          "palavras_chave": [
+            "roxo",
+            "roxos",
+            "arroxeado",
+            "lábios",
+            "dedos"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Definição, classificação e manejo da dispneia",
+            "url": "https://sanarmed.com/definicao-classificacao-e-manejo-da-dispneia-posmfc/"
+          }
+        },
+        {
+          "id": "dispneia-confusao-sonolencia",
+          "texto": "Confusão ou sonolência diferente do habitual",
+          "pergunta_exemplo": "Você ou sua família notaram você confuso ou sonolento demais junto com a falta de ar?",
+          "faltou": "Faltou perguntar se houve confusão ou sonolência fora do comum.",
+          "peso": 3,
+          "palavras_chave": [
+            "confuso",
+            "sonolento",
+            "sonolência",
+            "esquecido"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Dispneia (sintomas de doenças pulmonares)",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/dispneia"
+          }
+        },
+        {
+          "id": "sincope-pre-sincope",
+          "texto": "Desmaio ou sensação de desmaio",
+          "pergunta_exemplo": "Chegou a desmaiar ou sentiu que ia desmaiar?",
+          "faltou": "Faltou perguntar se houve desmaio ou sensação de desmaio.",
+          "peso": 3,
+          "palavras_chave": [
+            "desmaiar",
+            "desmaio",
+            "apagou",
+            "escureceu"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "antecedentes-dispneia",
+      "titulo": "Antecedentes e exposições ligados à falta de ar",
+      "itens": [
+        {
+          "id": "dispneia-doenca-pulmonar-previa",
+          "texto": "Doença de pulmão já conhecida (asma, bronquite, enfisema, DPOC)",
+          "pergunta_exemplo": "Você tem asma, bronquite, enfisema ou alguma outra doença no pulmão?",
+          "faltou": "Faltou perguntar se o paciente já tem alguma doença de pulmão, como asma ou DPOC.",
+          "peso": 3,
+          "palavras_chave": [
+            "asma",
+            "bronquite",
+            "enfisema",
+            "dpoc",
+            "pulmão"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Dispneia (sintomas de doenças pulmonares)",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/dispneia"
+          }
+        },
+        {
+          "id": "dispneia-doenca-cardiaca-previa",
+          "texto": "Doença do coração já conhecida (coração fraco ou dilatado, válvula, infarto)",
+          "pergunta_exemplo": "Algum médico já falou que seu coração é fraco ou crescido, ou que você tem problema de válvula?",
+          "faltou": "Faltou perguntar se o paciente já tem alguma doença do coração, como insuficiência cardíaca.",
+          "peso": 3,
+          "palavras_chave": [
+            "coração",
+            "fraco",
+            "crescido",
+            "válvula",
+            "insuficiência"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Dispneia (sintomas de doenças pulmonares)",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/dispneia"
+          }
+        },
+        {
+          "id": "dispneia-uso-bombinha",
+          "texto": "Uso de bombinha, quantas vezes por semana e se alivia",
+          "pergunta_exemplo": "Você usa bombinha? Quantas vezes precisou usar nesta semana e ela tem aliviado?",
+          "faltou": "Faltou perguntar sobre o uso de bombinha, com que frequência e se ela alivia.",
+          "peso": 2,
+          "palavras_chave": [
+            "bombinha",
+            "spray",
+            "inalação",
+            "aerossol",
+            "nebulização"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Cadernos de Atenção Básica: doenças respiratórias crônicas, cópia hospedada pela OPAS",
+            "url": "https://www.paho.org/sites/default/files/2020-03/_2009_01_15_CAB_DRC.pdf"
+          }
+        },
+        {
+          "id": "dispneia-crises-graves-previas",
+          "texto": "Crises anteriores que levaram ao pronto-socorro, à internação ou à intubação",
+          "pergunta_exemplo": "Já teve crises de falta de ar que te levaram ao pronto-socorro ou à internação? Já precisou ser intubado?",
+          "faltou": "Faltou perguntar sobre crises anteriores graves, com ida ao pronto-socorro, internação ou intubação.",
+          "peso": 2,
+          "palavras_chave": [
+            "pronto-socorro",
+            "internado",
+            "intubado",
+            "crise",
+            "emergência"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Cadernos de Atenção Básica: doenças respiratórias crônicas, cópia hospedada pela OPAS",
+            "url": "https://www.paho.org/sites/default/files/2020-03/_2009_01_15_CAB_DRC.pdf"
+          }
+        },
+        {
+          "id": "dispneia-exposicao-ocupacional",
+          "texto": "Poeira, fumaça ou produtos químicos no trabalho atual ou anterior",
+          "pergunta_exemplo": "No seu trabalho, hoje ou no passado, você respirava poeira, fumaça ou algum produto químico?",
+          "faltou": "Faltou perguntar sobre poeira, fumaça ou produtos químicos no trabalho.",
+          "peso": 2,
+          "palavras_chave": [
+            "trabalho",
+            "poeira",
+            "produto químico",
+            "fumaça",
+            "mina"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Dispneia (sintomas de doenças pulmonares)",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/dispneia"
+          }
+        },
+        {
+          "id": "dispneia-fumaca-domiciliar",
+          "texto": "Fumaça em casa: cigarro de outras pessoas ou fogão a lenha",
+          "pergunta_exemplo": "Alguém fuma dentro de casa? Você cozinha ou já cozinhou em fogão a lenha?",
+          "faltou": "Faltou perguntar sobre fumaça em casa, como cigarro de outras pessoas ou fogão a lenha.",
+          "peso": 1,
+          "palavras_chave": [
+            "fuma dentro de casa",
+            "fogão a lenha",
+            "lenha",
+            "fumaça"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Cadernos de Atenção Básica: doenças respiratórias crônicas, cópia hospedada pela OPAS",
+            "url": "https://www.paho.org/sites/default/files/2020-03/_2009_01_15_CAB_DRC.pdf"
+          }
+        },
+        {
+          "id": "tabagismo",
+          "texto": "Tabagismo e carga tabágica",
+          "pergunta_exemplo": "Você fuma ou já fumou? Quantos cigarros por dia e por quantos anos?",
+          "faltou": "Faltou perguntar sobre tabagismo e quanto e por quanto tempo fuma.",
+          "peso": 3,
+          "palavras_chave": [
+            "fuma",
+            "fumou",
+            "cigarro",
+            "maço",
+            "tabagismo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fatores-risco-tromboembolismo",
+      "titulo": "Fatores de risco para tromboembolismo",
+      "itens": [
+        {
+          "id": "imobilizacao",
+          "texto": "Imobilização ou acamado recentemente",
+          "pergunta_exemplo": "Ficou muito tempo de cama ou com a perna imobilizada nas últimas semanas?",
+          "faltou": "Faltou perguntar se o paciente ficou imobilizado recentemente.",
+          "peso": 2,
+          "palavras_chave": [
+            "cama",
+            "acamado",
+            "imobilizado",
+            "gesso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "cirurgia-recente",
+          "texto": "Cirurgia recente",
+          "pergunta_exemplo": "Fez alguma cirurgia no último mês?",
+          "faltou": "Faltou perguntar sobre cirurgia recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "cirurgia",
+            "operou",
+            "último mês",
+            "recente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "viagem-longa",
+          "texto": "Viagem longa recente",
+          "pergunta_exemplo": "Fez alguma viagem longa de avião, ônibus ou carro há pouco tempo?",
+          "faltou": "Faltou perguntar sobre viagem longa recente.",
+          "peso": 1,
+          "palavras_chave": [
+            "viagem",
+            "viajou",
+            "avião",
+            "ônibus"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fatores de risco para tromboembolismo venoso, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "hormonios-anticoncepcional",
+          "texto": "Uso de anticoncepcional ou hormônios",
+          "pergunta_exemplo": "Você usa anticoncepcional ou algum hormônio?",
+          "faltou": "Faltou perguntar sobre anticoncepcional ou outros hormônios.",
+          "peso": 2,
+          "palavras_chave": [
+            "anticoncepcional",
+            "pílula",
+            "hormônio",
+            "reposição"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fatores de risco para tromboembolismo venoso, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "tvp-previa",
+          "texto": "Trombose ou embolia anterior",
+          "pergunta_exemplo": "Já teve trombose na perna ou coágulo no pulmão?",
+          "faltou": "Faltou perguntar se já teve trombose ou embolia.",
+          "peso": 2,
+          "palavras_chave": [
+            "trombose",
+            "coágulo",
+            "embolia",
+            "perna inchada"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "cancer",
+          "texto": "Câncer atual ou recente",
+          "pergunta_exemplo": "Você tem ou teve câncer recentemente? Faz algum tratamento para isso?",
+          "faltou": "Faltou perguntar sobre câncer atual ou recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "câncer",
+            "tumor",
+            "quimioterapia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        }
+      ]
+    }
+  ]
+}

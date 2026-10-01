@@ -55,11 +55,18 @@ def tem(lista: list[str], arquivo: str, trecho: str) -> bool:
 
 def test_conteudo_real_passa():
     res = validar_conteudo.validar(CONTEUDO)
+    n_checklists = len(list((CONTEUDO / "checklists").glob("*.json")))
     assert res.problemas == []
-    assert res.checklists == 2
+    assert res.checklists == n_checklists
+    assert n_checklists == 11  # geral + uma por queixa da biblioteca
     assert res.queixas == 10
     assert res.cartoes == 30
-    assert res.arquivos == 5
+    assert res.arquivos == 3 + n_checklists
+
+
+def test_toda_queixa_aponta_para_o_seu_checklist():
+    queixas = ler(CONTEUDO, "queixas.json")["queixas"]
+    assert all(q["checklist"] == q["id"] for q in queixas)
 
 
 def test_linha_de_comando_conteudo_real():
@@ -84,9 +91,8 @@ def test_linha_de_comando_falha_com_codigo_1(pasta: Path):
 
 def test_item_compartilhado_conta_uma_vez():
     res = validar_conteudo.validar(CONTEUDO)
-    geral = ler(CONTEUDO, "checklists/geral.json")
-    dor = ler(CONTEUDO, "checklists/dor-toracica.json")
-    ids = [i["id"] for c in (geral, dor) for s in c["secoes"] for i in s["itens"]]
+    checklists = [ler(CONTEUDO, f"checklists/{c.name}") for c in (CONTEUDO / "checklists").glob("*.json")]
+    ids = [i["id"] for c in checklists for s in c["secoes"] for i in s["itens"]]
     assert "tabagismo" in ids
     assert res.itens == len(set(ids))
 
@@ -140,7 +146,8 @@ def test_id_duplicado_com_texto_diferente(pasta: Path):
     gravar(pasta, "checklists/dor-toracica.json", dados)
     lista = [p for p in problemas(pasta) if "'tabagismo'" in p]
     assert len(lista) == 1
-    assert "geral.json" in lista[0] and "dor-toracica.json" in lista[0]
+    assert lista[0].startswith("checklists/dor-toracica.json:")
+    assert "também está em checklists/" in lista[0]
 
 
 def test_id_repetido_dentro_do_checklist(pasta: Path):
@@ -167,9 +174,9 @@ def test_queixa_inexistente_no_cartao(pasta: Path):
 
 def test_checklist_referenciado_inexistente(pasta: Path):
     dados = ler(pasta, "queixas.json")
-    dados["queixas"][1]["checklist"] = "dispneia"
+    dados["queixas"][1]["checklist"] = "nao-existe"
     gravar(pasta, "queixas.json", dados)
-    assert tem(problemas(pasta), "queixas.json", "'dispneia'")
+    assert tem(problemas(pasta), "queixas.json", "'nao-existe'")
 
 
 def test_livro_sem_pagina(pasta: Path):

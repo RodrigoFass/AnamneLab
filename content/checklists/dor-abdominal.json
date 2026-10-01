@@ -1,0 +1,675 @@
+{
+  "id": "dor-abdominal",
+  "nome": "Dor abdominal",
+  "tipo": "queixa",
+  "queixa": "dor-abdominal",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-dor-abdominal",
+      "titulo": "Caracterização da dor abdominal",
+      "itens": [
+        {
+          "id": "dor-abdominal-regiao",
+          "texto": "Região do abdome onde dói",
+          "pergunta_exemplo": "Pode me mostrar com a mão onde dói? É na parte de cima, embaixo, de um lado ou em volta do umbigo?",
+          "faltou": "Faltou perguntar em que região da barriga fica a dor.",
+          "peso": 3,
+          "palavras_chave": [
+            "mostrar",
+            "onde dói",
+            "umbigo",
+            "lado direito",
+            "lado esquerdo",
+            "parte de cima"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Grupo Hospitalar Conceição. Protocolo de dor abdominal no adulto",
+            "url": "https://escolaghc.ghc.com.br/natsghc/Dorabdominaladulto.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-mudanca-local",
+          "texto": "Mudança do local da dor desde o começo",
+          "pergunta_exemplo": "A dor começou nesse mesmo lugar ou começou em outro ponto, como perto do umbigo, e depois mudou?",
+          "faltou": "Faltou perguntar se a dor mudou de lugar desde que começou.",
+          "peso": 3,
+          "palavras_chave": [
+            "mudou de lugar",
+            "começou onde",
+            "umbigo",
+            "andou",
+            "foi para"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. A semiologia é suficiente para o diagnóstico da apendicite aguda? (colunistas)",
+            "url": "https://sanarmed.com/a-semiologia-e-suficiente-para-o-diagnostico-da-apendicite-aguda-colunistas/"
+          }
+        },
+        {
+          "id": "dor-abdominal-irradiacao",
+          "texto": "Irradiação para costas, ombro ou virilha",
+          "pergunta_exemplo": "Essa dor vai para as costas, para o ombro ou desce para a virilha?",
+          "faltou": "Faltou perguntar se a dor vai para as costas, o ombro ou a virilha.",
+          "peso": 2,
+          "palavras_chave": [
+            "costas",
+            "ombro",
+            "virilha",
+            "vai para",
+            "faixa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Grupo Hospitalar Conceição. Protocolo de dor abdominal no adulto",
+            "url": "https://escolaghc.ghc.com.br/natsghc/Dorabdominaladulto.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-colica-ou-continua",
+          "texto": "Dor em cólica, que vem e vai, ou dor contínua",
+          "pergunta_exemplo": "É uma dor que vem em ondas, aperta e alivia, ou fica o tempo todo igual? Parece cólica, queimação ou pontada?",
+          "faltou": "Faltou perguntar se a dor é em cólica, que vem e vai, ou contínua.",
+          "peso": 2,
+          "palavras_chave": [
+            "cólica",
+            "vem e vai",
+            "ondas",
+            "queimação",
+            "pontada",
+            "o tempo todo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Machado e cols. Abordagem clínico-semiológica da dor abdominal aguda (BVS)",
+            "url": "https://docs.bvsalud.org/biblioref/2018/02/879376/abordagem-clinico-semiologica-da-dor-abdominal-aguda.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-relacao-refeicoes",
+          "texto": "Relação da dor com as refeições",
+          "pergunta_exemplo": "A dor piora ou melhora quando você come? Tem a ver com comida gordurosa?",
+          "faltou": "Faltou perguntar se a dor muda com as refeições.",
+          "peso": 2,
+          "palavras_chave": [
+            "come",
+            "comer",
+            "refeição",
+            "comida",
+            "gordura",
+            "jejum"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Belo Horizonte. Encaminhamento para consulta especializada com gastroenterologista",
+            "url": "https://fluxosusbh.pbh.gov.br/anexos/293c35a20a13a48389a57ce1cf3f2f102908d3a7.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-piora-movimento",
+          "texto": "Piora ao se mexer, andar ou tossir",
+          "pergunta_exemplo": "A dor piora quando você se mexe, anda, tosse ou quando o carro passa num buraco?",
+          "faltou": "Faltou perguntar se a dor piora ao se mexer ou tossir.",
+          "peso": 2,
+          "palavras_chave": [
+            "mexer",
+            "andar",
+            "tosse",
+            "buraco",
+            "pular",
+            "se movimenta"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. A semiologia é suficiente para o diagnóstico da apendicite aguda? (colunistas)",
+            "url": "https://sanarmed.com/a-semiologia-e-suficiente-para-o-diagnostico-da-apendicite-aguda-colunistas/"
+          }
+        },
+        {
+          "id": "dor-abdominal-episodios-previos",
+          "texto": "Crises de dor parecida antes",
+          "pergunta_exemplo": "Você já teve uma dor parecida na barriga antes? O que foi daquela vez?",
+          "faltou": "Faltou perguntar se já houve crises de dor abdominal parecidas.",
+          "peso": 2,
+          "palavras_chave": [
+            "antes",
+            "parecida",
+            "já teve",
+            "outra vez",
+            "crise"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sintomas-digestivos-dor-abdominal",
+      "titulo": "Sintomas digestivos associados",
+      "itens": [
+        {
+          "id": "nausea-vomito",
+          "texto": "Náusea ou vômito",
+          "pergunta_exemplo": "Sentiu enjoo ou vomitou?",
+          "faltou": "Faltou perguntar sobre enjoo e vômito.",
+          "peso": 2,
+          "palavras_chave": [
+            "enjoo",
+            "náusea",
+            "vomitou",
+            "vômito"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS. Perguntas na dor torácica (segunda opinião formativa)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/3511/1/SOF_Perguntas%20na%20dor%20tor%c3%a1cica.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-aspecto-vomito",
+          "texto": "Aspecto do vômito",
+          "pergunta_exemplo": "Como era o vômito? Era comida, um líquido verde ou amarelo, tinha sangue, parecia borra de café ou tinha cheiro de fezes?",
+          "faltou": "Faltou perguntar como era o vômito.",
+          "peso": 3,
+          "palavras_chave": [
+            "como era",
+            "verde",
+            "amarelo",
+            "sangue",
+            "borra de café",
+            "cheiro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Belo Horizonte. Encaminhamento para consulta especializada com gastroenterologista",
+            "url": "https://fluxosusbh.pbh.gov.br/anexos/293c35a20a13a48389a57ce1cf3f2f102908d3a7.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-dor-antes-vomito",
+          "texto": "O que veio primeiro: a dor ou o vômito",
+          "pergunta_exemplo": "O que começou primeiro, a dor ou o vômito?",
+          "faltou": "Faltou perguntar se a dor veio antes ou depois do vômito.",
+          "peso": 2,
+          "palavras_chave": [
+            "primeiro",
+            "antes",
+            "depois",
+            "começou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. A semiologia é suficiente para o diagnóstico da apendicite aguda? (colunistas)",
+            "url": "https://sanarmed.com/a-semiologia-e-suficiente-para-o-diagnostico-da-apendicite-aguda-colunistas/"
+          }
+        },
+        {
+          "id": "dor-abdominal-falta-apetite",
+          "texto": "Perda do apetite",
+          "pergunta_exemplo": "Desde que a dor começou, você perdeu a vontade de comer?",
+          "faltou": "Faltou perguntar sobre perda do apetite.",
+          "peso": 1,
+          "palavras_chave": [
+            "apetite",
+            "vontade de comer",
+            "fome",
+            "sem comer"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-diarreia",
+          "texto": "Diarreia e aspecto das fezes",
+          "pergunta_exemplo": "Está com diarreia? Quantas vezes por dia, e como estão as fezes: líquidas, com muco ou com gordura?",
+          "faltou": "Faltou perguntar sobre diarreia e como estão as fezes.",
+          "peso": 2,
+          "palavras_chave": [
+            "diarreia",
+            "fezes",
+            "solta",
+            "líquida",
+            "muco",
+            "vezes por dia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-prisao-ventre",
+          "texto": "Prisão de ventre e mudança recente do hábito intestinal",
+          "pergunta_exemplo": "Seu intestino mudou? Está preso, ficando dias sem evacuar?",
+          "faltou": "Faltou perguntar sobre prisão de ventre e mudança do hábito intestinal.",
+          "peso": 2,
+          "palavras_chave": [
+            "intestino",
+            "preso",
+            "prisão de ventre",
+            "evacuar",
+            "dias sem"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Goiânia. Protocolo de atenção primária nº 09: dor abdominal",
+            "url": "https://saude.goiania.go.gov.br/wp-content/uploads/sites/3/2020/12/PROTOCOLO_DOR_ABDOMINAL_09.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-parada-gases-fezes",
+          "texto": "Parada de eliminação de gases e fezes",
+          "pergunta_exemplo": "Desde que a dor começou, você está conseguindo soltar gases e fazer cocô?",
+          "faltou": "Faltou perguntar se o paciente parou de eliminar gases e fezes.",
+          "peso": 3,
+          "palavras_chave": [
+            "gases",
+            "pum",
+            "soltar",
+            "fazer cocô",
+            "parou",
+            "eliminar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-distensao",
+          "texto": "Barriga inchada ou estufada",
+          "pergunta_exemplo": "Sua barriga ficou inchada ou estufada?",
+          "faltou": "Faltou perguntar se a barriga ficou inchada.",
+          "peso": 2,
+          "palavras_chave": [
+            "inchada",
+            "estufada",
+            "distendida",
+            "cresceu"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-sangue-fezes",
+          "texto": "Sangue nas fezes",
+          "pergunta_exemplo": "Viu sangue nas fezes ou no papel higiênico?",
+          "faltou": "Faltou perguntar se há sangue nas fezes.",
+          "peso": 3,
+          "palavras_chave": [
+            "sangue",
+            "fezes",
+            "papel",
+            "vermelho"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Belo Horizonte. Encaminhamento para consulta especializada com gastroenterologista",
+            "url": "https://fluxosusbh.pbh.gov.br/anexos/293c35a20a13a48389a57ce1cf3f2f102908d3a7.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-fezes-pretas",
+          "texto": "Fezes pretas e pegajosas",
+          "pergunta_exemplo": "As fezes ficaram pretas, como piche ou borra de café, e com cheiro muito forte?",
+          "faltou": "Faltou perguntar se as fezes ficaram pretas.",
+          "peso": 3,
+          "palavras_chave": [
+            "pretas",
+            "escuras",
+            "piche",
+            "borra de café"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Belo Horizonte. Encaminhamento para consulta especializada com gastroenterologista",
+            "url": "https://fluxosusbh.pbh.gov.br/anexos/293c35a20a13a48389a57ce1cf3f2f102908d3a7.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-azia-regurgitacao",
+          "texto": "Azia e volta de alimento para a boca",
+          "pergunta_exemplo": "Sente azia, queimação subindo pelo peito, ou a comida volta para a boca?",
+          "faltou": "Faltou perguntar sobre azia e regurgitação.",
+          "peso": 1,
+          "palavras_chave": [
+            "azia",
+            "queimação",
+            "volta",
+            "boca",
+            "refluxo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Belo Horizonte. Encaminhamento para consulta especializada com gastroenterologista",
+            "url": "https://fluxosusbh.pbh.gov.br/anexos/293c35a20a13a48389a57ce1cf3f2f102908d3a7.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-dor-abdominal",
+      "titulo": "Sinais de alarme e sintomas gerais",
+      "itens": [
+        {
+          "id": "dor-abdominal-febre-calafrios",
+          "texto": "Febre ou calafrios junto com a dor",
+          "pergunta_exemplo": "Junto com essa dor você teve febre ou tremedeira de frio?",
+          "faltou": "Faltou perguntar se há febre ou calafrios junto com a dor.",
+          "peso": 3,
+          "palavras_chave": [
+            "febre",
+            "calafrio",
+            "tremedeira",
+            "temperatura",
+            "frio"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-ictericia",
+          "texto": "Pele ou olhos amarelados",
+          "pergunta_exemplo": "Alguém notou seus olhos ou sua pele amarelados?",
+          "faltou": "Faltou perguntar se os olhos ou a pele ficaram amarelados.",
+          "peso": 3,
+          "palavras_chave": [
+            "amarelo",
+            "amarelado",
+            "olhos",
+            "pele",
+            "icterícia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-urina-escura-fezes-claras",
+          "texto": "Urina escura e fezes claras",
+          "pergunta_exemplo": "Sua urina ficou escura, cor de coca-cola ou de chá-mate? E as fezes ficaram mais claras, esbranquiçadas?",
+          "faltou": "Faltou perguntar sobre urina escura e fezes claras.",
+          "peso": 2,
+          "palavras_chave": [
+            "urina escura",
+            "coca-cola",
+            "chá",
+            "fezes claras",
+            "esbranquiçadas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-perda-peso",
+          "texto": "Perda de peso sem querer",
+          "pergunta_exemplo": "Você emagreceu sem estar de dieta? Quantos quilos e em quanto tempo?",
+          "faltou": "Faltou perguntar se houve perda de peso sem intenção.",
+          "peso": 3,
+          "palavras_chave": [
+            "emagreceu",
+            "perdeu peso",
+            "quilos",
+            "dieta",
+            "roupa larga"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Goiânia. Protocolo de atenção primária nº 09: dor abdominal",
+            "url": "https://saude.goiania.go.gov.br/wp-content/uploads/sites/3/2020/12/PROTOCOLO_DOR_ABDOMINAL_09.pdf"
+          }
+        },
+        {
+          "id": "sincope-pre-sincope",
+          "texto": "Desmaio ou sensação de desmaio",
+          "pergunta_exemplo": "Chegou a desmaiar ou sentiu que ia desmaiar?",
+          "faltou": "Faltou perguntar se houve desmaio ou sensação de desmaio.",
+          "peso": 3,
+          "palavras_chave": [
+            "desmaiar",
+            "desmaio",
+            "apagou",
+            "escureceu"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-dificuldade-engolir",
+          "texto": "Dificuldade para engolir",
+          "pergunta_exemplo": "A comida tem parado no caminho quando você engole?",
+          "faltou": "Faltou perguntar se há dificuldade para engolir.",
+          "peso": 3,
+          "palavras_chave": [
+            "engolir",
+            "engasga",
+            "parar",
+            "entala",
+            "descer"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Goiânia. Protocolo de atenção primária nº 09: dor abdominal",
+            "url": "https://saude.goiania.go.gov.br/wp-content/uploads/sites/3/2020/12/PROTOCOLO_DOR_ABDOMINAL_09.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "urinario-ginecologico-dor-abdominal",
+      "titulo": "Sintomas urinários e ginecológicos",
+      "itens": [
+        {
+          "id": "dor-abdominal-sintomas-urinarios",
+          "texto": "Ardência ou sangue na urina, urinar muitas vezes",
+          "pergunta_exemplo": "Está sentindo ardência para urinar, indo muitas vezes ao banheiro ou viu sangue no xixi?",
+          "faltou": "Faltou perguntar sobre sintomas urinários.",
+          "peso": 2,
+          "palavras_chave": [
+            "urinar",
+            "xixi",
+            "ardência",
+            "arde",
+            "sangue na urina",
+            "muitas vezes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-ultima-menstruacao",
+          "texto": "Data da última menstruação",
+          "pergunta_exemplo": "Quando foi sua última menstruação? Ela está atrasada?",
+          "faltou": "Faltou perguntar a data da última menstruação.",
+          "peso": 3,
+          "palavras_chave": [
+            "menstruação",
+            "menstruou",
+            "atrasada",
+            "regra",
+            "última"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Machado e cols. Abordagem clínico-semiológica da dor abdominal aguda (BVS)",
+            "url": "https://docs.bvsalud.org/biblioref/2018/02/879376/abordagem-clinico-semiologica-da-dor-abdominal-aguda.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-possibilidade-gravidez",
+          "texto": "Possibilidade de gravidez",
+          "pergunta_exemplo": "Existe chance de você estar grávida? Tem tido relações e usa algum método para evitar gravidez?",
+          "faltou": "Faltou perguntar sobre a possibilidade de gravidez.",
+          "peso": 3,
+          "palavras_chave": [
+            "grávida",
+            "gravidez",
+            "relação",
+            "camisinha",
+            "anticoncepcional",
+            "método"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Grupo Hospitalar Conceição. Protocolo de dor abdominal no adulto",
+            "url": "https://escolaghc.ghc.com.br/natsghc/Dorabdominaladulto.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-corrimento-sangramento-vaginal",
+          "texto": "Corrimento ou sangramento vaginal",
+          "pergunta_exemplo": "Notou algum corrimento diferente ou sangramento pela vagina fora da menstruação?",
+          "faltou": "Faltou perguntar sobre corrimento ou sangramento vaginal.",
+          "peso": 2,
+          "palavras_chave": [
+            "corrimento",
+            "sangramento",
+            "vagina",
+            "fora da menstruação",
+            "escape"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Hospital Israelita Albert Einstein. Guia do episódio de cuidado: dor abdominal aguda em adultos",
+            "url": "https://medicalsuite.einstein.br/pratica-medica/Pathways/Dor-Abdominal-Aguda-em-Adultos.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "antecedentes-dor-abdominal",
+      "titulo": "Antecedentes e exposições ligados à queixa",
+      "itens": [
+        {
+          "id": "dor-abdominal-anti-inflamatorios",
+          "texto": "Uso de anti-inflamatórios ou aspirina",
+          "pergunta_exemplo": "Tem tomado anti-inflamatório, como ibuprofeno, diclofenaco, nimesulida, ou aspirina?",
+          "faltou": "Faltou perguntar sobre uso de anti-inflamatórios ou aspirina.",
+          "peso": 2,
+          "palavras_chave": [
+            "anti-inflamatório",
+            "ibuprofeno",
+            "diclofenaco",
+            "nimesulida",
+            "aspirina",
+            "aas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Belo Horizonte. Encaminhamento para consulta especializada com gastroenterologista",
+            "url": "https://fluxosusbh.pbh.gov.br/anexos/293c35a20a13a48389a57ce1cf3f2f102908d3a7.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-alcool-recente",
+          "texto": "Bebida alcoólica nos dias antes da dor",
+          "pergunta_exemplo": "Nos dias antes de a dor começar, você bebeu? Quanto, e costuma beber assim?",
+          "faltou": "Faltou perguntar sobre consumo de álcool antes da dor.",
+          "peso": 2,
+          "palavras_chave": [
+            "bebeu",
+            "bebida",
+            "álcool",
+            "cerveja",
+            "cachaça",
+            "quanto"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Belo Horizonte. Encaminhamento para consulta especializada com gastroenterologista",
+            "url": "https://fluxosusbh.pbh.gov.br/anexos/293c35a20a13a48389a57ce1cf3f2f102908d3a7.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-cirurgias-abdominais",
+          "texto": "Cirurgias abdominais anteriores",
+          "pergunta_exemplo": "Você já operou a barriga? Qual cirurgia e quando?",
+          "faltou": "Faltou perguntar sobre cirurgias abdominais anteriores.",
+          "peso": 2,
+          "palavras_chave": [
+            "operou",
+            "cirurgia",
+            "barriga",
+            "apêndice",
+            "vesícula",
+            "hérnia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Grupo Hospitalar Conceição. Protocolo de dor abdominal no adulto",
+            "url": "https://escolaghc.ghc.com.br/natsghc/Dorabdominaladulto.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-calculos-previos",
+          "texto": "Pedra na vesícula ou no rim já diagnosticada",
+          "pergunta_exemplo": "Algum médico já disse que você tem pedra na vesícula ou no rim?",
+          "faltou": "Faltou perguntar se já teve pedra na vesícula ou no rim.",
+          "peso": 1,
+          "palavras_chave": [
+            "pedra",
+            "cálculo",
+            "vesícula",
+            "rim"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Machado e cols. Abordagem clínico-semiológica da dor abdominal aguda (BVS)",
+            "url": "https://docs.bvsalud.org/biblioref/2018/02/879376/abordagem-clinico-semiologica-da-dor-abdominal-aguda.pdf"
+          }
+        },
+        {
+          "id": "dor-abdominal-familia-doenca-digestiva",
+          "texto": "Câncer ou doença do intestino na família",
+          "pergunta_exemplo": "Alguém da família teve câncer de estômago ou de intestino, ou alguma doença inflamatória do intestino?",
+          "faltou": "Faltou perguntar sobre câncer ou doença intestinal na família.",
+          "peso": 1,
+          "palavras_chave": [
+            "família",
+            "câncer",
+            "intestino",
+            "estômago",
+            "parente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Goiânia. Protocolo de atenção primária nº 09: dor abdominal",
+            "url": "https://saude.goiania.go.gov.br/wp-content/uploads/sites/3/2020/12/PROTOCOLO_DOR_ABDOMINAL_09.pdf"
+          }
+        }
+      ]
+    }
+  ]
+}
