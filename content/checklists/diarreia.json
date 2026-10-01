@@ -1,0 +1,674 @@
+{
+  "id": "diarreia",
+  "nome": "Diarreia",
+  "tipo": "queixa",
+  "queixa": "diarreia",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-diarreia",
+      "titulo": "Caracterização da diarreia",
+      "itens": [
+        {
+          "id": "diarreia-tempo-evolucao",
+          "texto": "Tempo de diarreia: menos de duas semanas, até um mês ou mais",
+          "pergunta_exemplo": "Faz quantos dias que o intestino está solto? Já passou de duas semanas?",
+          "faltou": "Faltou perguntar há quantos dias ou semanas dura a diarreia.",
+          "peso": 3,
+          "palavras_chave": [
+            "quantos dias",
+            "semanas",
+            "faz quanto tempo",
+            "intestino solto"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Diarreia: fluxo de atendimento nas UPAs (versão 1, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/DIARREIA%20AGUDA.pdf"
+          }
+        },
+        {
+          "id": "diarreia-numero-evacuacoes",
+          "texto": "Número de evacuações por dia",
+          "pergunta_exemplo": "Quantas vezes por dia você está indo ao banheiro para evacuar?",
+          "faltou": "Faltou perguntar quantas vezes por dia o paciente evacua.",
+          "peso": 3,
+          "palavras_chave": [
+            "quantas vezes",
+            "por dia",
+            "banheiro",
+            "evacuar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS (UFMA). Avaliação e manejo domiciliar da diarreia, unidade 3",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/1452/3/UNIDADE%2003.pdf"
+          }
+        },
+        {
+          "id": "diarreia-consistencia-fezes",
+          "texto": "Consistência das fezes",
+          "pergunta_exemplo": "Como estão as fezes: pastosas, moles ou líquidas como água?",
+          "faltou": "Faltou perguntar a consistência das fezes.",
+          "peso": 2,
+          "palavras_chave": [
+            "pastosa",
+            "mole",
+            "líquida",
+            "água",
+            "consistência"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-volume-fezes",
+          "texto": "Volume de cada evacuação",
+          "pergunta_exemplo": "Sai bastante de cada vez ou é pouquinho, mas muitas vezes?",
+          "faltou": "Faltou perguntar se cada evacuação tem volume grande ou pequeno.",
+          "peso": 2,
+          "palavras_chave": [
+            "bastante",
+            "pouquinho",
+            "quantidade",
+            "volume"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS (UFMA). Avaliação e manejo domiciliar da diarreia, unidade 3",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/1452/3/UNIDADE%2003.pdf"
+          }
+        },
+        {
+          "id": "diarreia-fezes-gordurosas",
+          "texto": "Fezes gordurosas, que boiam ou mudam de cor",
+          "pergunta_exemplo": "As fezes ficam com aspecto oleoso, boiam no vaso ou estão mais claras que o normal?",
+          "faltou": "Faltou perguntar se as fezes estão gordurosas, boiando ou com a cor alterada.",
+          "peso": 2,
+          "palavras_chave": [
+            "gordura",
+            "oleosa",
+            "boiam",
+            "cor",
+            "clara"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-urgencia-tenesmo",
+          "texto": "Urgência para evacuar e sensação de evacuação incompleta",
+          "pergunta_exemplo": "Precisa correr para o banheiro? Depois de evacuar, fica a vontade de ir de novo?",
+          "faltou": "Faltou perguntar sobre urgência para evacuar e sensação de que não esvaziou tudo.",
+          "peso": 2,
+          "palavras_chave": [
+            "correr",
+            "urgência",
+            "segurar",
+            "vontade de novo",
+            "esvaziou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-alternancia-constipacao",
+          "texto": "Alternância com intestino preso",
+          "pergunta_exemplo": "Tem épocas em que o intestino prende e depois solta?",
+          "faltou": "Faltou perguntar se a diarreia alterna com períodos de intestino preso.",
+          "peso": 2,
+          "palavras_chave": [
+            "prende",
+            "preso",
+            "prisão de ventre",
+            "alterna",
+            "intestino"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Diarreia: fluxo de atendimento nas UPAs (versão 1, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/DIARREIA%20AGUDA.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-diarreia",
+      "titulo": "Sinais de alarme",
+      "itens": [
+        {
+          "id": "diarreia-sangue-fezes",
+          "texto": "Sangue nas fezes",
+          "pergunta_exemplo": "Você viu sangue nas fezes ou no papel?",
+          "faltou": "Faltou perguntar se há sangue nas fezes.",
+          "peso": 3,
+          "palavras_chave": [
+            "sangue",
+            "vermelho",
+            "papel",
+            "fezes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-muco-pus",
+          "texto": "Muco ou pus nas fezes",
+          "pergunta_exemplo": "Tem saído uma gosma, catarro ou pus junto com as fezes?",
+          "faltou": "Faltou perguntar se há muco ou pus nas fezes.",
+          "peso": 3,
+          "palavras_chave": [
+            "gosma",
+            "catarro",
+            "muco",
+            "pus"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-febre",
+          "texto": "Febre junto com a diarreia",
+          "pergunta_exemplo": "Teve febre desde que a diarreia começou? Chegou a medir?",
+          "faltou": "Faltou perguntar se há febre junto com a diarreia.",
+          "peso": 3,
+          "palavras_chave": [
+            "febre",
+            "temperatura",
+            "mediu",
+            "termômetro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão saúde para a família. Diarreia em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/dist%C3%BArbios-digestivos/sintomas-de-dist%C3%BArbios-digestivos/diarreia-em-adultos"
+          }
+        },
+        {
+          "id": "diarreia-evacuacao-noturna",
+          "texto": "Acordar à noite para evacuar",
+          "pergunta_exemplo": "A diarreia faz você acordar de madrugada para ir ao banheiro?",
+          "faltou": "Faltou perguntar se a diarreia acorda o paciente à noite.",
+          "peso": 3,
+          "palavras_chave": [
+            "noite",
+            "madrugada",
+            "acordar",
+            "dormindo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Manejo da diarreia crônica na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/manejo-da-diarreia-cronica-na-atencao-primaria-posmfc/"
+          }
+        },
+        {
+          "id": "diarreia-perda-peso",
+          "texto": "Perda de peso sem querer",
+          "pergunta_exemplo": "Você emagreceu sem fazer dieta desde que começou a diarreia? Quantos quilos?",
+          "faltou": "Faltou perguntar se houve perda de peso sem intenção.",
+          "peso": 3,
+          "palavras_chave": [
+            "emagreceu",
+            "peso",
+            "quilos",
+            "roupa larga"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Manejo da diarreia crônica na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/manejo-da-diarreia-cronica-na-atencao-primaria-posmfc/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hidratacao-sintomas-associados-diarreia",
+      "titulo": "Hidratação e sintomas associados",
+      "itens": [
+        {
+          "id": "diarreia-colica-dor-abdominal",
+          "texto": "Cólica ou dor na barriga e relação com a evacuação",
+          "pergunta_exemplo": "Sente cólica na barriga? Ela melhora depois que você evacua?",
+          "faltou": "Faltou perguntar sobre cólica abdominal e se ela muda depois de evacuar.",
+          "peso": 2,
+          "palavras_chave": [
+            "cólica",
+            "dor na barriga",
+            "barriga",
+            "melhora depois"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Conduta da diarreia aguda na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/diarreia-aguda-posmfc/"
+          }
+        },
+        {
+          "id": "diarreia-vomitos",
+          "texto": "Vômitos e quantas vezes",
+          "pergunta_exemplo": "Está vomitando também? Quantas vezes por dia?",
+          "faltou": "Faltou perguntar se há vômitos e com que frequência.",
+          "peso": 2,
+          "palavras_chave": [
+            "vomitando",
+            "vômito",
+            "enjoo",
+            "quantas vezes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Acervo ARES/UNA-SUS (UFMA). Avaliação e manejo domiciliar da diarreia, unidade 3",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/1452/3/UNIDADE%2003.pdf"
+          }
+        },
+        {
+          "id": "diarreia-aceitacao-liquidos",
+          "texto": "Consegue beber e manter líquidos",
+          "pergunta_exemplo": "Você está conseguindo beber água ou soro sem pôr para fora?",
+          "faltou": "Faltou perguntar se o paciente consegue beber e manter líquidos.",
+          "peso": 3,
+          "palavras_chave": [
+            "beber",
+            "soro",
+            "água",
+            "líquido",
+            "pôr para fora"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Diarreia: fluxo de atendimento nas UPAs (versão 1, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/DIARREIA%20AGUDA.pdf"
+          }
+        },
+        {
+          "id": "diarreia-sede-boca-seca",
+          "texto": "Sede intensa e boca seca",
+          "pergunta_exemplo": "Tem sentido muita sede ou a boca muito seca?",
+          "faltou": "Faltou perguntar sobre sede intensa e boca seca.",
+          "peso": 2,
+          "palavras_chave": [
+            "sede",
+            "boca seca",
+            "seca"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão saúde para a família. Diarreia em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/dist%C3%BArbios-digestivos/sintomas-de-dist%C3%BArbios-digestivos/diarreia-em-adultos"
+          }
+        },
+        {
+          "id": "diarreia-diurese-reduzida",
+          "texto": "Urina em menor quantidade ou mais escura",
+          "pergunta_exemplo": "Está urinando menos que o normal? A urina ficou mais escura?",
+          "faltou": "Faltou perguntar se o paciente está urinando menos.",
+          "peso": 3,
+          "palavras_chave": [
+            "urinando",
+            "xixi",
+            "urina",
+            "escura"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão saúde para a família. Diarreia em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/dist%C3%BArbios-digestivos/sintomas-de-dist%C3%BArbios-digestivos/diarreia-em-adultos"
+          }
+        },
+        {
+          "id": "diarreia-tontura-ao-levantar",
+          "texto": "Tontura ou fraqueza ao ficar de pé",
+          "pergunta_exemplo": "Quando você levanta da cama ou da cadeira, fica tonto ou a vista escurece?",
+          "faltou": "Faltou perguntar se há tontura ao levantar.",
+          "peso": 3,
+          "palavras_chave": [
+            "tonto",
+            "tontura",
+            "levantar",
+            "vista escurece",
+            "fraqueza"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sinais de desidratação no adulto com diarreia, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "diarreia-sintomas-extraintestinais",
+          "texto": "Sintomas fora do intestino: juntas, pele, olhos e boca",
+          "pergunta_exemplo": "Junto com a diarreia, teve dor nas juntas, manchas na pele, olho vermelho ou aftas?",
+          "faltou": "Faltou perguntar sobre sintomas fora do intestino, como dor nas juntas, lesões de pele ou aftas.",
+          "peso": 1,
+          "palavras_chave": [
+            "juntas",
+            "articulação",
+            "pele",
+            "olho vermelho",
+            "aftas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        }
+      ]
+    },
+    {
+      "id": "exposicoes-recentes-diarreia",
+      "titulo": "Exposições recentes",
+      "itens": [
+        {
+          "id": "diarreia-alimento-suspeito",
+          "texto": "Alimento suspeito antes do quadro",
+          "pergunta_exemplo": "Comeu alguma coisa diferente, fora de casa ou que parecia estragada antes de começar?",
+          "faltou": "Faltou perguntar se houve algum alimento suspeito antes da diarreia.",
+          "peso": 3,
+          "palavras_chave": [
+            "comeu",
+            "estragada",
+            "fora de casa",
+            "restaurante",
+            "comida"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Conduta da diarreia aguda na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/diarreia-aguda-posmfc/"
+          }
+        },
+        {
+          "id": "diarreia-contactantes-mesmo-quadro",
+          "texto": "Outras pessoas com o mesmo quadro",
+          "pergunta_exemplo": "Alguém da casa, do trabalho ou que comeu com você está com diarreia também?",
+          "faltou": "Faltou perguntar se outras pessoas próximas estão com o mesmo quadro.",
+          "peso": 3,
+          "palavras_chave": [
+            "alguém",
+            "mais alguém",
+            "família",
+            "também",
+            "trabalho"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Conduta da diarreia aguda na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/diarreia-aguda-posmfc/"
+          }
+        },
+        {
+          "id": "diarreia-viagem-recente",
+          "texto": "Viagem recente e destino",
+          "pergunta_exemplo": "Viajou nas últimas semanas? Para onde?",
+          "faltou": "Faltou perguntar sobre viagem recente e para onde foi.",
+          "peso": 2,
+          "palavras_chave": [
+            "viajou",
+            "viagem",
+            "para onde",
+            "últimas semanas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia do viajante",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/gastroenterite/diarreia-do-viajante"
+          }
+        },
+        {
+          "id": "diarreia-agua-nao-tratada",
+          "texto": "Água de fonte não tratada",
+          "pergunta_exemplo": "A água que você bebe é tratada, filtrada? Bebeu água de poço, rio ou bica?",
+          "faltou": "Faltou perguntar a origem da água que o paciente bebe.",
+          "peso": 2,
+          "palavras_chave": [
+            "água",
+            "filtrada",
+            "poço",
+            "rio",
+            "tratada"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-antibiotico-recente",
+          "texto": "Uso de antibiótico nos últimos meses",
+          "pergunta_exemplo": "Tomou algum antibiótico nos últimos três meses?",
+          "faltou": "Faltou perguntar se usou antibiótico nos últimos meses.",
+          "peso": 3,
+          "palavras_chave": [
+            "antibiótico",
+            "últimos meses",
+            "tomou",
+            "remédio"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-internacao-recente",
+          "texto": "Internação ou permanência em serviço de saúde recente",
+          "pergunta_exemplo": "Ficou internado ou morou em casa de repouso nos últimos meses?",
+          "faltou": "Faltou perguntar sobre internação recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "internado",
+            "hospital",
+            "internação",
+            "casa de repouso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fatores de risco para diarreia associada a serviços de saúde, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "relacao-alimentos-diarreia",
+      "titulo": "Relação com alimentos",
+      "itens": [
+        {
+          "id": "diarreia-relacao-leite",
+          "texto": "Relação com leite e derivados",
+          "pergunta_exemplo": "A diarreia piora quando você toma leite ou come queijo, iogurte?",
+          "faltou": "Faltou perguntar se a diarreia tem relação com leite e derivados.",
+          "peso": 2,
+          "palavras_chave": [
+            "leite",
+            "queijo",
+            "iogurte",
+            "derivados"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-relacao-gluten",
+          "texto": "Relação com trigo e glúten",
+          "pergunta_exemplo": "Percebe piora depois de comer pão, massa ou outros alimentos com trigo?",
+          "faltou": "Faltou perguntar se a diarreia tem relação com alimentos com trigo ou glúten.",
+          "peso": 2,
+          "palavras_chave": [
+            "pão",
+            "massa",
+            "trigo",
+            "glúten"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Manejo da diarreia crônica na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/manejo-da-diarreia-cronica-na-atencao-primaria-posmfc/"
+          }
+        },
+        {
+          "id": "diarreia-adocantes",
+          "texto": "Adoçantes, balas e chicletes sem açúcar",
+          "pergunta_exemplo": "Você consome muito adoçante, bala ou chiclete sem açúcar?",
+          "faltou": "Faltou perguntar sobre consumo de adoçantes e produtos sem açúcar.",
+          "peso": 1,
+          "palavras_chave": [
+            "adoçante",
+            "chiclete",
+            "bala",
+            "sem açúcar",
+            "diet"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão saúde para a família. Diarreia em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/dist%C3%BArbios-digestivos/sintomas-de-dist%C3%BArbios-digestivos/diarreia-em-adultos"
+          }
+        }
+      ]
+    },
+    {
+      "id": "antecedentes-fatores-risco-diarreia",
+      "titulo": "Antecedentes e fatores de risco ligados à diarreia",
+      "itens": [
+        {
+          "id": "diarreia-laxantes",
+          "texto": "Uso de laxantes ou chás para soltar o intestino",
+          "pergunta_exemplo": "Você usa laxante, chá ou algum produto para soltar o intestino ou emagrecer?",
+          "faltou": "Faltou perguntar sobre uso de laxantes ou produtos que soltam o intestino.",
+          "peso": 2,
+          "palavras_chave": [
+            "laxante",
+            "chá",
+            "soltar",
+            "emagrecer"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Manejo da diarreia crônica na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/manejo-da-diarreia-cronica-na-atencao-primaria-posmfc/"
+          }
+        },
+        {
+          "id": "diarreia-medicamentos-associados",
+          "texto": "Remédios que podem soltar o intestino, como metformina ou magnésio",
+          "pergunta_exemplo": "Começou algum remédio novo? Usa metformina, magnésio ou antiácido?",
+          "faltou": "Faltou perguntar sobre remédios que podem causar diarreia, como metformina ou magnésio.",
+          "peso": 2,
+          "palavras_chave": [
+            "remédio novo",
+            "metformina",
+            "magnésio",
+            "antiácido"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Manejo da diarreia crônica na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/manejo-da-diarreia-cronica-na-atencao-primaria-posmfc/"
+          }
+        },
+        {
+          "id": "diarreia-sintomas-tireoide",
+          "texto": "Sintomas de tireoide acelerada (calor, tremor, coração acelerado)",
+          "pergunta_exemplo": "Tem sentido muito calor, tremor nas mãos ou o coração acelerado, mesmo parado?",
+          "faltou": "Faltou perguntar sobre calor excessivo, tremor e coração acelerado.",
+          "peso": 1,
+          "palavras_chave": [
+            "calor",
+            "tremor",
+            "coração acelerado",
+            "tireoide"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Diarreia",
+            "url": "https://www.msdmanuals.com/pt/profissional/dist%C3%BArbios-gastrointestinais/sintomas-dos-dist%C3%BArbios-gastrointestinais/diarreia"
+          }
+        },
+        {
+          "id": "diarreia-imunossupressao",
+          "texto": "Imunossupressão",
+          "pergunta_exemplo": "Você tem HIV, faz quimioterapia, usa corticoide ou algum remédio que baixa a imunidade?",
+          "faltou": "Faltou perguntar se há alguma condição ou remédio que baixe a imunidade.",
+          "peso": 3,
+          "palavras_chave": [
+            "hiv",
+            "imunidade",
+            "quimioterapia",
+            "corticoide",
+            "transplante"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Diarreia: fluxo de atendimento nas UPAs (versão 1, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/DIARREIA%20AGUDA.pdf"
+          }
+        },
+        {
+          "id": "diarreia-cirurgia-radioterapia-abdome",
+          "texto": "Cirurgia no abdome ou radioterapia na barriga ou pelve",
+          "pergunta_exemplo": "Já operou o estômago, o intestino ou a vesícula? Fez radioterapia na barriga?",
+          "faltou": "Faltou perguntar sobre cirurgias abdominais ou radioterapia na região.",
+          "peso": 1,
+          "palavras_chave": [
+            "operou",
+            "cirurgia",
+            "intestino",
+            "vesícula",
+            "radioterapia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Diarreia: fluxo de atendimento nas UPAs (versão 1, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/DIARREIA%20AGUDA.pdf"
+          }
+        },
+        {
+          "id": "diarreia-historia-familiar-intestino",
+          "texto": "Câncer de intestino, doença celíaca ou doença inflamatória intestinal na família",
+          "pergunta_exemplo": "Alguém na família teve câncer de intestino, doença celíaca ou doença de Crohn?",
+          "faltou": "Faltou perguntar sobre doenças do intestino na família.",
+          "peso": 2,
+          "palavras_chave": [
+            "família",
+            "câncer de intestino",
+            "celíaca",
+            "crohn"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Manejo da diarreia crônica na atenção primária (PósMFC)",
+            "url": "https://sanarmed.com/manejo-da-diarreia-cronica-na-atencao-primaria-posmfc/"
+          }
+        }
+      ]
+    }
+  ]
+}

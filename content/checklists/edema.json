@@ -1,0 +1,666 @@
+{
+  "id": "edema",
+  "nome": "Edema",
+  "tipo": "queixa",
+  "queixa": "edema",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-edema",
+      "titulo": "Caracterização do inchaço",
+      "itens": [
+        {
+          "id": "edema-local",
+          "texto": "Onde está o inchaço (pernas, rosto e pálpebras, barriga, corpo todo)",
+          "pergunta_exemplo": "Onde você percebe o inchaço: nas pernas, no rosto, na barriga ou no corpo todo?",
+          "faltou": "Faltou perguntar em que parte do corpo está o inchaço.",
+          "peso": 3,
+          "palavras_chave": [
+            "onde",
+            "inchaço",
+            "pernas",
+            "rosto",
+            "barriga",
+            "corpo todo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "edema-unilateral-bilateral",
+          "texto": "Inchaço de um lado só ou dos dois lados",
+          "pergunta_exemplo": "O inchaço é numa perna só ou nas duas?",
+          "faltou": "Faltou perguntar se o inchaço é de um lado só ou dos dois.",
+          "peso": 3,
+          "palavras_chave": [
+            "uma perna",
+            "duas pernas",
+            "um lado",
+            "os dois",
+            "só de um lado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UNA-SUS/UFMA. Avaliação e manejo domiciliar do edema em membros inferiores (acervo ARES)",
+            "url": "https://ares.unasus.gov.br/acervo/html/ARES/1164/1/Unidade%2002.pdf"
+          }
+        },
+        {
+          "id": "edema-variacao-no-dia",
+          "texto": "Variação ao longo do dia e relação com ficar muito tempo em pé ou sentado",
+          "pergunta_exemplo": "O inchaço piora no fim do dia ou depois de muito tempo em pé ou sentado? Você acorda com o rosto inchado?",
+          "faltou": "Faltou perguntar em que hora do dia o inchaço piora e se piora depois de muito tempo em pé ou sentado.",
+          "peso": 2,
+          "palavras_chave": [
+            "fim do dia",
+            "ao acordar",
+            "em pé",
+            "sentado",
+            "durante o dia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        },
+        {
+          "id": "edema-melhora-elevacao",
+          "texto": "Melhora ao deitar ou ao elevar as pernas",
+          "pergunta_exemplo": "Quando você deita ou coloca as pernas para cima, o inchaço diminui?",
+          "faltou": "Faltou perguntar se o inchaço melhora com as pernas para cima.",
+          "peso": 2,
+          "palavras_chave": [
+            "pernas para cima",
+            "elevar",
+            "deitar",
+            "diminui",
+            "repouso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        },
+        {
+          "id": "edema-ganho-peso",
+          "texto": "Ganho de peso desde o início do inchaço",
+          "pergunta_exemplo": "Você ganhou peso desde que o inchaço começou? Quantos quilos, mais ou menos?",
+          "faltou": "Faltou perguntar se houve ganho de peso junto com o inchaço.",
+          "peso": 2,
+          "palavras_chave": [
+            "peso",
+            "engordou",
+            "quilos",
+            "ganhou peso",
+            "balança"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-locais-alarme-edema",
+      "titulo": "Sinais locais e sinais de alarme",
+      "itens": [
+        {
+          "id": "edema-dor-perna",
+          "texto": "Dor na perna inchada, sobretudo na panturrilha",
+          "pergunta_exemplo": "Essa perna inchada dói? Dói mais na batata da perna?",
+          "faltou": "Faltou perguntar se a perna inchada dói.",
+          "peso": 3,
+          "palavras_chave": [
+            "dói",
+            "dor",
+            "batata da perna",
+            "panturrilha"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "edema-vermelhidao-calor",
+          "texto": "Vermelhidão e calor na pele do local inchado",
+          "pergunta_exemplo": "A pele está vermelha ou quente no lugar do inchaço?",
+          "faltou": "Faltou perguntar se há vermelhidão ou calor no local do inchaço.",
+          "peso": 3,
+          "palavras_chave": [
+            "vermelha",
+            "vermelhidão",
+            "quente",
+            "calor"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        },
+        {
+          "id": "edema-febre-ferida",
+          "texto": "Febre e ferida ou machucado na pele da região",
+          "pergunta_exemplo": "Teve febre? Tem alguma ferida, frieira ou machucado nessa perna?",
+          "faltou": "Faltou perguntar sobre febre e feridas na pele da região inchada.",
+          "peso": 2,
+          "palavras_chave": [
+            "febre",
+            "ferida",
+            "machucado",
+            "frieira",
+            "micose"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "edema-dispneia-subita-dor-toracica",
+          "texto": "Falta de ar súbita, dor no peito ou tosse com sangue junto com o inchaço",
+          "pergunta_exemplo": "Sentiu falta de ar de repente, dor no peito ou tossiu sangue?",
+          "faltou": "Faltou perguntar sobre falta de ar súbita, dor no peito ou tosse com sangue.",
+          "peso": 3,
+          "palavras_chave": [
+            "de repente",
+            "dor no peito",
+            "tossiu sangue",
+            "falta de ar",
+            "súbita"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        },
+        {
+          "id": "edema-labios-lingua-garganta",
+          "texto": "Inchaço de lábios, língua ou garganta, com dificuldade para engolir ou respirar",
+          "pergunta_exemplo": "Inchou a boca, a língua ou a garganta? Ficou difícil engolir ou respirar?",
+          "faltou": "Faltou perguntar se houve inchaço de lábios, língua ou garganta.",
+          "peso": 3,
+          "palavras_chave": [
+            "lábios",
+            "língua",
+            "garganta",
+            "engolir",
+            "alergia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        }
+      ]
+    },
+    {
+      "id": "coracao-falta-de-ar-edema",
+      "titulo": "Coração e falta de ar",
+      "itens": [
+        {
+          "id": "edema-dispneia-esforco",
+          "texto": "Falta de ar aos esforços",
+          "pergunta_exemplo": "Você tem sentido falta de ar ao andar no plano ou subir escada?",
+          "faltou": "Faltou perguntar se há falta de ar aos esforços.",
+          "peso": 3,
+          "palavras_chave": [
+            "falta de ar",
+            "cansaço",
+            "subir escada",
+            "andar",
+            "esforço"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "edema-ortopneia",
+          "texto": "Falta de ar ao deitar e número de travesseiros",
+          "pergunta_exemplo": "Você consegue dormir deitado reto ou precisa de mais travesseiros para respirar melhor?",
+          "faltou": "Faltou perguntar se a falta de ar piora ao deitar.",
+          "peso": 3,
+          "palavras_chave": [
+            "travesseiros",
+            "deitar",
+            "deitado",
+            "dormir",
+            "cabeceira"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "edema-dispneia-paroxistica-noturna",
+          "texto": "Acordar à noite sem ar",
+          "pergunta_exemplo": "Já acordou de madrugada sem ar, precisando sentar ou levantar para melhorar?",
+          "faltou": "Faltou perguntar se acorda à noite com falta de ar.",
+          "peso": 3,
+          "palavras_chave": [
+            "acordar",
+            "noite",
+            "madrugada",
+            "sem ar",
+            "sentar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "edema-cardiopatia-previa",
+          "texto": "Doença do coração já conhecida",
+          "pergunta_exemplo": "Você já teve algum problema no coração, como coração fraco, infarto ou problema de válvula?",
+          "faltou": "Faltou perguntar se já tem alguma doença do coração.",
+          "peso": 3,
+          "palavras_chave": [
+            "coração",
+            "cardíaco",
+            "coração fraco",
+            "infarto",
+            "válvula"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rins-figado-tireoide-edema",
+      "titulo": "Rins, fígado e tireoide",
+      "itens": [
+        {
+          "id": "edema-urina-espumosa",
+          "texto": "Urina com espuma",
+          "pergunta_exemplo": "Sua urina tem feito muita espuma no vaso?",
+          "faltou": "Faltou perguntar se a urina está com espuma.",
+          "peso": 3,
+          "palavras_chave": [
+            "espuma",
+            "espumosa",
+            "urina",
+            "xixi"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        },
+        {
+          "id": "edema-urina-escura-sangue",
+          "texto": "Urina escura ou com sangue",
+          "pergunta_exemplo": "A urina ficou escura, cor de coca-cola ou com sangue?",
+          "faltou": "Faltou perguntar se a urina ficou escura ou com sangue.",
+          "peso": 2,
+          "palavras_chave": [
+            "sangue na urina",
+            "escura",
+            "coca-cola",
+            "avermelhada",
+            "urina"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sinais urinários de doença glomerular, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "edema-volume-urinario",
+          "texto": "Diminuição do volume de urina",
+          "pergunta_exemplo": "Você está urinando menos do que o normal?",
+          "faltou": "Faltou perguntar se o volume de urina diminuiu.",
+          "peso": 3,
+          "palavras_chave": [
+            "urinando menos",
+            "pouca urina",
+            "xixi",
+            "quantidade de urina"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        },
+        {
+          "id": "edema-doenca-renal-previa",
+          "texto": "Doença dos rins ou perda de proteína na urina já conhecida",
+          "pergunta_exemplo": "Alguém já disse que você tem problema nos rins ou que perde proteína na urina?",
+          "faltou": "Faltou perguntar se já tem alguma doença dos rins.",
+          "peso": 3,
+          "palavras_chave": [
+            "rim",
+            "rins",
+            "proteína",
+            "renal",
+            "hemodiálise"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        },
+        {
+          "id": "edema-ictericia",
+          "texto": "Olhos ou pele amarelados",
+          "pergunta_exemplo": "Alguém notou seus olhos ou sua pele amarelados?",
+          "faltou": "Faltou perguntar se os olhos ou a pele ficaram amarelados.",
+          "peso": 3,
+          "palavras_chave": [
+            "amarelo",
+            "amarelados",
+            "olhos amarelos",
+            "icterícia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "edema-aumento-abdome",
+          "texto": "Aumento do volume da barriga",
+          "pergunta_exemplo": "Sua barriga cresceu? A roupa ficou apertada na cintura?",
+          "faltou": "Faltou perguntar se a barriga aumentou de volume.",
+          "peso": 3,
+          "palavras_chave": [
+            "barriga",
+            "cresceu",
+            "aumentou",
+            "cintura",
+            "inchada"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        },
+        {
+          "id": "edema-figado-alcool",
+          "texto": "Doença do fígado conhecida e consumo pesado de álcool",
+          "pergunta_exemplo": "Já teve hepatite ou problema no fígado? Quanto você costuma beber de álcool por semana?",
+          "faltou": "Faltou perguntar sobre doença do fígado e quanto o paciente bebe.",
+          "peso": 3,
+          "palavras_chave": [
+            "fígado",
+            "hepatite",
+            "cirrose",
+            "bebe",
+            "álcool"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "edema-sintomas-tireoide",
+          "texto": "Sintomas de tireoide lenta (frio, pele seca, intestino preso, lentidão)",
+          "pergunta_exemplo": "Tem sentido mais frio que as outras pessoas, pele seca, intestino preso ou muito desânimo?",
+          "faltou": "Faltou perguntar sobre sintomas de tireoide lenta.",
+          "peso": 2,
+          "palavras_chave": [
+            "frio",
+            "pele seca",
+            "intestino preso",
+            "tireoide",
+            "desânimo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Secretaria de Estado da Saúde de Goiás. Hipotireoidismo",
+            "url": "https://goias.gov.br/saude/hipotireoidismo/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "remedios-alimentacao-gestacao-edema",
+      "titulo": "Remédios, alimentação e gestação",
+      "itens": [
+        {
+          "id": "edema-medicamentos-que-incham",
+          "texto": "Remédios que podem causar inchaço (anlodipino e similares, anti-inflamatórios, corticoides)",
+          "pergunta_exemplo": "Começou algum remédio novo antes de inchar? Toma anlodipino, anti-inflamatório ou corticoide?",
+          "faltou": "Faltou perguntar se começou algum remédio que pode causar inchaço.",
+          "peso": 3,
+          "palavras_chave": [
+            "remédio novo",
+            "anlodipino",
+            "anti-inflamatório",
+            "corticoide",
+            "começou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "MD.Saúde. Inchaço nas pernas (edema e retenção de líquidos)",
+            "url": "https://www.mdsaude.com/nefrologia/inchacos-edema/"
+          }
+        },
+        {
+          "id": "hormonios-anticoncepcional",
+          "texto": "Uso de anticoncepcional ou hormônios",
+          "pergunta_exemplo": "Você usa anticoncepcional ou algum hormônio?",
+          "faltou": "Faltou perguntar sobre anticoncepcional ou outros hormônios.",
+          "peso": 2,
+          "palavras_chave": [
+            "anticoncepcional",
+            "pílula",
+            "hormônio",
+            "reposição"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fatores de risco para tromboembolismo venoso, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "edema-sal-proteina",
+          "texto": "Consumo de sal e alimentação pobre em proteína",
+          "pergunta_exemplo": "Você come muita comida salgada, embutido ou enlatado? E tem conseguido comer carne, ovo, feijão ou leite no dia a dia?",
+          "faltou": "Faltou perguntar sobre o consumo de sal e se a alimentação tem proteína suficiente.",
+          "peso": 1,
+          "palavras_chave": [
+            "sal",
+            "salgada",
+            "embutido",
+            "carne",
+            "ovo",
+            "feijão"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "MD.Saúde. Inchaço nas pernas (edema e retenção de líquidos)",
+            "url": "https://www.mdsaude.com/nefrologia/inchacos-edema/"
+          }
+        },
+        {
+          "id": "edema-gestacao",
+          "texto": "Possibilidade de gravidez e relação com o ciclo menstrual",
+          "pergunta_exemplo": "Existe chance de você estar grávida? O inchaço muda com a menstruação?",
+          "faltou": "Faltou perguntar sobre gravidez e relação com a menstruação.",
+          "peso": 3,
+          "palavras_chave": [
+            "grávida",
+            "gravidez",
+            "menstruação",
+            "gestação",
+            "ciclo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        }
+      ]
+    },
+    {
+      "id": "veias-trombose-linfaticos-edema",
+      "titulo": "Veias, trombose e linfáticos",
+      "itens": [
+        {
+          "id": "edema-varizes",
+          "texto": "Varizes ou tratamento prévio de varizes",
+          "pergunta_exemplo": "Você tem varizes? Já fez tratamento ou cirurgia de varizes?",
+          "faltou": "Faltou perguntar sobre varizes.",
+          "peso": 2,
+          "palavras_chave": [
+            "varizes",
+            "veias",
+            "vasinhos",
+            "cirurgia de varizes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Edema",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-cardiovasculares/sintomas-de-doen%C3%A7as-cardiovasculares/edema"
+          }
+        },
+        {
+          "id": "tvp-previa",
+          "texto": "Trombose ou embolia anterior",
+          "pergunta_exemplo": "Já teve trombose na perna ou coágulo no pulmão?",
+          "faltou": "Faltou perguntar se já teve trombose ou embolia.",
+          "peso": 2,
+          "palavras_chave": [
+            "trombose",
+            "coágulo",
+            "embolia",
+            "perna inchada"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "imobilizacao",
+          "texto": "Imobilização ou acamado recentemente",
+          "pergunta_exemplo": "Ficou muito tempo de cama ou com a perna imobilizada nas últimas semanas?",
+          "faltou": "Faltou perguntar se o paciente ficou imobilizado recentemente.",
+          "peso": 2,
+          "palavras_chave": [
+            "cama",
+            "acamado",
+            "imobilizado",
+            "gesso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "cirurgia-recente",
+          "texto": "Cirurgia recente",
+          "pergunta_exemplo": "Fez alguma cirurgia no último mês?",
+          "faltou": "Faltou perguntar sobre cirurgia recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "cirurgia",
+            "operou",
+            "último mês",
+            "recente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "viagem-longa",
+          "texto": "Viagem longa recente",
+          "pergunta_exemplo": "Fez alguma viagem longa de avião, ônibus ou carro há pouco tempo?",
+          "faltou": "Faltou perguntar sobre viagem longa recente.",
+          "peso": 1,
+          "palavras_chave": [
+            "viagem",
+            "viajou",
+            "avião",
+            "ônibus"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fatores de risco para tromboembolismo venoso, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "cancer",
+          "texto": "Câncer atual ou recente",
+          "pergunta_exemplo": "Você tem ou teve câncer recentemente? Faz algum tratamento para isso?",
+          "faltou": "Faltou perguntar sobre câncer atual ou recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "câncer",
+            "tumor",
+            "quimioterapia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "edema-linfonodos-radioterapia",
+          "texto": "Retirada de gânglios ou radioterapia na região",
+          "pergunta_exemplo": "Já tirou gânglios da virilha ou da axila, ou fez radioterapia?",
+          "faltou": "Faltou perguntar sobre retirada de gânglios ou radioterapia.",
+          "peso": 2,
+          "palavras_chave": [
+            "gânglios",
+            "íngua",
+            "radioterapia",
+            "axila",
+            "virilha"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Edema maleolar: causas clínicas, investigação e sinais de gravidade",
+            "url": "https://sanarmed.com/edema-maleolar-causas-clinicas-investigacao-e-sinais-de-gravidade/"
+          }
+        }
+      ]
+    }
+  ]
+}

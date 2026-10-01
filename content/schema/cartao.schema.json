@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anamnelab.local/schema/cartao.schema.json",
+  "title": "Cartões de paciente do AnamneLab",
+  "description": "Cartões curtos para a dupla não travar inventando o caso. Sem gabarito e fora da nota.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["versao", "cartoes"],
+  "properties": {
+    "versao": { "type": "integer", "minimum": 1 },
+    "cartoes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "queixa", "idade", "sexo", "resumo", "detalhes"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "queixa": { "type": "string", "description": "Id da queixa em queixas.json." },
+          "idade": { "type": "integer", "minimum": 0, "maximum": 110 },
+          "sexo": { "enum": ["feminino", "masculino"] },
+          "resumo": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Queixa na voz do paciente, com o tempo (ex.: 'Dor no peito há 2 horas')."
+          },
+          "detalhes": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}

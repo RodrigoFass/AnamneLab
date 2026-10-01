@@ -1,0 +1,578 @@
+{
+  "id": "tosse",
+  "nome": "Tosse",
+  "tipo": "queixa",
+  "queixa": "tosse",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-tosse",
+      "titulo": "Caracterização da tosse",
+      "itens": [
+        {
+          "id": "tosse-tempo-semanas",
+          "texto": "Tempo de tosse em semanas (aguda, subaguda ou crônica)",
+          "pergunta_exemplo": "Faz quantas semanas que você está tossindo? Já passou de três semanas? E de dois meses?",
+          "faltou": "Faltou perguntar há quantas semanas dura a tosse.",
+          "peso": 3,
+          "palavras_chave": [
+            "semanas",
+            "três semanas",
+            "dois meses",
+            "quanto tempo",
+            "tossindo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sociedade Brasileira de Pneumologia e Tisiologia. II Diretrizes brasileiras no manejo da tosse crônica (Jornal Brasileiro de Pneumologia, 2006)",
+            "url": "https://scielo.br/pdf/jbpneu/v32s6/v32s6a02"
+          }
+        },
+        {
+          "id": "tosse-seca-ou-produtiva",
+          "texto": "Tosse seca ou com catarro",
+          "pergunta_exemplo": "Essa tosse é seca ou vem catarro quando você tosse?",
+          "faltou": "Faltou perguntar se a tosse é seca ou com catarro.",
+          "peso": 3,
+          "palavras_chave": [
+            "seca",
+            "catarro",
+            "secreção",
+            "escarro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sociedade Brasileira de Pneumologia e Tisiologia. II Diretrizes brasileiras no manejo da tosse crônica (Jornal Brasileiro de Pneumologia, 2006)",
+            "url": "https://scielo.br/pdf/jbpneu/v32s6/v32s6a02"
+          }
+        },
+        {
+          "id": "tosse-aspecto-secrecao",
+          "texto": "Cor, consistência, quantidade e cheiro do catarro",
+          "pergunta_exemplo": "Quando sai catarro, de que cor ele é? É grosso ou ralo? Sai muito por dia? Tem cheiro ruim?",
+          "faltou": "Faltou perguntar a cor, a quantidade e o cheiro do catarro.",
+          "peso": 2,
+          "palavras_chave": [
+            "cor",
+            "amarelo",
+            "verde",
+            "grosso",
+            "quantidade",
+            "cheiro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sociedade Brasileira de Pneumologia e Tisiologia. II Diretrizes brasileiras no manejo da tosse crônica (Jornal Brasileiro de Pneumologia, 2006)",
+            "url": "https://scielo.br/pdf/jbpneu/v32s6/v32s6a02"
+          }
+        },
+        {
+          "id": "tosse-noite-deitado",
+          "texto": "Piora à noite ou ao deitar",
+          "pergunta_exemplo": "A tosse piora à noite ou quando você se deita? Chega a acordar tossindo?",
+          "faltou": "Faltou perguntar se a tosse piora à noite ou ao deitar.",
+          "peso": 2,
+          "palavras_chave": [
+            "noite",
+            "deitar",
+            "deitado",
+            "acorda",
+            "dormir"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-acessos-guincho",
+          "texto": "Crises de tosse seguidas, com ruído ao puxar o ar ou vômito depois",
+          "pergunta_exemplo": "A tosse vem em crises, uma atrás da outra, sem conseguir parar? Faz um barulho ao puxar o ar ou dá vontade de vomitar depois?",
+          "faltou": "Faltou perguntar se a tosse vem em crises seguidas, com ruído ao puxar o ar ou vômito depois.",
+          "peso": 2,
+          "palavras_chave": [
+            "crise",
+            "sem parar",
+            "guincho",
+            "vomitar",
+            "acesso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Guia de vigilância em saúde, 6ª edição: capítulo de coqueluche (cópia publicada pela Prefeitura de São Paulo)",
+            "url": "https://drive.prefeitura.sp.gov.br/cidade/secretarias/upload/saude/Guia%20de%20Vigil%C3%A2ncia%20-%206%C2%B0%20edi%C3%A7%C3%A3o%20-%20Coqueluche.pdf"
+          }
+        },
+        {
+          "id": "tosse-desencadeantes",
+          "texto": "Desencadeantes: frio, poeira, cheiros fortes, mofo, animais ou exercício",
+          "pergunta_exemplo": "Tem alguma coisa que dispara a tosse, como ar frio, poeira, perfume, mofo, bicho ou fazer exercício?",
+          "faltou": "Faltou perguntar o que dispara a tosse, como frio, poeira, cheiros fortes ou exercício.",
+          "peso": 2,
+          "palavras_chave": [
+            "frio",
+            "poeira",
+            "perfume",
+            "mofo",
+            "exercício",
+            "dispara"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-padrao-sazonal",
+          "texto": "Relação com épocas do ano",
+          "pergunta_exemplo": "Essa tosse aparece mais em alguma época do ano, como no inverno ou na primavera?",
+          "faltou": "Faltou perguntar se a tosse aparece mais em alguma época do ano.",
+          "peso": 1,
+          "palavras_chave": [
+            "época do ano",
+            "inverno",
+            "primavera",
+            "estação"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sintomas-associados-tosse",
+      "titulo": "Sintomas associados",
+      "itens": [
+        {
+          "id": "tosse-febre",
+          "texto": "Febre junto com a tosse e em que horário aparece",
+          "pergunta_exemplo": "Teve febre junto com a tosse? Ela costuma vir mais no fim da tarde?",
+          "faltou": "Faltou perguntar se há febre junto com a tosse e em que horário ela aparece.",
+          "peso": 2,
+          "palavras_chave": [
+            "febre",
+            "temperatura",
+            "fim da tarde",
+            "termômetro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Secretaria da Saúde do Paraná. Tuberculose",
+            "url": "https://www.saude.pr.gov.br/Pagina/Tuberculose"
+          }
+        },
+        {
+          "id": "tosse-falta-de-ar",
+          "texto": "Falta de ar junto com a tosse",
+          "pergunta_exemplo": "Junto com a tosse, você sente falta de ar? Com que esforço ela aparece?",
+          "faltou": "Faltou perguntar se há falta de ar junto com a tosse.",
+          "peso": 3,
+          "palavras_chave": [
+            "falta de ar",
+            "fôlego",
+            "cansaço",
+            "respirar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-chiado",
+          "texto": "Chiado no peito",
+          "pergunta_exemplo": "Você percebe um chiado no peito, como um gatinho miando, quando respira?",
+          "faltou": "Faltou perguntar se há chiado no peito.",
+          "peso": 2,
+          "palavras_chave": [
+            "chiado",
+            "chiar",
+            "gatinho",
+            "assobio",
+            "peito"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-dor-ao-respirar",
+          "texto": "Dor no peito ao respirar fundo ou ao tossir",
+          "pergunta_exemplo": "Sente dor no peito quando respira fundo ou quando tosse?",
+          "faltou": "Faltou perguntar se há dor no peito ao respirar fundo ou ao tossir.",
+          "peso": 2,
+          "palavras_chave": [
+            "dor no peito",
+            "respira fundo",
+            "pontada",
+            "dói"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-nariz-garganta",
+          "texto": "Nariz escorrendo ou entupido e secreção descendo pela garganta",
+          "pergunta_exemplo": "Seu nariz escorre ou fica entupido? Sente uma secreção descendo pela garganta ou precisa pigarrear muito?",
+          "faltou": "Faltou perguntar sobre nariz escorrendo ou entupido e secreção descendo pela garganta.",
+          "peso": 2,
+          "palavras_chave": [
+            "nariz",
+            "escorrendo",
+            "entupido",
+            "garganta",
+            "pigarro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sociedade Brasileira de Pneumologia e Tisiologia. II Diretrizes brasileiras no manejo da tosse crônica (Jornal Brasileiro de Pneumologia, 2006)",
+            "url": "https://scielo.br/pdf/jbpneu/v32s6/v32s6a02"
+          }
+        },
+        {
+          "id": "tosse-azia-refluxo",
+          "texto": "Azia, queimação e refluxo",
+          "pergunta_exemplo": "Você tem azia, queimação no estômago ou sente o alimento ou um líquido azedo voltando para a boca?",
+          "faltou": "Faltou perguntar sobre azia e refluxo.",
+          "peso": 2,
+          "palavras_chave": [
+            "azia",
+            "queimação",
+            "refluxo",
+            "azedo",
+            "voltando"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sociedade Brasileira de Pneumologia e Tisiologia. II Diretrizes brasileiras no manejo da tosse crônica (Jornal Brasileiro de Pneumologia, 2006)",
+            "url": "https://scielo.br/pdf/jbpneu/v32s6/v32s6a02"
+          }
+        },
+        {
+          "id": "tosse-engasgo",
+          "texto": "Engasgos ao comer ou beber",
+          "pergunta_exemplo": "Você costuma se engasgar ou tossir quando come ou bebe alguma coisa?",
+          "faltou": "Faltou perguntar se há engasgos ao comer ou beber.",
+          "peso": 1,
+          "palavras_chave": [
+            "engasga",
+            "engasgo",
+            "comer",
+            "beber",
+            "engolir"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-infeccao-recente",
+          "texto": "Gripe ou resfriado recente",
+          "pergunta_exemplo": "Antes de começar a tosse, você teve gripe, resfriado ou dor de garganta?",
+          "faltou": "Faltou perguntar se a tosse começou depois de uma gripe ou resfriado.",
+          "peso": 2,
+          "palavras_chave": [
+            "gripe",
+            "resfriado",
+            "dor de garganta",
+            "antes de começar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-tosse",
+      "titulo": "Sinais de alarme",
+      "itens": [
+        {
+          "id": "tosse-sangue",
+          "texto": "Sangue no catarro ou ao tossir",
+          "pergunta_exemplo": "Já saiu sangue quando você tossiu, mesmo que só uns rajados no catarro? Quanto?",
+          "faltou": "Faltou perguntar se já saiu sangue com a tosse.",
+          "peso": 3,
+          "palavras_chave": [
+            "sangue",
+            "rajado",
+            "escarro com sangue",
+            "sangrou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-perda-peso",
+          "texto": "Perda de peso sem querer",
+          "pergunta_exemplo": "Você emagreceu sem estar tentando desde que a tosse começou? Quantos quilos?",
+          "faltou": "Faltou perguntar se houve perda de peso sem querer.",
+          "peso": 3,
+          "palavras_chave": [
+            "emagreceu",
+            "perdeu peso",
+            "quilos",
+            "roupa larga"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-suor-noturno",
+          "texto": "Suor à noite",
+          "pergunta_exemplo": "Você tem acordado suado à noite, a ponto de molhar a roupa ou o lençol?",
+          "faltou": "Faltou perguntar se há suor à noite.",
+          "peso": 3,
+          "palavras_chave": [
+            "suor",
+            "suado",
+            "noite",
+            "molhar",
+            "lençol"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-mudanca-padrao-fumante",
+          "texto": "Mudança no jeito da tosse em quem fuma ou fumou",
+          "pergunta_exemplo": "Para quem fuma ou já fumou: a sua tosse de sempre mudou de jeito nos últimos tempos?",
+          "faltou": "Faltou perguntar, em quem fuma ou fumou, se a tosse mudou de padrão.",
+          "peso": 3,
+          "palavras_chave": [
+            "mudou",
+            "diferente",
+            "tosse de sempre",
+            "fumante"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Afya Whitebook. Como identificar a possível causa da tosse persistente?",
+            "url": "https://portal.afya.com.br/medicina-de-emergencia/whitebook-como-identificar-a-possivel-causa-da-tosse"
+          }
+        },
+        {
+          "id": "tosse-ruido-ao-inspirar",
+          "texto": "Ruído agudo ao puxar o ar",
+          "pergunta_exemplo": "Quando você puxa o ar, faz algum barulho agudo, como um apito na garganta?",
+          "faltou": "Faltou perguntar se há ruído agudo ao puxar o ar.",
+          "peso": 3,
+          "palavras_chave": [
+            "barulho",
+            "puxar o ar",
+            "apito",
+            "garganta",
+            "ruído"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Afya Whitebook. Como identificar a possível causa da tosse persistente?",
+            "url": "https://portal.afya.com.br/medicina-de-emergencia/whitebook-como-identificar-a-possivel-causa-da-tosse"
+          }
+        },
+        {
+          "id": "tosse-rouquidao",
+          "texto": "Rouquidão ou mudança na voz",
+          "pergunta_exemplo": "Sua voz ficou rouca ou diferente desde que a tosse começou? Faz quanto tempo?",
+          "faltou": "Faltou perguntar se a voz ficou rouca ou mudou.",
+          "peso": 2,
+          "palavras_chave": [
+            "rouca",
+            "rouquidão",
+            "voz",
+            "falhando"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sociedade Brasileira de Pneumologia e Tisiologia. II Diretrizes brasileiras no manejo da tosse crônica (Jornal Brasileiro de Pneumologia, 2006)",
+            "url": "https://scielo.br/pdf/jbpneu/v32s6/v32s6a02"
+          }
+        }
+      ]
+    },
+    {
+      "id": "antecedentes-exposicoes-tosse",
+      "titulo": "Antecedentes e exposições ligados à tosse",
+      "itens": [
+        {
+          "id": "tabagismo",
+          "texto": "Tabagismo e carga tabágica",
+          "pergunta_exemplo": "Você fuma ou já fumou? Quantos cigarros por dia e por quantos anos?",
+          "faltou": "Faltou perguntar sobre tabagismo e quanto e por quanto tempo fuma.",
+          "peso": 3,
+          "palavras_chave": [
+            "fuma",
+            "fumou",
+            "cigarro",
+            "maço",
+            "tabagismo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "tosse-fumo-passivo-outros",
+          "texto": "Fumaça de outras pessoas, cigarro eletrônico, narguilé ou fogão a lenha",
+          "pergunta_exemplo": "Alguém fuma perto de você em casa? Você usa cigarro eletrônico ou narguilé? Cozinha em fogão a lenha?",
+          "faltou": "Faltou perguntar sobre fumo de outras pessoas, cigarro eletrônico, narguilé e fumaça de lenha.",
+          "peso": 1,
+          "palavras_chave": [
+            "fuma perto",
+            "cigarro eletrônico",
+            "vape",
+            "narguilé",
+            "fogão a lenha"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de semiologia do aparelho respiratório, material público; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "tosse-remedio-pressao",
+          "texto": "Uso de remédio para pressão da classe do enalapril ou captopril",
+          "pergunta_exemplo": "Você toma algum remédio para pressão, como enalapril ou captopril? Começou ou mudou algum remédio antes da tosse?",
+          "faltou": "Faltou perguntar se o paciente usa remédio para pressão como enalapril ou captopril.",
+          "peso": 3,
+          "palavras_chave": [
+            "enalapril",
+            "captopril",
+            "remédio para pressão",
+            "pressão",
+            "começou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sociedade Brasileira de Pneumologia e Tisiologia. II Diretrizes brasileiras no manejo da tosse crônica (Jornal Brasileiro de Pneumologia, 2006)",
+            "url": "https://scielo.br/pdf/jbpneu/v32s6/v32s6a02"
+          }
+        },
+        {
+          "id": "tosse-exposicao-trabalho",
+          "texto": "Poeira, fumaça ou produtos químicos no trabalho",
+          "pergunta_exemplo": "No seu trabalho você fica exposto a poeira, fumaça, tinta, produtos químicos ou mofo? Melhora quando está de folga?",
+          "faltou": "Faltou perguntar se há exposição a poeira, fumaça ou produtos químicos no trabalho.",
+          "peso": 2,
+          "palavras_chave": [
+            "trabalho",
+            "poeira",
+            "fumaça",
+            "produto químico",
+            "folga"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sociedade Brasileira de Pneumologia e Tisiologia. II Diretrizes brasileiras no manejo da tosse crônica (Jornal Brasileiro de Pneumologia, 2006)",
+            "url": "https://scielo.br/pdf/jbpneu/v32s6/v32s6a02"
+          }
+        },
+        {
+          "id": "tosse-contato-tuberculose",
+          "texto": "Contato com alguém com tuberculose ou com tosse prolongada",
+          "pergunta_exemplo": "Alguém na sua casa, no trabalho ou perto de você teve tuberculose ou está com tosse há muito tempo?",
+          "faltou": "Faltou perguntar se houve contato com alguém com tuberculose ou com tosse prolongada.",
+          "peso": 3,
+          "palavras_chave": [
+            "tuberculose",
+            "contato",
+            "alguém em casa",
+            "tosse há muito tempo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-tuberculose-previa",
+          "texto": "Tuberculose anterior e tratamento",
+          "pergunta_exemplo": "Você já teve tuberculose? Fez o tratamento completo?",
+          "faltou": "Faltou perguntar se o paciente já teve tuberculose e se fez o tratamento.",
+          "peso": 2,
+          "palavras_chave": [
+            "tuberculose",
+            "já teve",
+            "tratamento",
+            "seis meses"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-doenca-respiratoria-previa",
+          "texto": "Asma, bronquite, enfisema ou rinite alérgica",
+          "pergunta_exemplo": "Você tem ou já teve asma, bronquite, enfisema ou rinite alérgica?",
+          "faltou": "Faltou perguntar sobre asma, bronquite, enfisema ou rinite.",
+          "peso": 2,
+          "palavras_chave": [
+            "asma",
+            "bronquite",
+            "enfisema",
+            "rinite",
+            "alergia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        },
+        {
+          "id": "tosse-imunidade-baixa",
+          "texto": "Condições ou remédios que baixam a imunidade",
+          "pergunta_exemplo": "Você tem alguma condição ou usa algum remédio que baixa a imunidade, como HIV, quimioterapia ou corticoide por muito tempo?",
+          "faltou": "Faltou perguntar sobre condições ou remédios que baixam a imunidade.",
+          "peso": 2,
+          "palavras_chave": [
+            "imunidade",
+            "hiv",
+            "quimioterapia",
+            "corticoide"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Tosse em adultos",
+            "url": "https://www.msdmanuals.com/pt/profissional/pneumologia/sintomas-de-doen%C3%A7as-pulmonares/tosse-em-adultos"
+          }
+        }
+      ]
+    }
+  ]
+}

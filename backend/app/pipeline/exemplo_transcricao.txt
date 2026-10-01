@@ -1,0 +1,56 @@
+Médico: Bom dia, eu sou o Lucas, estudante de Medicina, e vou conversar um pouco com o senhor antes do atendimento. Tudo bem?
+Paciente: Bom dia, tudo bem.
+Médico: Qual é o seu nome completo?
+Paciente: Carlos Alberto Pereira.
+Médico: Quantos anos o senhor tem?
+Paciente: Tenho cinquenta e oito anos.
+Médico: E o senhor trabalha com o quê?
+Paciente: Sou motorista de ônibus há uns vinte anos.
+Médico: Seu Carlos, o que trouxe o senhor aqui hoje?
+Paciente: É uma dor no peito que começou hoje de manhã e não passa direito.
+Médico: Quando exatamente essa dor começou?
+Paciente: Foi há umas duas horas, eu estava subindo a escada do terminal.
+Médico: O senhor pode me mostrar onde é a dor?
+Paciente: É bem aqui no meio do peito, atrás do osso.
+Médico: Essa dor vai para algum outro lugar, como o braço, o pescoço ou as costas?
+Paciente: Vai para o braço esquerdo e às vezes sobe para o queixo.
+Médico: Como é essa dor? É um aperto, uma queimação, uma pontada?
+Paciente: É um aperto, parece que tem um peso em cima do peito.
+Médico: De zero a dez, que nota o senhor dá para a intensidade dessa dor?
+Paciente: Uns oito, está forte.
+Médico: Ela é contínua ou vem e vai? Quanto tempo dura?
+Paciente: Quando começou ficou uns vinte minutos forte, depois aliviou um pouco, mas não sumiu.
+Médico: Tem alguma coisa que melhora a dor?
+Paciente: Quando eu sentei e fiquei quieto ela melhorou um pouco.
+Médico: E alguma coisa que piora? Por exemplo, fazer esforço, andar, subir escada?
+Paciente: Piora quando eu ando rápido ou subo escada.
+Médico: O senhor já tinha sentido uma dor parecida antes? Ela vem piorando nos últimos dias?
+Paciente: Na semana passada senti uma dor mais fraca jogando bola, mas passou sozinha. Hoje foi bem mais forte.
+Médico: Junto com a dor, o senhor sentiu falta de ar?
+Paciente: Senti um pouco de falta de ar, sim.
+Médico: Suou frio ou teve enjoo, vontade de vomitar?
+Paciente: Suei bastante e fiquei meio enjoado, mas não vomitei.
+Médico: O senhor tem alguma doença, como pressão alta, diabetes ou colesterol alto?
+Paciente: Tenho pressão alta faz uns dez anos e o colesterol é alto também.
+Médico: Toma algum remédio todos os dias?
+Paciente: Tomo losartana de manhã, mas confesso que esqueço muitas vezes.
+Médico: O senhor já foi internado ou fez alguma cirurgia, inclusive do coração, como cateterismo?
+Paciente: Nunca fui internado nem operei. Cateterismo também nunca fiz.
+Médico: E diabetes, o senhor já fez exame de açúcar no sangue?
+Paciente: O médico do posto disse que estava no limite, mas não tomo nada.
+Médico: Alguém na sua família teve problema de coração, infarto ou morte súbita?
+Paciente: Meu pai teve infarto com cinquenta e cinco anos e morreu disso.
+Médico: E sua mãe ou seus irmãos?
+Paciente: Minha mãe tem pressão alta. Meus irmãos, que eu saiba, não têm nada.
+Médico: O senhor fuma ou já fumou?
+Paciente: Fumo desde os dezoito anos, mais ou menos um maço por dia.
+Médico: E bebida alcoólica, o senhor bebe?
+Paciente: Só cerveja no fim de semana, umas três ou quatro latas.
+Médico: Faz algum exercício físico ou atividade física durante a semana?
+Paciente: Não, só o futebol de vez em quando com os amigos.
+Médico: Como tem sido o seu sono e o seu apetite nos últimos tempos?
+Paciente: Durmo pouco por causa do horário do trabalho, mas o apetite está normal.
+Médico: O senhor percebeu inchaço nas pernas ou cansaço maior que o normal no dia a dia?
+Paciente: Inchaço não, mas ando mais cansado para subir a ladeira de casa.
+Médico: Certo, seu Carlos. Vou chamar o médico responsável agora para examinar o senhor.
+Paciente: Está bem, obrigado.

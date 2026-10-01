@@ -1,0 +1,618 @@
+{
+  "id": "sincope",
+  "nome": "Síncope",
+  "tipo": "queixa",
+  "queixa": "sincope",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "sincope-circunstancias",
+      "titulo": "Circunstâncias do desmaio",
+      "itens": [
+        {
+          "id": "sincope-atividade-antes",
+          "texto": "O que estava fazendo logo antes de desmaiar",
+          "pergunta_exemplo": "O que você estava fazendo na hora em que desmaiou?",
+          "faltou": "Faltou perguntar o que o paciente fazia logo antes de desmaiar.",
+          "peso": 3,
+          "palavras_chave": [
+            "fazendo",
+            "na hora",
+            "antes de desmaiar",
+            "estava"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "FMRP-USP, Departamento de Clínica Médica. Síncope na emergência (Revista Qualidade HC)",
+            "url": "https://www.hcrp.usp.br/revistaqualidade/uploads/Artigos/203/203.pdf"
+          }
+        },
+        {
+          "id": "sincope-posicao-corporal",
+          "texto": "Posição do corpo no momento (em pé, sentado ou deitado)",
+          "pergunta_exemplo": "Você estava em pé, sentado ou deitado quando apagou?",
+          "faltou": "Faltou perguntar em que posição o paciente estava quando desmaiou.",
+          "peso": 3,
+          "palavras_chave": [
+            "em pé",
+            "sentado",
+            "deitado",
+            "posição"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Síncope na emergência",
+            "url": "https://sanarmed.com/sincope-na-emergencia/"
+          }
+        },
+        {
+          "id": "sincope-em-pe-calor",
+          "texto": "Muito tempo em pé, lugar quente ou cheio de gente",
+          "pergunta_exemplo": "Você estava em pé há muito tempo, num lugar quente ou cheio de gente?",
+          "faltou": "Faltou perguntar se estava em pé por muito tempo ou em lugar quente e abafado.",
+          "peso": 2,
+          "palavras_chave": [
+            "muito tempo em pé",
+            "quente",
+            "calor",
+            "cheio",
+            "abafado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "FMRP-USP, Departamento de Clínica Médica. Síncope na emergência (Revista Qualidade HC)",
+            "url": "https://www.hcrp.usp.br/revistaqualidade/uploads/Artigos/203/203.pdf"
+          }
+        },
+        {
+          "id": "sincope-ao-levantar",
+          "texto": "Desmaio logo depois de se levantar",
+          "pergunta_exemplo": "Aconteceu logo depois que você se levantou da cama ou da cadeira?",
+          "faltou": "Faltou perguntar se o desmaio veio logo depois de se levantar.",
+          "peso": 2,
+          "palavras_chave": [
+            "levantou",
+            "levantar",
+            "se levantar",
+            "da cama"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Estratégia MED. Resumo de hipotensão ortostática: diagnóstico, tratamento e mais",
+            "url": "https://med.estrategia.com/portal/conteudos-gratis/doencas/resumo-de-hipotensao-ortostatica-diagnostico-tratamento-e-mais/"
+          }
+        },
+        {
+          "id": "sincope-dor-susto-emocao",
+          "texto": "Dor forte, susto, emoção forte ou ver sangue antes",
+          "pergunta_exemplo": "Antes de desmaiar você levou um susto, sentiu uma dor forte, ficou nervoso ou viu sangue?",
+          "faltou": "Faltou perguntar se houve dor forte, susto ou emoção forte logo antes.",
+          "peso": 2,
+          "palavras_chave": [
+            "susto",
+            "dor forte",
+            "nervoso",
+            "sangue",
+            "emoção"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Síncope vasovagal: diagnóstico, gatilhos e condução no pronto atendimento",
+            "url": "https://www.medway.com.br/conteudos/sincope-vasovagal-tudo-que-voce-precisa-saber/"
+          }
+        },
+        {
+          "id": "sincope-urinar-tossir-evacuar",
+          "texto": "Desmaio ao urinar, evacuar, tossir ou engolir",
+          "pergunta_exemplo": "Aconteceu quando você estava urinando, no banheiro, tossindo ou engolindo?",
+          "faltou": "Faltou perguntar se o desmaio veio ao urinar, evacuar, tossir ou engolir.",
+          "peso": 2,
+          "palavras_chave": [
+            "urinar",
+            "urinando",
+            "banheiro",
+            "tossindo",
+            "engolir"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Whitebook: como identificar uma síncope?",
+            "url": "https://portal.afya.com.br/cardiologia/whitebook-como-identificar-uma-sincope"
+          }
+        },
+        {
+          "id": "sincope-durante-esforco",
+          "texto": "Desmaio durante esforço físico",
+          "pergunta_exemplo": "Você estava fazendo força ou exercício, como correr ou subir escada, quando desmaiou?",
+          "faltou": "Faltou perguntar se o desmaio aconteceu durante um esforço.",
+          "peso": 3,
+          "palavras_chave": [
+            "esforço",
+            "exercício",
+            "correndo",
+            "escada",
+            "força"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Síncope vasovagal: diagnóstico, gatilhos e condução no pronto atendimento",
+            "url": "https://www.medway.com.br/conteudos/sincope-vasovagal-tudo-que-voce-precisa-saber/"
+          }
+        },
+        {
+          "id": "sincope-pos-refeicao-pescoco",
+          "texto": "Desmaio depois de comer ou ao virar o pescoço",
+          "pergunta_exemplo": "Tinha acabado de comer? Ou aconteceu quando virou a cabeça ou apertou o colarinho?",
+          "faltou": "Faltou perguntar se o desmaio veio depois de comer ou ao mexer o pescoço.",
+          "peso": 1,
+          "palavras_chave": [
+            "comer",
+            "refeição",
+            "pescoço",
+            "virou a cabeça",
+            "colarinho"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Whitebook: como identificar uma síncope?",
+            "url": "https://portal.afya.com.br/cardiologia/whitebook-como-identificar-uma-sincope"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sincope-sintomas-antes",
+      "titulo": "Sintomas antes do desmaio",
+      "itens": [
+        {
+          "id": "sincope-aviso-antes",
+          "texto": "Se houve aviso antes (vista escurecendo, tontura, zumbido) ou se apagou de repente",
+          "pergunta_exemplo": "Você sentiu algum aviso antes, como a vista escurecer, tontura ou zumbido, ou apagou de repente?",
+          "faltou": "Faltou perguntar se houve algum aviso antes do desmaio ou se ele veio de repente.",
+          "peso": 3,
+          "palavras_chave": [
+            "vista escureceu",
+            "tontura",
+            "zumbido",
+            "aviso",
+            "de repente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Síncope vasovagal: diagnóstico, gatilhos e condução no pronto atendimento",
+            "url": "https://www.medway.com.br/conteudos/sincope-vasovagal-tudo-que-voce-precisa-saber/"
+          }
+        },
+        {
+          "id": "sincope-nausea-suor-calor",
+          "texto": "Enjoo, suor, calor ou frio antes do desmaio",
+          "pergunta_exemplo": "Antes de apagar, você ficou enjoado, suando, com calor ou com frio?",
+          "faltou": "Faltou perguntar se houve enjoo, suor, calor ou frio antes do desmaio.",
+          "peso": 2,
+          "palavras_chave": [
+            "enjoo",
+            "enjoado",
+            "suando",
+            "suor",
+            "calor",
+            "frio"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Boff, Schuch e Bodanese. Síncope: abordagem diagnóstica (acervo BVS)",
+            "url": "https://docs.bvsalud.org/biblioref/2018/04/882855/sincope-abordagem-diagnostica.pdf"
+          }
+        },
+        {
+          "id": "sincope-palpitacao-antes",
+          "texto": "Palpitação logo antes do desmaio",
+          "pergunta_exemplo": "Antes de desmaiar, você sentiu o coração disparar ou bater descompassado?",
+          "faltou": "Faltou perguntar se o coração disparou ou ficou irregular antes do desmaio.",
+          "peso": 3,
+          "palavras_chave": [
+            "coração",
+            "disparou",
+            "disparar",
+            "descompassado",
+            "palpitação"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Síncope vasovagal: diagnóstico, gatilhos e condução no pronto atendimento",
+            "url": "https://www.medway.com.br/conteudos/sincope-vasovagal-tudo-que-voce-precisa-saber/"
+          }
+        },
+        {
+          "id": "sincope-dor-toracica-antes",
+          "texto": "Dor no peito antes ou depois do desmaio",
+          "pergunta_exemplo": "Você sentiu dor ou aperto no peito antes ou depois de desmaiar?",
+          "faltou": "Faltou perguntar se houve dor no peito junto com o desmaio.",
+          "peso": 3,
+          "palavras_chave": [
+            "dor no peito",
+            "aperto",
+            "peito",
+            "pressão no peito"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Whitebook: como identificar uma síncope?",
+            "url": "https://portal.afya.com.br/cardiologia/whitebook-como-identificar-uma-sincope"
+          }
+        },
+        {
+          "id": "sincope-falta-ar-antes",
+          "texto": "Falta de ar antes do desmaio",
+          "pergunta_exemplo": "Antes de apagar, você ficou com falta de ar?",
+          "faltou": "Faltou perguntar se houve falta de ar antes do desmaio.",
+          "peso": 3,
+          "palavras_chave": [
+            "falta de ar",
+            "fôlego",
+            "respirar",
+            "sufocado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Whitebook: como identificar uma síncope?",
+            "url": "https://portal.afya.com.br/cardiologia/whitebook-como-identificar-uma-sincope"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sincope-durante-depois",
+      "titulo": "Durante e depois do desmaio",
+      "itens": [
+        {
+          "id": "sincope-tempo-desacordado",
+          "texto": "Quanto tempo ficou desacordado",
+          "pergunta_exemplo": "Quanto tempo você ficou desacordado? Alguns segundos, minutos?",
+          "faltou": "Faltou perguntar quanto tempo o paciente ficou desacordado.",
+          "peso": 3,
+          "palavras_chave": [
+            "quanto tempo",
+            "desacordado",
+            "segundos",
+            "minutos",
+            "apagado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "FMRP-USP, Departamento de Clínica Médica. Síncope na emergência (Revista Qualidade HC)",
+            "url": "https://www.hcrp.usp.br/revistaqualidade/uploads/Artigos/203/203.pdf"
+          }
+        },
+        {
+          "id": "sincope-relato-testemunha",
+          "texto": "O que quem estava junto viu (queda, cor da pele, respiração)",
+          "pergunta_exemplo": "Alguém viu você desmaiar? O que essa pessoa contou: como você caiu, se ficou pálido ou roxo?",
+          "faltou": "Faltou perguntar se alguém viu o desmaio e o que a pessoa contou.",
+          "peso": 3,
+          "palavras_chave": [
+            "alguém viu",
+            "testemunha",
+            "pálido",
+            "roxo",
+            "contou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "FMRP-USP, Departamento de Clínica Médica. Síncope na emergência (Revista Qualidade HC)",
+            "url": "https://www.hcrp.usp.br/revistaqualidade/uploads/Artigos/203/203.pdf"
+          }
+        },
+        {
+          "id": "sincope-movimentos",
+          "texto": "Abalos ou tremores do corpo durante o desmaio",
+          "pergunta_exemplo": "Quem viu disse se você se debateu, tremeu ou ficou com o corpo duro?",
+          "faltou": "Faltou perguntar se houve abalos, tremores ou o corpo ficou rígido durante o desmaio.",
+          "peso": 3,
+          "palavras_chave": [
+            "debateu",
+            "tremeu",
+            "tremendo",
+            "corpo duro",
+            "se mexendo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Síncope ou convulsão: como diferenciar na emergência",
+            "url": "https://portal.afya.com.br/pediatria/sincope-ou-convulsao-pediatria-como-diferenciar-na-emergencia"
+          }
+        },
+        {
+          "id": "sincope-mordeu-lingua",
+          "texto": "Mordida na língua",
+          "pergunta_exemplo": "Você mordeu a língua? Ficou machucada do lado?",
+          "faltou": "Faltou perguntar se o paciente mordeu a língua.",
+          "peso": 2,
+          "palavras_chave": [
+            "mordeu",
+            "língua",
+            "mordida",
+            "machucou a língua"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Síncope ou convulsão: como diferenciar na emergência",
+            "url": "https://portal.afya.com.br/pediatria/sincope-ou-convulsao-pediatria-como-diferenciar-na-emergencia"
+          }
+        },
+        {
+          "id": "sincope-perda-urina",
+          "texto": "Perda de urina ou fezes durante o desmaio",
+          "pergunta_exemplo": "Você fez xixi na roupa ou perdeu fezes enquanto estava desacordado?",
+          "faltou": "Faltou perguntar se houve perda de urina ou fezes durante o desmaio.",
+          "peso": 2,
+          "palavras_chave": [
+            "xixi",
+            "urina",
+            "fez na roupa",
+            "molhou",
+            "fezes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Amorim, Bomfim e Ribeiro (HUPE/UERJ). Avaliação de pacientes com síncope",
+            "url": "https://www.saudedireta.com.br/docsupload/1337428927AvSincope.pdf"
+          }
+        },
+        {
+          "id": "sincope-recuperacao",
+          "texto": "Como foi a volta: rápida e completa ou com confusão demorada",
+          "pergunta_exemplo": "Quando você acordou, já estava bem e sabia onde estava, ou ficou confuso por um tempo?",
+          "faltou": "Faltou perguntar como foi a recuperação, se rápida ou com confusão prolongada.",
+          "peso": 3,
+          "palavras_chave": [
+            "acordou",
+            "confuso",
+            "sabia onde estava",
+            "voltou",
+            "recuperou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Portal Afya. Síncope ou convulsão: como diferenciar na emergência",
+            "url": "https://portal.afya.com.br/pediatria/sincope-ou-convulsao-pediatria-como-diferenciar-na-emergencia"
+          }
+        },
+        {
+          "id": "sincope-sintomas-depois",
+          "texto": "Sintomas depois de acordar (fraqueza de um lado, fala enrolada, dor de cabeça forte)",
+          "pergunta_exemplo": "Depois que acordou, ficou com fraqueza de um lado do corpo, a fala enrolada ou uma dor de cabeça forte?",
+          "faltou": "Faltou perguntar se ficou algum sintoma depois do desmaio, como fraqueza de um lado ou fala enrolada.",
+          "peso": 3,
+          "palavras_chave": [
+            "fraqueza",
+            "um lado",
+            "fala enrolada",
+            "dor de cabeça",
+            "depois que acordou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "FMRP-USP, Departamento de Clínica Médica. Síncope na emergência (Revista Qualidade HC)",
+            "url": "https://www.hcrp.usp.br/revistaqualidade/uploads/Artigos/203/203.pdf"
+          }
+        },
+        {
+          "id": "sincope-machucou-queda",
+          "texto": "Machucado na queda",
+          "pergunta_exemplo": "Você se machucou quando caiu? Bateu a cabeça?",
+          "faltou": "Faltou perguntar se o paciente se machucou na queda.",
+          "peso": 2,
+          "palavras_chave": [
+            "machucou",
+            "bateu a cabeça",
+            "queda",
+            "caiu",
+            "ferida"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "FMRP-USP, Departamento de Clínica Médica. Síncope na emergência (Revista Qualidade HC)",
+            "url": "https://www.hcrp.usp.br/revistaqualidade/uploads/Artigos/203/203.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sincope-antecedentes-riscos",
+      "titulo": "Antecedentes e fatores de risco ligados ao desmaio",
+      "itens": [
+        {
+          "id": "sincope-episodios-previos",
+          "texto": "Desmaios anteriores: quantos, desde quando e se parecidos",
+          "pergunta_exemplo": "Você já desmaiou outras vezes? Quantas, desde quando, e foi parecido com este?",
+          "faltou": "Faltou perguntar se já houve outros desmaios e como foram.",
+          "peso": 3,
+          "palavras_chave": [
+            "outras vezes",
+            "já desmaiou",
+            "antes",
+            "quantas vezes",
+            "parecido"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "FMRP-USP, Departamento de Clínica Médica. Síncope na emergência (Revista Qualidade HC)",
+            "url": "https://www.hcrp.usp.br/revistaqualidade/uploads/Artigos/203/203.pdf"
+          }
+        },
+        {
+          "id": "sincope-doenca-cardiaca",
+          "texto": "Doença do coração conhecida (infarto, sopro, arritmia, insuficiência, marcapasso)",
+          "pergunta_exemplo": "Você tem algum problema no coração, como sopro, arritmia, coração fraco ou já teve infarto?",
+          "faltou": "Faltou perguntar se o paciente tem alguma doença do coração.",
+          "peso": 3,
+          "palavras_chave": [
+            "coração",
+            "sopro",
+            "arritmia",
+            "infarto",
+            "marcapasso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Síncope vasovagal: diagnóstico, gatilhos e condução no pronto atendimento",
+            "url": "https://www.medway.com.br/conteudos/sincope-vasovagal-tudo-que-voce-precisa-saber/"
+          }
+        },
+        {
+          "id": "sincope-morte-subita-familia",
+          "texto": "Morte súbita ou inexplicada na família",
+          "pergunta_exemplo": "Alguém da sua família morreu de repente, sem explicação, principalmente jovem?",
+          "faltou": "Faltou perguntar se há morte súbita ou sem explicação na família.",
+          "peso": 3,
+          "palavras_chave": [
+            "família",
+            "morreu de repente",
+            "morte súbita",
+            "jovem",
+            "sem explicação"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Síncope",
+            "url": "https://www.msdmanuals.com/pt/profissional/cardiologia/sintomas-de-doen%C3%A7as-cardiovasculares/s%C3%ADncope"
+          }
+        },
+        {
+          "id": "sincope-remedios-pressao-ritmo",
+          "texto": "Remédios para pressão, diuréticos ou para o ritmo do coração, inclusive mudança recente",
+          "pergunta_exemplo": "Você toma remédio para pressão, para urinar ou para o ritmo do coração? Começou ou mudou a dose há pouco tempo?",
+          "faltou": "Faltou perguntar sobre remédios para pressão, diuréticos ou para o ritmo do coração.",
+          "peso": 3,
+          "palavras_chave": [
+            "remédio para pressão",
+            "diurético",
+            "ritmo",
+            "mudou a dose",
+            "começou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Síncope",
+            "url": "https://www.msdmanuals.com/pt/profissional/cardiologia/sintomas-de-doen%C3%A7as-cardiovasculares/s%C3%ADncope"
+          }
+        },
+        {
+          "id": "diabetes",
+          "texto": "Diabetes",
+          "pergunta_exemplo": "Você tem diabetes ou açúcar alto no sangue?",
+          "faltou": "Faltou perguntar sobre diabetes.",
+          "peso": 3,
+          "palavras_chave": [
+            "diabetes",
+            "açúcar",
+            "glicose"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "sincope-jejum-hipoglicemia",
+          "texto": "Jejum, insulina ou remédio para açúcar e glicemia baixa",
+          "pergunta_exemplo": "Você estava sem comer há muito tempo? Usa insulina ou remédio para diabetes? Mediram o açúcar na hora?",
+          "faltou": "Faltou perguntar sobre jejum e possibilidade de açúcar baixo no sangue.",
+          "peso": 2,
+          "palavras_chave": [
+            "sem comer",
+            "jejum",
+            "insulina",
+            "açúcar baixo",
+            "glicemia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Síncope (Colunistas)",
+            "url": "https://sanarmed.com/sincope-colunistas/"
+          }
+        },
+        {
+          "id": "sincope-perda-liquidos",
+          "texto": "Vômitos, diarreia ou pouca ingestão de líquidos nos últimos dias",
+          "pergunta_exemplo": "Nos últimos dias você teve vômito, diarreia ou ficou bebendo pouca água?",
+          "faltou": "Faltou perguntar sobre vômitos, diarreia ou pouca ingestão de líquidos.",
+          "peso": 2,
+          "palavras_chave": [
+            "vômito",
+            "diarreia",
+            "pouca água",
+            "desidratado",
+            "bebendo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Estratégia MED. Resumo de hipotensão ortostática: diagnóstico, tratamento e mais",
+            "url": "https://med.estrategia.com/portal/conteudos-gratis/doencas/resumo-de-hipotensao-ortostatica-diagnostico-tratamento-e-mais/"
+          }
+        },
+        {
+          "id": "sincope-sangramento",
+          "texto": "Sangramento: fezes pretas ou com sangue, menstruação muito forte",
+          "pergunta_exemplo": "Notou fezes pretas ou com sangue, vômito com sangue ou menstruação muito forte?",
+          "faltou": "Faltou perguntar sobre sinais de sangramento, como fezes pretas ou menstruação muito forte.",
+          "peso": 2,
+          "palavras_chave": [
+            "fezes pretas",
+            "sangue",
+            "sangramento",
+            "menstruação forte"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Síncope",
+            "url": "https://www.msdmanuals.com/pt/profissional/cardiologia/sintomas-de-doen%C3%A7as-cardiovasculares/s%C3%ADncope"
+          }
+        },
+        {
+          "id": "sincope-alcool-drogas-antes",
+          "texto": "Álcool ou drogas antes do desmaio",
+          "pergunta_exemplo": "Você tinha bebido ou usado alguma droga antes de desmaiar?",
+          "faltou": "Faltou perguntar se houve uso de álcool ou drogas antes do desmaio.",
+          "peso": 2,
+          "palavras_chave": [
+            "bebido",
+            "bebida",
+            "álcool",
+            "droga",
+            "usado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Estratégia MED. Resumo de hipotensão ortostática: diagnóstico, tratamento e mais",
+            "url": "https://med.estrategia.com/portal/conteudos-gratis/doencas/resumo-de-hipotensao-ortostatica-diagnostico-tratamento-e-mais/"
+          }
+        },
+        {
+          "id": "sincope-gestacao",
+          "texto": "Possibilidade de gravidez em mulher em idade fértil",
+          "pergunta_exemplo": "Existe alguma chance de você estar grávida? Quando foi sua última menstruação?",
+          "faltou": "Faltou perguntar sobre a possibilidade de gravidez.",
+          "peso": 2,
+          "palavras_chave": [
+            "grávida",
+            "gravidez",
+            "última menstruação",
+            "atraso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, edição para profissionais. Síncope",
+            "url": "https://www.msdmanuals.com/pt/profissional/cardiologia/sintomas-de-doen%C3%A7as-cardiovasculares/s%C3%ADncope"
+          }
+        }
+      ]
+    }
+  ]
+}

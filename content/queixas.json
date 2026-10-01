@@ -1,0 +1,136 @@
+{
+  "versao": 1,
+  "queixas": [
+    {
+      "id": "dor-toracica",
+      "nome": "Dor torácica",
+      "checklist": "dor-toracica",
+      "sinonimos": [
+        "dor no peito",
+        "aperto no peito",
+        "pontada no peito",
+        "peso no peito",
+        "queimação no peito",
+        "dor precordial",
+        "precordialgia",
+        "toracalgia"
+      ]
+    },
+    {
+      "id": "dispneia",
+      "nome": "Dispneia",
+      "checklist": "dispneia",
+      "sinonimos": [
+        "falta de ar",
+        "cansaço para respirar",
+        "fôlego curto",
+        "sufocação",
+        "dificuldade para respirar",
+        "canseira"
+      ]
+    },
+    {
+      "id": "dor-abdominal",
+      "nome": "Dor abdominal",
+      "checklist": "dor-abdominal",
+      "sinonimos": [
+        "dor de barriga",
+        "dor na barriga",
+        "dor no estômago",
+        "cólica",
+        "dor na boca do estômago",
+        "abdominalgia",
+        "epigastralgia"
+      ]
+    },
+    {
+      "id": "cefaleia",
+      "nome": "Cefaleia",
+      "checklist": "cefaleia",
+      "sinonimos": [
+        "dor de cabeça",
+        "dor na cabeça",
+        "enxaqueca",
+        "cabeça latejando",
+        "pressão na cabeça"
+      ]
+    },
+    {
+      "id": "febre",
+      "nome": "Febre",
+      "checklist": "febre",
+      "sinonimos": [
+        "quentura",
+        "corpo quente",
+        "calafrio",
+        "temperatura alta",
+        "estado febril",
+        "hipertermia"
+      ]
+    },
+    {
+      "id": "tosse",
+      "nome": "Tosse",
+      "checklist": "tosse",
+      "sinonimos": [
+        "tosse seca",
+        "tosse com catarro",
+        "pigarro",
+        "tosse produtiva",
+        "tosse com secreção"
+      ]
+    },
+    {
+      "id": "dor-lombar",
+      "nome": "Dor lombar",
+      "checklist": "dor-lombar",
+      "sinonimos": [
+        "dor nas costas",
+        "dor na lombar",
+        "dor nos rins",
+        "dor no fim das costas",
+        "travou as costas",
+        "lombalgia",
+        "lumbago"
+      ]
+    },
+    {
+      "id": "sincope",
+      "nome": "Síncope",
+      "checklist": "sincope",
+      "sinonimos": [
+        "desmaio",
+        "desmaiou",
+        "apagou",
+        "perdeu os sentidos",
+        "caiu desacordado",
+        "perda de consciência"
+      ]
+    },
+    {
+      "id": "edema",
+      "nome": "Edema",
+      "checklist": "edema",
+      "sinonimos": [
+        "inchaço",
+        "inchaço nas pernas",
+        "perna inchada",
+        "pé inchado",
+        "corpo inchado",
+        "retenção de líquido"
+      ]
+    },
+    {
+      "id": "diarreia",
+      "nome": "Diarreia",
+      "checklist": "diarreia",
+      "sinonimos": [
+        "intestino solto",
+        "fezes moles",
+        "barriga solta",
+        "desarranjo",
+        "evacuações líquidas"
+      ]
+    }
+  ]
+}

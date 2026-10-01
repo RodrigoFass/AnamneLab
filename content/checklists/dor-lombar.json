@@ -1,0 +1,635 @@
+{
+  "id": "dor-lombar",
+  "nome": "Dor lombar",
+  "tipo": "queixa",
+  "queixa": "dor-lombar",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-dor-lombar",
+      "titulo": "Caracterização da dor lombar",
+      "itens": [
+        {
+          "id": "dor-lombar-mecanismo-inicio",
+          "texto": "O que estava fazendo quando a dor começou (esforço, peso, movimento brusco ou sem motivo)",
+          "pergunta_exemplo": "A dor começou depois de pegar peso, de algum movimento ou apareceu sem motivo?",
+          "faltou": "Faltou perguntar se a dor começou depois de esforço, de pegar peso ou sem motivo aparente.",
+          "peso": 3,
+          "palavras_chave": [
+            "pegar peso",
+            "esforço",
+            "movimento",
+            "abaixou",
+            "sem motivo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Lombalgia: atendimento à demanda aguda na APS (versão 2, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/APS/LOMBALGIA-%20v2.%2002-09-2022.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-relacao-posicao-movimento",
+          "texto": "Relação com posição e movimento da coluna",
+          "pergunta_exemplo": "A dor muda quando você fica sentado, em pé, se abaixa ou deita?",
+          "faltou": "Faltou perguntar se a dor muda com a posição e com o movimento da coluna.",
+          "peso": 2,
+          "palavras_chave": [
+            "sentado",
+            "em pé",
+            "abaixar",
+            "deitado",
+            "posição"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Lombalgia: atendimento à demanda aguda na APS (versão 2, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/APS/LOMBALGIA-%20v2.%2002-09-2022.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-piora-tosse-espirro",
+          "texto": "Piora ao tossir, espirrar ou fazer força para evacuar",
+          "pergunta_exemplo": "Quando você tosse, espirra ou faz força no banheiro, a dor aumenta ou desce pela perna?",
+          "faltou": "Faltou perguntar se a dor piora ao tossir, espirrar ou fazer força.",
+          "peso": 1,
+          "palavras_chave": [
+            "tossir",
+            "espirrar",
+            "espirro",
+            "força"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese da dor lombar, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "dor-lombar-claudicacao-pernas",
+          "texto": "Dor ou cansaço nas pernas ao andar que melhora ao sentar ou se inclinar para frente",
+          "pergunta_exemplo": "Quando você anda um pouco, as pernas doem ou pesam e melhoram quando senta ou se inclina para frente?",
+          "faltou": "Faltou perguntar se as pernas doem ao caminhar e aliviam ao sentar ou ao se inclinar.",
+          "peso": 2,
+          "palavras_chave": [
+            "andar",
+            "caminhar",
+            "sentar",
+            "inclinar",
+            "pernas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese da dor lombar, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "dor-lombar-episodios-previos",
+          "texto": "Primeiro episódio ou crises anteriores de dor lombar",
+          "pergunta_exemplo": "É a primeira vez que você tem essa dor nas costas ou já teve crises parecidas antes?",
+          "faltou": "Faltou perguntar se é o primeiro episódio ou se já houve crises parecidas.",
+          "peso": 2,
+          "palavras_chave": [
+            "primeira vez",
+            "antes",
+            "outras vezes",
+            "crise",
+            "parecida"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Lombalgia: atendimento à demanda aguda na APS (versão 2, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/APS/LOMBALGIA-%20v2.%2002-09-2022.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-limitacao-funcional",
+          "texto": "Quanto a dor limita o trabalho e as atividades do dia a dia",
+          "pergunta_exemplo": "Essa dor está atrapalhando seu trabalho ou suas tarefas? Precisou se afastar?",
+          "faltou": "Faltou perguntar o quanto a dor limita o trabalho e o dia a dia.",
+          "peso": 2,
+          "palavras_chave": [
+            "atrapalha",
+            "trabalhar",
+            "afastar",
+            "afastado",
+            "dia a dia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "TelessaúdeRS-UFRGS. Protocolos de encaminhamento para ortopedia adulto (2016), protocolo de dor lombar",
+            "url": "https://lume.ufrgs.br/bitstream/10183/266102/1/001178087.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "irradiacao-sintomas-pernas",
+      "titulo": "Irradiação e sintomas nas pernas",
+      "itens": [
+        {
+          "id": "dor-lombar-irradiacao-abaixo-joelho",
+          "texto": "Dor que desce pela perna até abaixo do joelho",
+          "pergunta_exemplo": "Essa dor desce para a perna? Passa do joelho e chega ao pé?",
+          "faltou": "Faltou perguntar se a dor desce pela perna e passa do joelho.",
+          "peso": 3,
+          "palavras_chave": [
+            "desce",
+            "perna",
+            "joelho",
+            "pé"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Defino e Herrero. Protocolo clínico e de regulação para lombalgia (FMRP-USP)",
+            "url": "https://www.saudedireta.com.br/docsupload/1333460315dor_lombar.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-parestesia-pernas",
+          "texto": "Formigamento ou dormência na perna ou no pé",
+          "pergunta_exemplo": "Sente formigamento ou dormência em alguma perna ou no pé?",
+          "faltou": "Faltou perguntar sobre formigamento ou dormência nas pernas.",
+          "peso": 2,
+          "palavras_chave": [
+            "formigamento",
+            "formiga",
+            "dormência",
+            "dormente",
+            "perna"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Defino e Herrero. Protocolo clínico e de regulação para lombalgia (FMRP-USP)",
+            "url": "https://www.saudedireta.com.br/docsupload/1333460315dor_lombar.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-neurologicos",
+      "titulo": "Sinais de alarme neurológicos",
+      "itens": [
+        {
+          "id": "dor-lombar-anestesia-sela",
+          "texto": "Dormência na região entre as pernas, ânus, genitais e parte interna das coxas",
+          "pergunta_exemplo": "Sente dormência ou perda de sensibilidade entre as pernas, no bumbum ou nas partes íntimas?",
+          "faltou": "Faltou perguntar sobre dormência na região entre as pernas e nas nádegas.",
+          "peso": 3,
+          "palavras_chave": [
+            "dormência",
+            "entre as pernas",
+            "bumbum",
+            "partes íntimas",
+            "sensibilidade"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Lombalgia: atendimento à demanda aguda na APS (versão 2, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/APS/LOMBALGIA-%20v2.%2002-09-2022.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-controle-urina",
+          "texto": "Retenção urinária ou perda do controle da urina desde o início da dor",
+          "pergunta_exemplo": "Desde que a dor começou, está com dificuldade para urinar ou a urina tem escapado sem você perceber?",
+          "faltou": "Faltou perguntar se há dificuldade para urinar ou perda do controle da urina.",
+          "peso": 3,
+          "palavras_chave": [
+            "urinar",
+            "urina",
+            "xixi",
+            "escapando",
+            "segurar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Lombalgia: atendimento à demanda aguda na APS (versão 2, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/APS/LOMBALGIA-%20v2.%2002-09-2022.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-controle-fezes",
+          "texto": "Perda do controle das fezes",
+          "pergunta_exemplo": "Tem conseguido segurar as fezes normalmente ou já escapou sem você sentir?",
+          "faltou": "Faltou perguntar se há perda do controle das fezes.",
+          "peso": 3,
+          "palavras_chave": [
+            "fezes",
+            "cocô",
+            "segurar",
+            "intestino",
+            "escapou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Goiânia. Protocolo de atenção primária nº 12: atendimento de urgência na atenção básica, dor lombar",
+            "url": "https://saude.goiania.go.gov.br/wp-content/uploads/sites/3/2020/12/PROTOCOLO_DOR_LOMBAR_12.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-fraqueza-pernas",
+          "texto": "Fraqueza na perna ou no pé e se está piorando",
+          "pergunta_exemplo": "Notou fraqueza na perna ou o pé arrastando? Essa fraqueza está piorando com os dias?",
+          "faltou": "Faltou perguntar se há fraqueza nas pernas e se ela está piorando.",
+          "peso": 3,
+          "palavras_chave": [
+            "fraqueza",
+            "fraca",
+            "força",
+            "arrastando",
+            "piorando"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Defino e Herrero. Protocolo clínico e de regulação para lombalgia (FMRP-USP)",
+            "url": "https://www.saudedireta.com.br/docsupload/1333460315dor_lombar.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-sistemicos",
+      "titulo": "Sinais de alarme sistêmicos",
+      "itens": [
+        {
+          "id": "dor-lombar-febre",
+          "texto": "Febre ou calafrio junto com a dor nas costas",
+          "pergunta_exemplo": "Desde que essa dor começou, teve febre ou calafrio?",
+          "faltou": "Faltou perguntar se há febre ou calafrio junto com a dor.",
+          "peso": 3,
+          "palavras_chave": [
+            "febre",
+            "calafrio",
+            "temperatura",
+            "quente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Goiânia. Protocolo de atenção primária nº 12: atendimento de urgência na atenção básica, dor lombar",
+            "url": "https://saude.goiania.go.gov.br/wp-content/uploads/sites/3/2020/12/PROTOCOLO_DOR_LOMBAR_12.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-perda-peso",
+          "texto": "Perda de peso sem explicação",
+          "pergunta_exemplo": "Perdeu peso nos últimos meses sem estar fazendo dieta?",
+          "faltou": "Faltou perguntar se houve perda de peso sem explicação.",
+          "peso": 3,
+          "palavras_chave": [
+            "perdeu peso",
+            "emagreceu",
+            "quilos",
+            "sem querer",
+            "dieta"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Lombalgia: atendimento à demanda aguda na APS (versão 2, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/APS/LOMBALGIA-%20v2.%2002-09-2022.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-dor-noturna-repouso",
+          "texto": "Dor à noite ou em repouso que não alivia ao deitar",
+          "pergunta_exemplo": "A dor acorda você à noite ou continua mesmo deitado e parado?",
+          "faltou": "Faltou perguntar se a dor aparece à noite ou em repouso.",
+          "peso": 3,
+          "palavras_chave": [
+            "noite",
+            "acorda",
+            "deitado",
+            "parado",
+            "repouso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "SMS Goiânia. Protocolo de atenção primária nº 12: atendimento de urgência na atenção básica, dor lombar",
+            "url": "https://saude.goiania.go.gov.br/wp-content/uploads/sites/3/2020/12/PROTOCOLO_DOR_LOMBAR_12.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-historia-cancer",
+          "texto": "Câncer em qualquer época da vida",
+          "pergunta_exemplo": "Você já teve câncer alguma vez, mesmo que há muitos anos?",
+          "faltou": "Faltou perguntar se o paciente já teve câncer em algum momento.",
+          "peso": 3,
+          "palavras_chave": [
+            "câncer",
+            "tumor",
+            "quimioterapia",
+            "radioterapia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Lombalgia: atendimento à demanda aguda na APS (versão 2, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/APS/LOMBALGIA-%20v2.%2002-09-2022.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-trauma",
+          "texto": "Queda, acidente ou pancada nas costas",
+          "pergunta_exemplo": "Antes da dor, você caiu, sofreu algum acidente ou levou alguma pancada nas costas?",
+          "faltou": "Faltou perguntar se houve queda, acidente ou pancada antes da dor.",
+          "peso": 3,
+          "palavras_chave": [
+            "caiu",
+            "queda",
+            "acidente",
+            "pancada",
+            "batida"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Defino e Herrero. Protocolo clínico e de regulação para lombalgia (FMRP-USP)",
+            "url": "https://www.saudedireta.com.br/docsupload/1333460315dor_lombar.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fatores-risco-dor-lombar",
+      "titulo": "Fatores de risco para causa grave",
+      "itens": [
+        {
+          "id": "dor-lombar-corticoide-osteoporose",
+          "texto": "Uso prolongado de corticoide ou osteoporose",
+          "pergunta_exemplo": "Você usa ou usou corticoide por muito tempo? Já falaram que você tem osteoporose ou osso fraco?",
+          "faltou": "Faltou perguntar sobre uso prolongado de corticoide e osteoporose.",
+          "peso": 2,
+          "palavras_chave": [
+            "corticoide",
+            "prednisona",
+            "osteoporose",
+            "osso fraco"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Afya. Lombalgia: saiba como diagnosticar e manejar a dor lombar",
+            "url": "https://portal.afya.com.br/ortopedia/lombalgia-saiba-como-diagnosticar-e-manejar-a-dor-lombar"
+          }
+        },
+        {
+          "id": "dor-lombar-drogas-injetaveis",
+          "texto": "Uso de drogas injetáveis",
+          "pergunta_exemplo": "Você usa ou já usou alguma droga na veia?",
+          "faltou": "Faltou perguntar sobre uso de drogas injetáveis.",
+          "peso": 2,
+          "palavras_chave": [
+            "droga",
+            "na veia",
+            "injetável",
+            "seringa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Lombalgia: sinais de alarme e condições mais temidas",
+            "url": "https://sanarmed.com/lombalgia/"
+          }
+        },
+        {
+          "id": "dor-lombar-imunossupressao",
+          "texto": "Imunidade baixa (HIV, transplante, quimioterapia ou remédios que baixam a imunidade)",
+          "pergunta_exemplo": "Você tem alguma condição ou toma algum remédio que baixa a imunidade, como tratamento de HIV, transplante ou quimioterapia?",
+          "faltou": "Faltou perguntar sobre condições ou remédios que baixam a imunidade.",
+          "peso": 2,
+          "palavras_chave": [
+            "imunidade",
+            "hiv",
+            "transplante",
+            "quimioterapia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Grupo MedCof. Lombalgia: você conhece os sinais de alerta?",
+            "url": "https://www.grupomedcof.com.br/blog/lombalgia/"
+          }
+        },
+        {
+          "id": "dor-lombar-infeccao-recente",
+          "texto": "Infecção ou procedimento recente (infecção urinária ou de pele, sonda, injeção na coluna)",
+          "pergunta_exemplo": "Teve alguma infecção nas últimas semanas, usou sonda ou fez algum procedimento ou injeção na coluna?",
+          "faltou": "Faltou perguntar sobre infecção ou procedimento recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "infecção",
+            "antibiótico",
+            "sonda",
+            "procedimento",
+            "injeção"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Lombalgia: sinais de alarme e condições mais temidas",
+            "url": "https://sanarmed.com/lombalgia/"
+          }
+        },
+        {
+          "id": "dor-lombar-contato-tuberculose",
+          "texto": "Tuberculose prévia ou contato com alguém com tuberculose",
+          "pergunta_exemplo": "Você já teve tuberculose ou conviveu com alguém que teve?",
+          "faltou": "Faltou perguntar sobre tuberculose prévia ou contato com alguém com tuberculose.",
+          "peso": 1,
+          "palavras_chave": [
+            "tuberculose",
+            "conviveu",
+            "contato",
+            "alguém"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Lombalgia: sinais de alarme e condições mais temidas",
+            "url": "https://sanarmed.com/lombalgia/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dor-inflamatoria-causas-fora-coluna",
+      "titulo": "Rigidez matinal e sintomas fora da coluna",
+      "itens": [
+        {
+          "id": "dor-lombar-rigidez-matinal",
+          "texto": "Rigidez ao acordar que melhora com o movimento",
+          "pergunta_exemplo": "De manhã você acorda com as costas duras? Isso melhora quando começa a se mexer?",
+          "faltou": "Faltou perguntar se há rigidez pela manhã que melhora com o movimento.",
+          "peso": 2,
+          "palavras_chave": [
+            "manhã",
+            "acorda",
+            "rigidez",
+            "duro",
+            "travado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Afya. Lombalgia: saiba como diagnosticar e manejar a dor lombar",
+            "url": "https://portal.afya.com.br/ortopedia/lombalgia-saiba-como-diagnosticar-e-manejar-a-dor-lombar"
+          }
+        },
+        {
+          "id": "dor-lombar-melhora-exercicio",
+          "texto": "Dor que melhora com exercício e não melhora com repouso",
+          "pergunta_exemplo": "A dor melhora quando você se exercita e piora quando fica muito tempo parado?",
+          "faltou": "Faltou perguntar se a dor melhora com exercício e piora com repouso.",
+          "peso": 2,
+          "palavras_chave": [
+            "exercício",
+            "exercita",
+            "parado",
+            "descanso",
+            "melhora"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "TelessaúdeRS-UFRGS. Protocolos de encaminhamento para ortopedia adulto (2016), protocolo de dor lombar",
+            "url": "https://lume.ufrgs.br/bitstream/10183/266102/1/001178087.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-sintomas-urinarios",
+          "texto": "Ardência para urinar ou sangue na urina",
+          "pergunta_exemplo": "Está com ardência para urinar, urinando muitas vezes ou notou sangue na urina?",
+          "faltou": "Faltou perguntar sobre ardência para urinar e sangue na urina.",
+          "peso": 2,
+          "palavras_chave": [
+            "ardência",
+            "urinar",
+            "sangue na urina",
+            "xixi",
+            "arde"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Prefeitura de Curitiba. Lombalgia: atendimento à demanda aguda na APS (versão 2, 2022)",
+            "url": "https://saude.curitiba.pr.gov.br/images/APS/LOMBALGIA-%20v2.%2002-09-2022.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-colica-flanco-virilha",
+          "texto": "Dor em cólica no flanco que vai para a virilha",
+          "pergunta_exemplo": "Essa dor vem em ondas, muito forte, e vai para a barriga ou para a virilha? Não acha posição?",
+          "faltou": "Faltou perguntar se a dor é em cólica e se irradia para a virilha.",
+          "peso": 2,
+          "palavras_chave": [
+            "cólica",
+            "ondas",
+            "virilha",
+            "posição",
+            "pedra no rim"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese da dor lombar, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "dor-lombar-dor-pulsatil-abdome",
+          "texto": "Dor ou pulsação na barriga junto com a dor nas costas",
+          "pergunta_exemplo": "Junto com a dor nas costas, sente dor na barriga ou algo pulsando nela?",
+          "faltou": "Faltou perguntar se há dor ou pulsação na barriga junto com a dor nas costas.",
+          "peso": 3,
+          "palavras_chave": [
+            "barriga",
+            "abdome",
+            "pulsando",
+            "pulsação",
+            "latejando"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Lombalgia: sinais de alarme e condições mais temidas",
+            "url": "https://sanarmed.com/lombalgia/"
+          }
+        },
+        {
+          "id": "dor-lombar-relacao-ciclo-gestacao",
+          "texto": "Relação com a menstruação e possibilidade de gravidez",
+          "pergunta_exemplo": "A dor tem relação com a menstruação? Existe chance de você estar grávida?",
+          "faltou": "Faltou perguntar sobre relação com a menstruação e possibilidade de gravidez, quando couber.",
+          "peso": 1,
+          "palavras_chave": [
+            "menstruação",
+            "grávida",
+            "gravidez",
+            "atraso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese da dor lombar, material público de semiologia; conferir fonte",
+            "url": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "trabalho-fatores-psicossociais",
+      "titulo": "Trabalho e fatores psicossociais",
+      "itens": [
+        {
+          "id": "dor-lombar-sobrecarga-ocupacional",
+          "texto": "Carga física da coluna no trabalho (peso, postura, tempo sentado ou dirigindo)",
+          "pergunta_exemplo": "No seu trabalho, você carrega peso, fica muito tempo sentado, dirigindo ou curvado?",
+          "faltou": "Faltou perguntar sobre a carga que o trabalho coloca na coluna.",
+          "peso": 2,
+          "palavras_chave": [
+            "carrega peso",
+            "sentado",
+            "dirigindo",
+            "curvado",
+            "trabalho"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "TelessaúdeRS-UFRGS. Protocolos de encaminhamento para ortopedia adulto (2016), protocolo de dor lombar",
+            "url": "https://lume.ufrgs.br/bitstream/10183/266102/1/001178087.pdf"
+          }
+        },
+        {
+          "id": "dor-lombar-medo-evitacao",
+          "texto": "Medo de que o movimento piore a dor",
+          "pergunta_exemplo": "Você tem evitado se mexer com medo de piorar a dor ou de se machucar?",
+          "faltou": "Faltou perguntar se o paciente tem medo de se movimentar e piorar a dor.",
+          "peso": 1,
+          "palavras_chave": [
+            "medo",
+            "evita",
+            "piorar",
+            "se mexer",
+            "machucar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Grupo MedCof. Lombalgia: você conhece os sinais de alerta?",
+            "url": "https://www.grupomedcof.com.br/blog/lombalgia/"
+          }
+        },
+        {
+          "id": "dor-lombar-crencas-expectativas",
+          "texto": "O que o paciente acha que causa a dor e o que espera da consulta",
+          "pergunta_exemplo": "O que você acha que está causando essa dor? O que mais te preocupa?",
+          "faltou": "Faltou perguntar o que o paciente pensa sobre a causa da dor e o que o preocupa.",
+          "peso": 1,
+          "palavras_chave": [
+            "acha que",
+            "causando",
+            "preocupa",
+            "espera"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Grupo MedCof. Lombalgia: você conhece os sinais de alerta?",
+            "url": "https://www.grupomedcof.com.br/blog/lombalgia/"
+          }
+        }
+      ]
+    }
+  ]
+}

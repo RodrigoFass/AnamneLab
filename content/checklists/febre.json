@@ -1,0 +1,685 @@
+{
+  "id": "febre",
+  "nome": "Febre",
+  "tipo": "queixa",
+  "queixa": "febre",
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "caracterizacao-febre",
+      "titulo": "Caracterização da febre",
+      "itens": [
+        {
+          "id": "febre-temperatura-maxima",
+          "texto": "Se a febre foi medida com termômetro e qual a temperatura mais alta",
+          "pergunta_exemplo": "Você chegou a medir a febre com termômetro? Qual foi a temperatura mais alta que marcou?",
+          "faltou": "Faltou perguntar se a febre foi medida com termômetro e qual foi a temperatura mais alta.",
+          "peso": 3,
+          "palavras_chave": [
+            "termômetro",
+            "mediu",
+            "temperatura",
+            "graus",
+            "mais alta",
+            "marcou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-padrao-diario",
+          "texto": "Padrão da febre ao longo do dia e entre os dias",
+          "pergunta_exemplo": "A febre fica o dia todo ou aparece em certos horários, como no fim da tarde? Tem dias sem febre?",
+          "faltou": "Faltou perguntar em que horários a febre aparece e se há dias sem febre.",
+          "peso": 2,
+          "palavras_chave": [
+            "horário",
+            "fim da tarde",
+            "à noite",
+            "o dia todo",
+            "dias sem febre"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre de origem indeterminada (FOI)",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre-de-origem-indeterminada-foi"
+          }
+        },
+        {
+          "id": "febre-recorrente",
+          "texto": "Episódios anteriores de febre que vão e voltam",
+          "pergunta_exemplo": "Antes desta vez, você já teve outras crises de febre que iam e voltavam?",
+          "faltou": "Faltou perguntar se já houve outros episódios de febre antes deste.",
+          "peso": 1,
+          "palavras_chave": [
+            "outras vezes",
+            "vai e volta",
+            "antes",
+            "de novo",
+            "episódios"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-calafrios-tremores",
+          "texto": "Calafrios com tremores",
+          "pergunta_exemplo": "Junto com a febre você tem calafrio, a ponto de tremer o corpo ou bater os dentes?",
+          "faltou": "Faltou perguntar se a febre vem com calafrios e tremores.",
+          "peso": 2,
+          "palavras_chave": [
+            "calafrio",
+            "tremor",
+            "tremendo",
+            "bater os dentes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-sudorese-noturna",
+          "texto": "Suor noturno",
+          "pergunta_exemplo": "Você tem acordado de noite suando, a ponto de molhar a roupa ou o lençol?",
+          "faltou": "Faltou perguntar sobre suor durante a noite.",
+          "peso": 2,
+          "palavras_chave": [
+            "suor",
+            "suando",
+            "de noite",
+            "lençol",
+            "molhar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Secretaria da Saúde do Paraná. Tuberculose",
+            "url": "https://www.saude.pr.gov.br/Pagina/Tuberculose"
+          }
+        },
+        {
+          "id": "febre-resposta-antitermico",
+          "texto": "Uso de antitérmico e se a febre cede com ele",
+          "pergunta_exemplo": "Tomou algum remédio para baixar a febre? Ela baixou? Quanto tempo depois voltou?",
+          "faltou": "Faltou perguntar se usou antitérmico e se a febre cedeu com ele.",
+          "peso": 2,
+          "palavras_chave": [
+            "remédio para febre",
+            "dipirona",
+            "paracetamol",
+            "baixou",
+            "antitérmico"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Febre em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/infec%C3%A7%C3%B5es/biologia-das-doen%C3%A7as-infecciosas/febre-em-adultos"
+          }
+        },
+        {
+          "id": "febre-antibiotico-previo",
+          "texto": "Antibiótico já usado neste quadro (qual, por quanto tempo, resposta)",
+          "pergunta_exemplo": "Você chegou a tomar algum antibiótico por causa dessa febre? Qual e por quantos dias?",
+          "faltou": "Faltou perguntar se já usou antibiótico neste quadro e qual foi a resposta.",
+          "peso": 2,
+          "palavras_chave": [
+            "antibiótico",
+            "amoxicilina",
+            "quantos dias",
+            "tomou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "USP Ribeirão Preto, Enfermaria de Especialidades Pediátricas. Protocolo de neutropenia febril no paciente oncológico",
+            "url": "https://sites.usp.br/rpp/protocolo-neutropenia-febril-no-paciente-oncologico/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sintomas-foco-febre",
+      "titulo": "Sintomas associados e busca do foco",
+      "itens": [
+        {
+          "id": "febre-perda-peso",
+          "texto": "Perda de peso sem querer desde o início do quadro",
+          "pergunta_exemplo": "Você perdeu peso sem estar fazendo dieta? Quantos quilos, mais ou menos?",
+          "faltou": "Faltou perguntar se houve perda de peso sem intenção.",
+          "peso": 3,
+          "palavras_chave": [
+            "peso",
+            "emagreceu",
+            "quilos",
+            "roupa folgada"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre de origem indeterminada (FOI)",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre-de-origem-indeterminada-foi"
+          }
+        },
+        {
+          "id": "febre-foco-respiratorio",
+          "texto": "Sintomas respiratórios e de vias aéreas (tosse, catarro, coriza, dor de garganta ou de ouvido)",
+          "pergunta_exemplo": "Junto com a febre, você está com tosse, catarro, nariz escorrendo, dor de garganta ou de ouvido?",
+          "faltou": "Faltou perguntar sobre tosse, catarro, coriza e dor de garganta ou de ouvido.",
+          "peso": 3,
+          "palavras_chave": [
+            "tosse",
+            "catarro",
+            "garganta",
+            "nariz",
+            "ouvido",
+            "gripe"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-foco-urinario",
+          "texto": "Sintomas urinários (ardência, urgência, dor nas costas na altura dos rins)",
+          "pergunta_exemplo": "Está sentindo ardência ou vontade toda hora de urinar? Alguma dor nas costas, do lado?",
+          "faltou": "Faltou perguntar sobre ardência ao urinar e dor nas costas na altura dos rins.",
+          "peso": 3,
+          "palavras_chave": [
+            "urinar",
+            "xixi",
+            "ardência",
+            "arde",
+            "urina"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-foco-intestinal",
+          "texto": "Diarreia e dor na barriga",
+          "pergunta_exemplo": "Junto com a febre teve diarreia ou dor na barriga?",
+          "faltou": "Faltou perguntar sobre diarreia e dor na barriga.",
+          "peso": 2,
+          "palavras_chave": [
+            "diarreia",
+            "intestino",
+            "barriga",
+            "evacuar",
+            "fezes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-dor-articulacoes",
+          "texto": "Dor no corpo e nas articulações, com ou sem inchaço das juntas",
+          "pergunta_exemplo": "Está com dor no corpo ou nas juntas, como punhos, tornozelos e joelhos? Alguma junta inchou?",
+          "faltou": "Faltou perguntar sobre dor no corpo e nas articulações.",
+          "peso": 2,
+          "palavras_chave": [
+            "dor no corpo",
+            "juntas",
+            "articulação",
+            "inchou",
+            "músculos"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre de origem indeterminada (FOI)",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre-de-origem-indeterminada-foi"
+          }
+        },
+        {
+          "id": "febre-lesao-pele-local",
+          "texto": "Ferida ou área da pele vermelha, quente e inchada",
+          "pergunta_exemplo": "Apareceu alguma ferida, ou algum lugar da pele vermelho, quente e inchado?",
+          "faltou": "Faltou perguntar se há ferida ou área da pele vermelha, quente e inchada.",
+          "peso": 2,
+          "palavras_chave": [
+            "ferida",
+            "vermelho",
+            "quente",
+            "inchado",
+            "machucado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-ictericia-urina-escura",
+          "texto": "Olhos amarelados ou urina escura",
+          "pergunta_exemplo": "Alguém notou seus olhos amarelados? A urina ficou escura, cor de coca-cola?",
+          "faltou": "Faltou perguntar sobre olhos amarelados e urina escura.",
+          "peso": 2,
+          "palavras_chave": [
+            "amarelo",
+            "amarelado",
+            "olhos",
+            "urina escura"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Centro de Vigilância Epidemiológica de São Paulo. Alerta de leptospirose para profissionais de saúde",
+            "url": "https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/doc/lepto/alerta_lepto_profissionais.pdf"
+          }
+        },
+        {
+          "id": "febre-olhos-vermelhos-panturrilha",
+          "texto": "Olhos vermelhos e dor forte na batata da perna",
+          "pergunta_exemplo": "Seus olhos ficaram vermelhos? Sente dor forte na batata da perna?",
+          "faltou": "Faltou perguntar sobre olhos vermelhos e dor na batata da perna.",
+          "peso": 1,
+          "palavras_chave": [
+            "olhos vermelhos",
+            "batata da perna",
+            "panturrilha",
+            "dor na perna"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Centro de Vigilância Epidemiológica de São Paulo. Alerta de leptospirose para profissionais de saúde",
+            "url": "https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/doc/lepto/alerta_lepto_profissionais.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sinais-alarme-febre",
+      "titulo": "Sinais de alarme",
+      "itens": [
+        {
+          "id": "febre-confusao-sonolencia",
+          "texto": "Confusão, sonolência fora do comum ou mudança de comportamento",
+          "pergunta_exemplo": "Alguém percebeu você confuso, muito sonolento ou falando coisas sem sentido?",
+          "faltou": "Faltou perguntar sobre confusão ou sonolência fora do comum.",
+          "peso": 3,
+          "palavras_chave": [
+            "confuso",
+            "sonolento",
+            "sonolência",
+            "sem sentido",
+            "desorientado"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Febre em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/infec%C3%A7%C3%B5es/biologia-das-doen%C3%A7as-infecciosas/febre-em-adultos"
+          }
+        },
+        {
+          "id": "febre-cefaleia-rigidez-nuca",
+          "texto": "Dor de cabeça forte com pescoço duro ou vômitos em jato",
+          "pergunta_exemplo": "Está com dor de cabeça forte? Sente o pescoço duro, difícil de encostar o queixo no peito?",
+          "faltou": "Faltou perguntar sobre dor de cabeça forte com pescoço duro.",
+          "peso": 3,
+          "palavras_chave": [
+            "dor de cabeça",
+            "pescoço duro",
+            "nuca",
+            "queixo no peito",
+            "vômito em jato"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Secretaria de Estado da Saúde de Goiás. Meningite",
+            "url": "https://goias.gov.br/saude/meningite/"
+          }
+        },
+        {
+          "id": "febre-manchas-pele",
+          "texto": "Manchas na pele, sobretudo roxas ou que não somem ao apertar",
+          "pergunta_exemplo": "Apareceu alguma mancha na pele? Ela é roxa ou some quando você aperta?",
+          "faltou": "Faltou perguntar se apareceram manchas na pele.",
+          "peso": 3,
+          "palavras_chave": [
+            "manchas",
+            "pele",
+            "pintinhas",
+            "roxas",
+            "vermelhas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Febre em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/infec%C3%A7%C3%B5es/biologia-das-doen%C3%A7as-infecciosas/febre-em-adultos"
+          }
+        },
+        {
+          "id": "febre-sangramentos",
+          "texto": "Sangramento de gengiva, nariz, urina ou fezes",
+          "pergunta_exemplo": "Notou sangue saindo da gengiva ou do nariz, na urina ou fezes pretas?",
+          "faltou": "Faltou perguntar sobre sangramentos.",
+          "peso": 3,
+          "palavras_chave": [
+            "sangramento",
+            "sangue",
+            "gengiva",
+            "nariz",
+            "fezes pretas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Dengue: diagnóstico e manejo clínico, adulto e criança, 6ª edição (2024)",
+            "url": "https://portaldeboaspraticas.iff.fiocruz.br/wp-content/uploads/2024/02/dengue-manejo-clinico.pdf"
+          }
+        },
+        {
+          "id": "febre-dor-abdominal-vomitos-persistentes",
+          "texto": "Dor forte e contínua na barriga ou vômitos que não param",
+          "pergunta_exemplo": "Tem dor forte na barriga que não passa, ou vômitos que não deixam parar nada no estômago?",
+          "faltou": "Faltou perguntar sobre dor forte e contínua na barriga ou vômitos persistentes.",
+          "peso": 3,
+          "palavras_chave": [
+            "vômito",
+            "vomitando",
+            "dor na barriga",
+            "não para",
+            "não passa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Dengue: diagnóstico e manejo clínico, adulto e criança, 6ª edição (2024)",
+            "url": "https://portaldeboaspraticas.iff.fiocruz.br/wp-content/uploads/2024/02/dengue-manejo-clinico.pdf"
+          }
+        },
+        {
+          "id": "febre-desidratacao",
+          "texto": "Tontura ao levantar e pouca urina",
+          "pergunta_exemplo": "Sente tontura quando levanta? Está urinando menos que o normal? Quando urinou pela última vez?",
+          "faltou": "Faltou perguntar sobre tontura ao levantar e quantidade de urina.",
+          "peso": 3,
+          "palavras_chave": [
+            "tontura",
+            "levantar",
+            "urinando",
+            "urinou",
+            "última vez"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Dengue: diagnóstico e manejo clínico, adulto e criança, 6ª edição (2024)",
+            "url": "https://portaldeboaspraticas.iff.fiocruz.br/wp-content/uploads/2024/02/dengue-manejo-clinico.pdf"
+          }
+        },
+        {
+          "id": "febre-falta-de-ar",
+          "texto": "Falta de ar junto com a febre",
+          "pergunta_exemplo": "Junto com a febre, você sente falta de ar ou respira mais rápido?",
+          "faltou": "Faltou perguntar se há falta de ar junto com a febre.",
+          "peso": 3,
+          "palavras_chave": [
+            "falta de ar",
+            "fôlego",
+            "respirar",
+            "cansaço para respirar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Febre em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/infec%C3%A7%C3%B5es/biologia-das-doen%C3%A7as-infecciosas/febre-em-adultos"
+          }
+        }
+      ]
+    },
+    {
+      "id": "exposicoes-febre",
+      "titulo": "Exposições e epidemiologia",
+      "itens": [
+        {
+          "id": "febre-viagem-recente",
+          "texto": "Viagem recente: para onde e há quanto tempo voltou",
+          "pergunta_exemplo": "Você viajou nas últimas semanas? Para onde, e quando voltou?",
+          "faltou": "Faltou perguntar sobre viagem recente, o destino e a data da volta.",
+          "peso": 3,
+          "palavras_chave": [
+            "viajou",
+            "viagem",
+            "para onde",
+            "voltou",
+            "últimas semanas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-area-malaria-febre-amarela",
+          "texto": "Passagem por área de malária, mata ou zona rural e vacina contra febre amarela",
+          "pergunta_exemplo": "No último mês você esteve na região amazônica, em mata ou zona rural? Tomou a vacina da febre amarela?",
+          "faltou": "Faltou perguntar sobre passagem por área de malária ou de mata e sobre a vacina da febre amarela.",
+          "peso": 2,
+          "palavras_chave": [
+            "amazônia",
+            "mata",
+            "zona rural",
+            "malária",
+            "febre amarela",
+            "vacina"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Secretaria da Saúde do Paraná. Malária",
+            "url": "https://www.saude.pr.gov.br/Pagina/Malaria"
+          }
+        },
+        {
+          "id": "febre-dengue-vizinhanca",
+          "texto": "Casos de dengue na casa ou no bairro e picadas de mosquito",
+          "pergunta_exemplo": "Tem alguém em casa ou no bairro com dengue? Tem muito mosquito onde você mora?",
+          "faltou": "Faltou perguntar sobre casos de dengue por perto e exposição a mosquitos.",
+          "peso": 2,
+          "palavras_chave": [
+            "dengue",
+            "mosquito",
+            "bairro",
+            "vizinho",
+            "picada"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Dengue: diagnóstico e manejo clínico, adulto e criança, 6ª edição (2024)",
+            "url": "https://portaldeboaspraticas.iff.fiocruz.br/wp-content/uploads/2024/02/dengue-manejo-clinico.pdf"
+          }
+        },
+        {
+          "id": "febre-contato-doentes",
+          "texto": "Contato com pessoas doentes, incluindo tosse prolongada ou meningite",
+          "pergunta_exemplo": "Alguém perto de você está doente ou teve febre? Conhece alguém com tosse há muito tempo ou com tuberculose?",
+          "faltou": "Faltou perguntar sobre contato com pessoas doentes.",
+          "peso": 2,
+          "palavras_chave": [
+            "alguém doente",
+            "contato",
+            "em casa",
+            "tuberculose",
+            "mesma coisa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre"
+          }
+        },
+        {
+          "id": "febre-enchente-esgoto-ratos",
+          "texto": "Contato com água de enchente, lama, esgoto ou ratos",
+          "pergunta_exemplo": "No último mês você entrou em água de enchente, lama ou esgoto? Tem rato onde você mora ou trabalha?",
+          "faltou": "Faltou perguntar sobre contato com enchente, lama, esgoto ou ratos.",
+          "peso": 2,
+          "palavras_chave": [
+            "enchente",
+            "alagamento",
+            "lama",
+            "esgoto",
+            "rato"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Centro de Vigilância Epidemiológica de São Paulo. Alerta de leptospirose para profissionais de saúde",
+            "url": "https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/doc/lepto/alerta_lepto_profissionais.pdf"
+          }
+        },
+        {
+          "id": "febre-contato-animais",
+          "texto": "Contato com animais ou carrapatos",
+          "pergunta_exemplo": "Você tem contato com animais, como cachorro, gato, gado, cavalo ou aves? Foi picado por carrapato?",
+          "faltou": "Faltou perguntar sobre contato com animais e carrapatos.",
+          "peso": 1,
+          "palavras_chave": [
+            "animais",
+            "cachorro",
+            "gato",
+            "gado",
+            "carrapato"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre de origem indeterminada (FOI)",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre-de-origem-indeterminada-foi"
+          }
+        },
+        {
+          "id": "febre-exposicao-sexual",
+          "texto": "Exposição sexual de risco, perguntada com respeito",
+          "pergunta_exemplo": "Posso fazer uma pergunta sobre sua vida sexual? Teve relação sem camisinha ou com parceria nova nos últimos meses?",
+          "faltou": "Faltou perguntar, com respeito, sobre exposição sexual de risco.",
+          "peso": 2,
+          "palavras_chave": [
+            "relação",
+            "camisinha",
+            "preservativo",
+            "parceiro",
+            "vida sexual"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para profissionais. Febre de origem indeterminada (FOI)",
+            "url": "https://www.msdmanuals.com/pt/profissional/doen%C3%A7as-infecciosas/biologia-das-doen%C3%A7as-infecciosas/febre-de-origem-indeterminada-foi"
+          }
+        }
+      ]
+    },
+    {
+      "id": "antecedentes-febre",
+      "titulo": "Antecedentes ligados à febre",
+      "itens": [
+        {
+          "id": "febre-imunossupressao",
+          "texto": "Imunidade baixa (HIV, transplante, corticoide ou imunossupressor)",
+          "pergunta_exemplo": "Você tem alguma doença ou usa algum remédio que baixa a imunidade, como corticoide, ou tem HIV?",
+          "faltou": "Faltou perguntar sobre condições ou remédios que baixam a imunidade.",
+          "peso": 3,
+          "palavras_chave": [
+            "imunidade",
+            "hiv",
+            "corticoide",
+            "transplante",
+            "imunossupressor"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Manual MSD, versão para a família. Febre em adultos",
+            "url": "https://www.msdmanuals.com/pt/casa/infec%C3%A7%C3%B5es/biologia-das-doen%C3%A7as-infecciosas/febre-em-adultos"
+          }
+        },
+        {
+          "id": "febre-quimioterapia-recente",
+          "texto": "Quimioterapia recente e data do último ciclo",
+          "pergunta_exemplo": "Você faz quimioterapia? Quando foi a última sessão?",
+          "faltou": "Faltou perguntar sobre quimioterapia recente e a data da última sessão.",
+          "peso": 3,
+          "palavras_chave": [
+            "quimioterapia",
+            "quimio",
+            "última sessão",
+            "tratamento de câncer"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "USP Ribeirão Preto, Enfermaria de Especialidades Pediátricas. Protocolo de neutropenia febril no paciente oncológico",
+            "url": "https://sites.usp.br/rpp/protocolo-neutropenia-febril-no-paciente-oncologico/"
+          }
+        },
+        {
+          "id": "cirurgia-recente",
+          "texto": "Cirurgia recente",
+          "pergunta_exemplo": "Fez alguma cirurgia no último mês?",
+          "faltou": "Faltou perguntar sobre cirurgia recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "cirurgia",
+            "operou",
+            "último mês",
+            "recente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Fuzinatto e cols. Profilaxia para tromboembolia venosa em um hospital geral (repositório LUME/UFRGS)",
+            "url": "https://lume.ufrgs.br/bitstream/10183/153048/1/001003740.pdf"
+          }
+        },
+        {
+          "id": "febre-internacao-procedimento-recente",
+          "texto": "Internação, procedimento ou dispositivo recente (sonda, cateter, dentista)",
+          "pergunta_exemplo": "Esteve internado, passou por algum procedimento ou usou sonda ou cateter nos últimos meses? Foi ao dentista?",
+          "faltou": "Faltou perguntar sobre internação, procedimento ou uso de sonda ou cateter recente.",
+          "peso": 2,
+          "palavras_chave": [
+            "internado",
+            "internação",
+            "sonda",
+            "cateter",
+            "dentista",
+            "procedimento"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "USP Ribeirão Preto, Enfermaria de Especialidades Pediátricas. Protocolo de neutropenia febril no paciente oncológico",
+            "url": "https://sites.usp.br/rpp/protocolo-neutropenia-febril-no-paciente-oncologico/"
+          }
+        },
+        {
+          "id": "febre-possibilidade-gravidez",
+          "texto": "Possibilidade de gravidez, quando couber",
+          "pergunta_exemplo": "Existe chance de você estar grávida? Quando foi sua última menstruação?",
+          "faltou": "Faltou perguntar sobre a possibilidade de gravidez.",
+          "peso": 2,
+          "palavras_chave": [
+            "grávida",
+            "gravidez",
+            "menstruação",
+            "gestante"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Ministério da Saúde. Dengue: diagnóstico e manejo clínico, adulto e criança, 6ª edição (2024)",
+            "url": "https://portaldeboaspraticas.iff.fiocruz.br/wp-content/uploads/2024/02/dengue-manejo-clinico.pdf"
+          }
+        }
+      ]
+    }
+  ]
+}

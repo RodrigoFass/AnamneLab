@@ -1,0 +1,55 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  conteudo:
+    name: Conteúdo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instala dependências
+        run: pip install jsonschema pytest
+      - name: Valida o conteúdo
+        run: python scripts/validar_conteudo.py
+      - name: Testa o validador
+        run: pytest scripts/tests
+
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instala o backend
+        run: pip install -e "backend[dev]"
+      - name: Roda os testes
+        working-directory: backend
+        run: pytest -q
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Instala dependências
+        working-directory: frontend
+        run: npm ci
+      - name: Compila
+        working-directory: frontend
+        run: npm run build

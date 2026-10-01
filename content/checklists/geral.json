@@ -1,0 +1,868 @@
+{
+  "id": "geral",
+  "nome": "Anamnese geral",
+  "tipo": "geral",
+  "queixa": null,
+  "versao": 1,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "observacoes": "Rascunho provisório montado a partir de fontes públicas da internet, escrito com palavras próprias. Ainda não foi revisado. Precisa ser revisado e assinado por um professor de Semiologia antes de virar 'aprovado'.",
+  "secoes": [
+    {
+      "id": "identificacao",
+      "titulo": "Identificação",
+      "itens": [
+        {
+          "id": "nome",
+          "texto": "Nome do paciente",
+          "pergunta_exemplo": "Qual é o seu nome?",
+          "faltou": "Faltou perguntar o nome do paciente.",
+          "peso": 2,
+          "palavras_chave": [
+            "nome",
+            "chama",
+            "como você se chama"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "idade",
+          "texto": "Idade",
+          "pergunta_exemplo": "Quantos anos você tem?",
+          "faltou": "Faltou perguntar a idade.",
+          "peso": 3,
+          "palavras_chave": [
+            "idade",
+            "anos",
+            "quantos anos"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "estado-civil",
+          "texto": "Estado civil",
+          "pergunta_exemplo": "Você é casado, solteiro, mora com alguém?",
+          "faltou": "Faltou perguntar o estado civil.",
+          "peso": 1,
+          "palavras_chave": [
+            "casado",
+            "casada",
+            "solteiro",
+            "estado civil"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese de semiologia, material público; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "naturalidade-procedencia",
+          "texto": "Naturalidade e procedência",
+          "pergunta_exemplo": "Onde você nasceu e em que cidade mora hoje?",
+          "faltou": "Faltou perguntar onde o paciente nasceu e onde mora.",
+          "peso": 2,
+          "palavras_chave": [
+            "nasceu",
+            "mora",
+            "cidade",
+            "natural"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese de semiologia, material público; conferir fonte",
+            "url": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "queixa-principal",
+      "titulo": "Queixa principal",
+      "itens": [
+        {
+          "id": "motivo-consulta",
+          "texto": "Motivo da consulta",
+          "pergunta_exemplo": "O que trouxe você aqui hoje?",
+          "faltou": "Faltou perguntar o que trouxe o paciente à consulta.",
+          "peso": 3,
+          "palavras_chave": [
+            "trouxe",
+            "motivo",
+            "o que aconteceu",
+            "o que está sentindo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "duracao-queixa",
+          "texto": "Há quanto tempo a queixa começou",
+          "pergunta_exemplo": "Há quanto tempo você está com isso?",
+          "faltou": "Faltou perguntar há quanto tempo a queixa começou.",
+          "peso": 3,
+          "palavras_chave": [
+            "quanto tempo",
+            "desde quando",
+            "há quantos dias"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hda",
+      "titulo": "História da doença atual",
+      "itens": [
+        {
+          "id": "inicio",
+          "texto": "Início do sintoma (como e quando começou, súbito ou aos poucos)",
+          "pergunta_exemplo": "Como isso começou? Foi de repente ou aos poucos?",
+          "faltou": "Faltou perguntar como o sintoma começou.",
+          "peso": 3,
+          "palavras_chave": [
+            "começou",
+            "de repente",
+            "aos poucos",
+            "início"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "duracao-sintoma",
+          "texto": "Duração de cada episódio ou se é contínuo",
+          "pergunta_exemplo": "Quando vem, dura quanto tempo? Ou é o tempo todo?",
+          "faltou": "Faltou perguntar quanto tempo dura cada episódio.",
+          "peso": 2,
+          "palavras_chave": [
+            "dura",
+            "quanto tempo dura",
+            "o tempo todo",
+            "contínuo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "localizacao",
+          "texto": "Localização do sintoma",
+          "pergunta_exemplo": "Onde exatamente você sente?",
+          "faltou": "Faltou perguntar onde fica o sintoma.",
+          "peso": 3,
+          "palavras_chave": [
+            "onde",
+            "local",
+            "lugar",
+            "mostrar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "irradiacao",
+          "texto": "Irradiação",
+          "pergunta_exemplo": "Isso vai para algum outro lugar do corpo?",
+          "faltou": "Faltou perguntar se o sintoma irradia.",
+          "peso": 2,
+          "palavras_chave": [
+            "irradia",
+            "espalha",
+            "vai para",
+            "outro lugar"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "UEPA. Guia simplificado de propedêutica em fisioterapia cardiovascular: avaliação clínica e funcional",
+            "url": "https://educapes.capes.gov.br/bitstream/capes/1134514/2/GUIA_SIMPLIFICADO_PROPEDEUTICA_CARDIOVASCULAR.pdf"
+          }
+        },
+        {
+          "id": "intensidade",
+          "texto": "Intensidade",
+          "pergunta_exemplo": "De 0 a 10, qual a força disso?",
+          "faltou": "Faltou perguntar a intensidade.",
+          "peso": 2,
+          "palavras_chave": [
+            "0 a 10",
+            "zero a dez",
+            "nota",
+            "forte",
+            "intensidade"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "carater",
+          "texto": "Caráter ou qualidade",
+          "pergunta_exemplo": "Como é essa sensação? Aperto, pontada, queimação?",
+          "faltou": "Faltou perguntar como é a sensação (aperto, pontada, queimação).",
+          "peso": 2,
+          "palavras_chave": [
+            "aperto",
+            "pontada",
+            "queimação",
+            "como é",
+            "tipo de"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "evolucao-frequencia",
+          "texto": "Evolução e frequência",
+          "pergunta_exemplo": "Desde que começou, está melhorando, piorando ou igual? Com que frequência acontece?",
+          "faltou": "Faltou perguntar como o sintoma evoluiu e com que frequência aparece.",
+          "peso": 2,
+          "palavras_chave": [
+            "piorando",
+            "melhorando",
+            "frequência",
+            "quantas vezes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "fatores-melhora",
+          "texto": "Fatores de melhora",
+          "pergunta_exemplo": "Tem alguma coisa que melhora?",
+          "faltou": "Faltou perguntar o que melhora o sintoma.",
+          "peso": 2,
+          "palavras_chave": [
+            "melhora",
+            "alivia",
+            "passa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "fatores-piora",
+          "texto": "Fatores de piora",
+          "pergunta_exemplo": "Tem alguma coisa que piora?",
+          "faltou": "Faltou perguntar o que piora o sintoma.",
+          "peso": 2,
+          "palavras_chave": [
+            "piora",
+            "agrava",
+            "fica pior"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "sintomas-associados",
+          "texto": "Sintomas associados",
+          "pergunta_exemplo": "Junto com isso, você sentiu mais alguma coisa?",
+          "faltou": "Faltou perguntar se há outros sintomas junto.",
+          "peso": 3,
+          "palavras_chave": [
+            "mais alguma coisa",
+            "junto",
+            "outro sintoma",
+            "acompanha"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "tratamentos-realizados",
+          "texto": "Tratamentos já feitos e resposta",
+          "pergunta_exemplo": "Você já tomou algum remédio ou fez algo para isso? Ajudou?",
+          "faltou": "Faltou perguntar o que o paciente já fez para tratar e se ajudou.",
+          "peso": 2,
+          "palavras_chave": [
+            "tomou",
+            "remédio",
+            "tratamento",
+            "ajudou"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "interrogatorio-sintomatologico",
+      "titulo": "Interrogatório sintomatológico",
+      "itens": [
+        {
+          "id": "is-sintomas-gerais",
+          "texto": "Sintomas gerais (febre, perda de peso, cansaço)",
+          "pergunta_exemplo": "Teve febre, perdeu peso sem querer ou anda mais cansado?",
+          "faltou": "Faltou perguntar sobre sintomas gerais, como febre, perda de peso e cansaço.",
+          "peso": 2,
+          "palavras_chave": [
+            "febre",
+            "peso",
+            "emagreceu",
+            "cansaço"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "is-pele",
+          "texto": "Pele e anexos",
+          "pergunta_exemplo": "Notou manchas, coceira ou feridas na pele?",
+          "faltou": "Faltou perguntar sobre a pele, como manchas, coceira ou feridas.",
+          "peso": 1,
+          "palavras_chave": [
+            "pele",
+            "mancha",
+            "coceira",
+            "ferida"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Anamnese: o que é e tópicos importantes do documento",
+            "url": "https://sanarmed.com/anamnese/"
+          }
+        },
+        {
+          "id": "is-cabeca-pescoco",
+          "texto": "Cabeça, olhos, ouvidos, nariz e garganta",
+          "pergunta_exemplo": "Alguma alteração na visão, na audição, no nariz ou na garganta?",
+          "faltou": "Faltou perguntar sobre visão, audição, nariz e garganta.",
+          "peso": 1,
+          "palavras_chave": [
+            "visão",
+            "enxergar",
+            "ouvido",
+            "garganta",
+            "nariz"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Anamnese: o que é e tópicos importantes do documento",
+            "url": "https://sanarmed.com/anamnese/"
+          }
+        },
+        {
+          "id": "is-cardiovascular",
+          "texto": "Sistema cardiovascular",
+          "pergunta_exemplo": "Sente o coração disparar, dor no peito ou inchaço nas pernas?",
+          "faltou": "Faltou perguntar sobre sintomas do coração, como palpitação, dor no peito ou inchaço nas pernas.",
+          "peso": 2,
+          "palavras_chave": [
+            "coração",
+            "palpitação",
+            "disparar",
+            "inchaço"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "is-respiratorio",
+          "texto": "Sistema respiratório",
+          "pergunta_exemplo": "Tem tosse, falta de ar ou chiado no peito?",
+          "faltou": "Faltou perguntar sobre sintomas respiratórios, como tosse, falta de ar ou chiado.",
+          "peso": 2,
+          "palavras_chave": [
+            "tosse",
+            "falta de ar",
+            "chiado",
+            "catarro"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "is-gastrointestinal",
+          "texto": "Sistema digestório",
+          "pergunta_exemplo": "Como está o apetite, o intestino? Teve enjoo, azia ou sangue nas fezes?",
+          "faltou": "Faltou perguntar sobre o sistema digestório, como apetite, intestino, enjoo e azia.",
+          "peso": 2,
+          "palavras_chave": [
+            "intestino",
+            "apetite",
+            "enjoo",
+            "azia",
+            "fezes"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "is-geniturinario",
+          "texto": "Sistema geniturinário (e ciclo menstrual quando couber)",
+          "pergunta_exemplo": "Alguma dor ou ardência para urinar? E a menstruação, como está?",
+          "faltou": "Faltou perguntar sobre urina e, quando couber, sobre a menstruação.",
+          "peso": 2,
+          "palavras_chave": [
+            "urinar",
+            "xixi",
+            "ardência",
+            "menstruação"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Anamnese: o que é e tópicos importantes do documento",
+            "url": "https://sanarmed.com/anamnese/"
+          }
+        },
+        {
+          "id": "is-musculoesqueletico",
+          "texto": "Sistema musculoesquelético",
+          "pergunta_exemplo": "Sente dor nas juntas, nos músculos ou nas costas?",
+          "faltou": "Faltou perguntar sobre dor nas articulações, nos músculos ou nas costas.",
+          "peso": 1,
+          "palavras_chave": [
+            "juntas",
+            "articulação",
+            "músculo",
+            "costas"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Anamnese: o que é e tópicos importantes do documento",
+            "url": "https://sanarmed.com/anamnese/"
+          }
+        },
+        {
+          "id": "is-neurologico",
+          "texto": "Sistema nervoso",
+          "pergunta_exemplo": "Tem dor de cabeça, tontura, desmaios ou formigamento?",
+          "faltou": "Faltou perguntar sobre sintomas neurológicos, como dor de cabeça, tontura, desmaio ou formigamento.",
+          "peso": 2,
+          "palavras_chave": [
+            "dor de cabeça",
+            "tontura",
+            "desmaio",
+            "formigamento"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "is-psiquico",
+          "texto": "Humor e ansiedade",
+          "pergunta_exemplo": "Como anda seu humor? Tem se sentido ansioso ou triste?",
+          "faltou": "Faltou perguntar sobre humor e ansiedade.",
+          "peso": 1,
+          "palavras_chave": [
+            "humor",
+            "ansioso",
+            "triste",
+            "nervoso"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Sanar. Anamnese: o que é e tópicos importantes do documento",
+            "url": "https://sanarmed.com/anamnese/"
+          }
+        },
+        {
+          "id": "is-endocrino",
+          "texto": "Sistema endócrino",
+          "pergunta_exemplo": "Tem sentido muita sede, urinado muito ou sentido muito calor ou frio?",
+          "faltou": "Faltou perguntar sobre sintomas endócrinos, como sede excessiva e intolerância ao calor ou ao frio.",
+          "peso": 1,
+          "palavras_chave": [
+            "sede",
+            "calor",
+            "frio",
+            "urinado muito"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese de semiologia, material público; conferir fonte",
+            "url": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "antecedentes-pessoais",
+      "titulo": "Antecedentes pessoais",
+      "itens": [
+        {
+          "id": "doencas-cronicas",
+          "texto": "Doenças crônicas",
+          "pergunta_exemplo": "Você tem alguma doença, como pressão alta, diabetes ou asma?",
+          "faltou": "Faltou perguntar sobre doenças crônicas.",
+          "peso": 3,
+          "palavras_chave": [
+            "doença",
+            "pressão alta",
+            "diabetes",
+            "problema de saúde"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "cirurgias",
+          "texto": "Cirurgias prévias",
+          "pergunta_exemplo": "Já fez alguma cirurgia?",
+          "faltou": "Faltou perguntar sobre cirurgias anteriores.",
+          "peso": 2,
+          "palavras_chave": [
+            "cirurgia",
+            "operou",
+            "operação"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "internacoes",
+          "texto": "Internações prévias",
+          "pergunta_exemplo": "Já ficou internado alguma vez? Por quê?",
+          "faltou": "Faltou perguntar sobre internações anteriores.",
+          "peso": 2,
+          "palavras_chave": [
+            "internado",
+            "internação",
+            "hospital"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese de semiologia, material público; conferir fonte",
+            "url": null
+          }
+        },
+        {
+          "id": "medicamentos-em-uso",
+          "texto": "Medicamentos em uso",
+          "pergunta_exemplo": "Você toma algum remédio todo dia? Qual e em que dose?",
+          "faltou": "Faltou perguntar quais remédios o paciente usa.",
+          "peso": 3,
+          "palavras_chave": [
+            "remédio",
+            "medicamento",
+            "toma",
+            "dose"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "alergias",
+          "texto": "Alergias",
+          "pergunta_exemplo": "Tem alergia a algum remédio ou alimento?",
+          "faltou": "Faltou perguntar sobre alergias.",
+          "peso": 3,
+          "palavras_chave": [
+            "alergia",
+            "alérgico",
+            "alérgica"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "vacinacao",
+          "texto": "Vacinação",
+          "pergunta_exemplo": "Suas vacinas estão em dia?",
+          "faltou": "Faltou perguntar sobre a vacinação.",
+          "peso": 1,
+          "palavras_chave": [
+            "vacina",
+            "vacinação",
+            "em dia"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese de semiologia, material público; conferir fonte",
+            "url": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "antecedentes-familiares",
+      "titulo": "Antecedentes familiares",
+      "itens": [
+        {
+          "id": "doencas-familia",
+          "texto": "Doenças em pais, irmãos e filhos",
+          "pergunta_exemplo": "Alguém da sua família tem alguma doença, como pressão alta, diabetes, câncer ou problema no coração?",
+          "faltou": "Faltou perguntar sobre doenças na família.",
+          "peso": 2,
+          "palavras_chave": [
+            "família",
+            "pai",
+            "mãe",
+            "irmão",
+            "parente"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "familiares-falecidos",
+          "texto": "Idade e causa da morte de familiares falecidos",
+          "pergunta_exemplo": "Seus pais estão vivos? Se não, do que faleceram e com que idade?",
+          "faltou": "Faltou perguntar a causa e a idade da morte de familiares que já faleceram.",
+          "peso": 1,
+          "palavras_chave": [
+            "faleceu",
+            "morreu",
+            "vivos",
+            "causa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Roteiro de anamnese de semiologia, material público; conferir fonte",
+            "url": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "habitos-de-vida",
+      "titulo": "Hábitos de vida",
+      "itens": [
+        {
+          "id": "tabagismo",
+          "texto": "Tabagismo e carga tabágica",
+          "pergunta_exemplo": "Você fuma ou já fumou? Quantos cigarros por dia e por quantos anos?",
+          "faltou": "Faltou perguntar sobre tabagismo e quanto e por quanto tempo fuma.",
+          "peso": 3,
+          "palavras_chave": [
+            "fuma",
+            "fumou",
+            "cigarro",
+            "maço",
+            "tabagismo"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "alcool",
+          "texto": "Consumo de álcool",
+          "pergunta_exemplo": "Você bebe? O quê, quanto e com que frequência?",
+          "faltou": "Faltou perguntar sobre o consumo de álcool.",
+          "peso": 2,
+          "palavras_chave": [
+            "bebe",
+            "bebida",
+            "álcool",
+            "cerveja"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "outras-drogas",
+          "texto": "Uso de outras drogas",
+          "pergunta_exemplo": "Você usa ou já usou alguma outra droga?",
+          "faltou": "Faltou perguntar sobre o uso de outras drogas.",
+          "peso": 2,
+          "palavras_chave": [
+            "droga",
+            "maconha",
+            "cocaína",
+            "usa"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "atividade-fisica",
+          "texto": "Atividade física",
+          "pergunta_exemplo": "Você pratica alguma atividade física?",
+          "faltou": "Faltou perguntar sobre atividade física.",
+          "peso": 1,
+          "palavras_chave": [
+            "exercício",
+            "atividade física",
+            "academia",
+            "caminhada"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "alimentacao",
+          "texto": "Alimentação",
+          "pergunta_exemplo": "Como é a sua alimentação no dia a dia?",
+          "faltou": "Faltou perguntar sobre a alimentação.",
+          "peso": 1,
+          "palavras_chave": [
+            "alimentação",
+            "come",
+            "comida",
+            "dieta"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "sono",
+          "texto": "Sono",
+          "pergunta_exemplo": "Como você tem dormido?",
+          "faltou": "Faltou perguntar sobre o sono.",
+          "peso": 1,
+          "palavras_chave": [
+            "dorme",
+            "dormido",
+            "sono"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "condicoes-socioeconomicas",
+      "titulo": "Condições socioeconômicas",
+      "itens": [
+        {
+          "id": "moradia-saneamento",
+          "texto": "Moradia e saneamento",
+          "pergunta_exemplo": "Como é a sua casa? Tem água encanada e esgoto?",
+          "faltou": "Faltou perguntar sobre a moradia e o saneamento.",
+          "peso": 1,
+          "palavras_chave": [
+            "casa",
+            "mora",
+            "água",
+            "esgoto"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "ocupacao",
+          "texto": "Ocupação e exposições no trabalho",
+          "pergunta_exemplo": "Em que você trabalha? O que faz no dia a dia do trabalho?",
+          "faltou": "Faltou perguntar a ocupação.",
+          "peso": 2,
+          "palavras_chave": [
+            "trabalha",
+            "profissão",
+            "trabalho",
+            "emprego"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        },
+        {
+          "id": "escolaridade-renda",
+          "texto": "Escolaridade e renda, perguntadas com respeito",
+          "pergunta_exemplo": "Até que série você estudou? Se não se importar, como está a renda da casa?",
+          "faltou": "Faltou perguntar, com respeito, sobre escolaridade e renda.",
+          "peso": 1,
+          "palavras_chave": [
+            "estudou",
+            "escola",
+            "renda",
+            "série"
+          ],
+          "fonte": {
+            "tipo": "web",
+            "referencia": "Medway. Anamnese médica: etapas, como fazer e checklist para estudantes de Medicina",
+            "url": "https://www.medway.com.br/conteudos/anamnese-medica-checklist-para-estudantes-de-medicina/"
+          }
+        }
+      ]
+    }
+  ]
+}

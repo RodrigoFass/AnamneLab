@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>AnamneLab — símbolo</title>
+  <defs>
+    <mask id="corte-tras" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"></rect>
+      <g fill="#000" stroke="#000" stroke-width="6" stroke-linejoin="round">
+        <rect x="20" y="22" width="40" height="30" rx="11"></rect>
+        <polygon points="44,50 56,60 54,48"></polygon>
+      </g>
+    </mask>
+    <mask id="corte-check" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"></rect>
+      <polyline points="30,37.5 37,44.5 50,31.5" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+    </mask>
+  </defs>
+  <g fill="#E3A82B" mask="url(#corte-tras)">
+    <rect x="4" y="6" width="40" height="30" rx="10"></rect>
+    <polygon points="10,32 8,44 22,34"></polygon>
+  </g>
+  <g fill="#0E5E66" mask="url(#corte-check)">
+    <rect x="20" y="22" width="40" height="30" rx="11"></rect>
+    <polygon points="44,50 56,60 54,48"></polygon>
+  </g>
+</svg>

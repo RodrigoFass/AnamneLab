@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anamnelab.local/schema/termo.schema.json",
+  "title": "Termo de gravação do AnamneLab",
+  "description": "Termo que cada voz aceita antes da gravação. A versão aceita fica registrada em 'consentimentos'.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["versao", "titulo", "texto"],
+  "properties": {
+    "versao": {
+      "type": "string",
+      "pattern": "^[0-9]+$",
+      "description": "Versão do termo. Mudou o texto, sobe a versão."
+    },
+    "titulo": { "type": "string", "minLength": 1 },
+    "texto": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500,
+      "description": "Texto curto, que caiba numa tela de celular. Parágrafos separados por linha em branco."
+    }
+  }
+}

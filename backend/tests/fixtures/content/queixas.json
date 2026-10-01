@@ -1,0 +1,17 @@
+{
+  "versao": 1,
+  "queixas": [
+    {
+      "id": "dor-toracica",
+      "nome": "Dor torácica",
+      "sinonimos": ["dor no peito", "aperto no peito"],
+      "checklist": "dor-toracica"
+    },
+    {
+      "id": "cefaleia",
+      "nome": "Cefaleia",
+      "sinonimos": ["dor de cabeça"],
+      "checklist": null
+    }
+  ]
+}

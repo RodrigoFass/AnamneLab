@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anamnelab.local/schema/queixas.schema.json",
+  "title": "Biblioteca de queixas do AnamneLab",
+  "description": "Lista fechada de queixas. A IA escolhe uma destas ou 'outra'.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["versao", "queixas"],
+  "properties": {
+    "versao": { "type": "integer", "minimum": 1 },
+    "queixas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "nome", "sinonimos", "checklist"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "not": { "const": "outra" }
+          },
+          "nome": { "type": "string", "minLength": 1, "description": "Nome padrão, em sentence case." },
+          "sinonimos": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "Como o paciente ou o aluno costuma dizer (ex.: 'dor no peito')."
+          },
+          "checklist": {
+            "type": ["string", "null"],
+            "description": "Id do checklist da queixa em content/checklists/, ou nulo se ainda não existe."
+          }
+        }
+      }
+    }
+  }
+}

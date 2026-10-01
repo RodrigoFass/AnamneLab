@@ -1,0 +1,51 @@
+{
+  "id": "dor-toracica",
+  "nome": "Dor torácica (teste)",
+  "tipo": "queixa",
+  "queixa": "dor-toracica",
+  "versao": 2,
+  "status": "rascunho",
+  "origem": "fontes-publicas",
+  "validado_por": null,
+  "validado_em": null,
+  "secoes": [
+    {
+      "id": "caracterizacao",
+      "titulo": "Caracterização da dor",
+      "itens": [
+        {
+          "id": "irradiacao",
+          "texto": "Irradiação da dor",
+          "faltou": "Faltou perguntar se a dor vai para outro lugar.",
+          "peso": 3,
+          "palavras_chave": ["outro lugar"],
+          "fonte": {"tipo": "web", "referencia": "Material de teste", "url": null}
+        },
+        {
+          "id": "sudorese",
+          "texto": "Suor frio",
+          "faltou": "Faltou perguntar sobre suor frio.",
+          "peso": 2,
+          "palavras_chave": ["suou"],
+          "fonte": {"tipo": "web", "referencia": "Material de teste", "url": null}
+        },
+        {
+          "id": "tabagismo",
+          "texto": "Tabagismo e carga tabágica",
+          "faltou": "Faltou perguntar se fuma e quanto.",
+          "peso": 3,
+          "palavras_chave": ["fuma"],
+          "fonte": {"tipo": "web", "referencia": "Material de teste", "url": null}
+        },
+        {
+          "id": "sincope",
+          "texto": "Desmaio ou sensação de desmaio",
+          "faltou": "Faltou perguntar se desmaiou ou quase desmaiou.",
+          "peso": 2,
+          "palavras_chave": ["desmai"],
+          "fonte": {"tipo": "web", "referencia": "Material de teste", "url": null}
+        }
+      ]
+    }
+  ]
+}
