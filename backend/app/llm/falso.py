@@ -17,6 +17,9 @@ NAO_ABORDADO = "Não abordado."
 _MARCADOR = re.compile(r"(Médico|Medico|Entrevistador|Estudante|Paciente)\s*:", re.IGNORECASE)
 _FRASE = re.compile(r"[^.?!]+[.?!]?")
 
+FALAS_PARA_QUEIXA = 3
+"""Quantas falas do paciente o falso olha para achar a queixa principal."""
+
 # Ordem importa: a primeira seção cujo termo aparece na pergunta leva a resposta.
 _SECOES_ANAMNESE: list[tuple[str, tuple[str, ...]]] = [
     ("queixa_principal", ("traz", "trouxe", "motivo", "queixa", "ajudar", "o que aconteceu", "está sentindo")),
@@ -69,6 +72,7 @@ class ClienteFalso(ClienteLLM):
             "anamnese": _anamnese,
             "corrigir": _corrigir,
             "sugestoes": _sugestoes,
+            "verificar_contestacao": _verificar_contestacao,
         }
         if tarefa not in respostas:
             raise ValueError(f"tarefa desconhecida para o provedor falso: {tarefa}")
@@ -94,23 +98,36 @@ def _rotular(contexto: dict[str, Any]) -> dict[str, Any]:
 
 
 def _queixa(contexto: dict[str, Any]) -> dict[str, Any]:
+    """A queixa principal aparece logo que o paciente conta o motivo da consulta.
+
+    Olha só as primeiras falas do paciente a partir da resposta à pergunta sobre o motivo
+    (ou do começo, se essa pergunta não aparece) e devolve só a primeira queixa que casar.
+    Sintoma que surge depois, no interrogatório, não vira queixa principal.
+    """
     falas: list[dict[str, str]] = contexto.get("falas", [])
     queixas: list[dict[str, Any]] = contexto.get("queixas", [])
-    falas_paciente = [f for f in falas if f["papel"] == "paciente"] or falas
+    janela = _falas_do_motivo(falas)[:FALAS_PARA_QUEIXA]
 
-    achadas: list[tuple[int, str, str]] = []
-    for queixa in queixas:
-        termos = [normalizar(t) for t in [queixa["nome"], *queixa.get("sinonimos", [])] if normalizar(t)]
-        for indice, fala in enumerate(falas_paciente):
-            texto = normalizar(fala["texto"])
+    for fala in janela:
+        texto = normalizar(fala["texto"])
+        for queixa in queixas:
+            termos = [normalizar(t) for t in [queixa["nome"], *queixa.get("sinonimos", [])] if normalizar(t)]
             if any(termo in texto for termo in termos):
-                achadas.append((indice, queixa["id"], fala["texto"]))
-                break
-    achadas.sort()
-    if achadas:
-        return {"queixas": [q for _, q, _ in achadas], "descricao_outra": None, "trecho": achadas[0][2]}
-    primeira = falas_paciente[0]["texto"] if falas_paciente else ""
+                return {"queixas": [queixa["id"]], "descricao_outra": None, "trecho": fala["texto"]}
+    primeira = janela[0]["texto"] if janela else ""
     return {"queixas": ["outra"], "descricao_outra": primeira[:80] or None, "trecho": primeira}
+
+
+def _falas_do_motivo(falas: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Falas do paciente a partir da resposta à pergunta sobre o motivo da consulta."""
+    termos_motivo = dict(_SECOES_ANAMNESE)["queixa_principal"]
+    inicio = 0
+    for indice, fala in enumerate(falas):
+        if fala["papel"] == "entrevistador" and any(t in fala["texto"].casefold() for t in termos_motivo):
+            inicio = indice + 1
+            break
+    do_paciente = [f for f in falas[inicio:] if f["papel"] == "paciente"]
+    return do_paciente or [f for f in falas if f["papel"] == "paciente"] or falas
 
 
 def _anamnese(contexto: dict[str, Any]) -> dict[str, Any]:
@@ -145,7 +162,9 @@ def _corrigir(contexto: dict[str, Any]) -> dict[str, Any]:
 
 
 def _sugestoes(contexto: dict[str, Any]) -> dict[str, Any]:
+    """Perguntas só quando falta checklist para a queixa (mesma regra do pipeline)."""
     faltantes = contexto.get("itens_faltantes", [])
+    pedir_perguntas = bool(contexto.get("pedir_perguntas"))
     return {
         "hipoteses": [
             {
@@ -154,5 +173,13 @@ def _sugestoes(contexto: dict[str, Any]) -> dict[str, Any]:
                 "contra": ["Exemplo: dado que falta ou que pesa contra."],
             }
         ],
-        "perguntas_sugeridas": [item["texto"] for item in faltantes],
+        "perguntas_sugeridas": [item["texto"] for item in faltantes] if pedir_perguntas else [],
     }
+
+
+def _verificar_contestacao(contexto: dict[str, Any]) -> dict[str, Any]:
+    """Cumpre se alguma palavra-chave do item aparece no trecho apontado."""
+    trecho = normalizar(contexto.get("trecho") or "")
+    item = contexto.get("item") or {}
+    chaves = [normalizar(p) for p in item.get("palavras_chave", []) if normalizar(p)]
+    return {"cumpre": any(chave in trecho for chave in chaves)}

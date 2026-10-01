@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type {
@@ -47,10 +47,33 @@ function quemFalou(trecho: string | null, falas: Fala[]): string {
   return fala.papel === "entrevistador" ? "Você disse" : "O paciente disse";
 }
 
+interface SecaoItens {
+  secao: string;
+  itens: Avaliacao[];
+}
+
 interface Grupo {
   checklistId: string;
   usado: ChecklistUsado | undefined;
-  secoes: { secao: string; itens: Avaliacao[] }[];
+  /** Faltou (e item contestado, para o aluno ver o resultado): sempre aberto. */
+  abertos: SecaoItens[];
+  /** Feito: recolhido atrás de um botão. */
+  feitos: SecaoItens[];
+  totalFeitos: number;
+}
+
+/** Agrupa por seção mantendo a ordem do checklist. */
+function porSecao(avaliacoes: Avaliacao[]): SecaoItens[] {
+  const secoes: SecaoItens[] = [];
+  for (const a of avaliacoes) {
+    let s = secoes.find((x) => x.secao === a.secao);
+    if (!s) {
+      s = { secao: a.secao, itens: [] };
+      secoes.push(s);
+    }
+    s.itens.push(a);
+  }
+  return secoes;
 }
 
 function agrupar(sessao: Sessao): Grupo[] {
@@ -59,22 +82,19 @@ function agrupar(sessao: Sessao): Grupo[] {
 
   return ordem
     .map((checklistId) => {
-      const secoes: Grupo["secoes"] = [];
-      for (const a of sessao.avaliacoes.filter((x) => x.checklist_id === checklistId)) {
-        let s = secoes.find((x) => x.secao === a.secao);
-        if (!s) {
-          s = { secao: a.secao, itens: [] };
-          secoes.push(s);
-        }
-        s.itens.push(a);
-      }
-      // Faltou primeiro: o aluno vê antes o que corrigir. A ordem do checklist se mantém.
-      for (const s of secoes) {
-        s.itens = [...s.itens.filter((i) => i.status === "faltou"), ...s.itens.filter((i) => i.status === "feito")];
-      }
-      return { checklistId, usado: sessao.checklists_usados.find((c) => c.id === checklistId), secoes };
+      const doChecklist = sessao.avaliacoes.filter((x) => x.checklist_id === checklistId);
+      // Item contestado fica à vista mesmo quando virou feito: o aluno vê o resultado na hora.
+      const aberto = (a: Avaliacao) => a.status === "faltou" || Boolean(a.contestacao);
+      const feitos = doChecklist.filter((a) => !aberto(a));
+      return {
+        checklistId,
+        usado: sessao.checklists_usados.find((c) => c.id === checklistId),
+        abertos: porSecao(doChecklist.filter(aberto)),
+        feitos: porSecao(feitos),
+        totalFeitos: feitos.length,
+      };
     })
-    .filter((g) => g.secoes.length > 0);
+    .filter((g) => g.abertos.length > 0 || g.feitos.length > 0);
 }
 
 function contagem(avaliacoes: Avaliacao[]): string {
@@ -91,8 +111,8 @@ function ResultadoContestacao({ c }: { c: Contestacao }) {
     return (
       <p className="app-status app-status-ok app-contestacao-resultado">
         <IconeCheck />
-        Contestação aceita: o trecho está na conversa, o item contou como feito e a nota foi
-        recalculada.
+        Contestação aceita: o trecho mostra que você investigou o item. Ele contou como feito e a
+        nota foi recalculada.
       </p>
     );
   }
@@ -168,8 +188,8 @@ function FormContestar({ sessao, item, onFechar, onAtualizada }: PropsContestar)
         </select>
       </label>
       <p className="app-legenda">
-        Com uma fala que está na conversa, o item conta como feito na hora. Sem fala, a contestação
-        vai para o professor e a nota não muda.
+        Se a fala mostrar que você investigou o item, ele conta como feito na hora. Sem fala, ou
+        se a fala não mostrar o item, a contestação vai para o professor e a nota não muda.
       </p>
       {erro && <Aviso tipo="erro">{erro}</Aviso>}
       <div className="app-acoes">
@@ -181,6 +201,131 @@ function FormContestar({ sessao, item, onFechar, onAtualizada }: PropsContestar)
         </button>
       </div>
     </form>
+  );
+}
+
+interface PropsChecklist {
+  grupo: Grupo;
+  sessao: Sessao;
+  queixas: Queixa[];
+  contestando: string | null;
+  onContestando: (chave: string | null) => void;
+  onAtualizada: (s: Sessao) => void;
+}
+
+/** Um checklist corrigido: o que faltou aberto, o que foi feito recolhido. */
+function ChecklistCorrigido({ grupo, sessao, queixas, contestando, onContestando, onAtualizada }: PropsChecklist) {
+  const [verFeitos, setVerFeitos] = useState(false);
+  const idFeitos = useId();
+  const g = grupo;
+
+  const itens = (secoes: SecaoItens[]) =>
+    secoes.map((s) => (
+      <div key={s.secao} className="app-secao-itens">
+        <h3 className="app-secao-titulo">{humanizar(s.secao)}</h3>
+        {s.itens.map((a) => {
+          const chave = `${a.checklist_id}:${a.item_id}`;
+          const aberto = contestando === chave;
+          return (
+            <ItemChecklist
+              key={chave}
+              avaliacao={a}
+              quemFalou={quemFalou(a.trecho, sessao.falas)}
+              onContestar={() => onContestando(aberto ? null : chave)}
+              contestando={aberto}
+            >
+              {a.contestacao && <ResultadoContestacao c={a.contestacao} />}
+              {aberto && !a.contestacao && (
+                <FormContestar
+                  sessao={sessao}
+                  item={a}
+                  onFechar={() => onContestando(null)}
+                  onAtualizada={onAtualizada}
+                />
+              )}
+            </ItemChecklist>
+          );
+        })}
+      </div>
+    ));
+
+  const rotuloFeitos =
+    g.totalFeitos === 1 ? "Ver o item feito" : `Ver os ${g.totalFeitos} itens feitos`;
+
+  return (
+    <section className="app-secao" aria-labelledby={`chk-${g.checklistId}`}>
+      <div className="app-checklist-topo">
+        <h2 className="app-subtitulo" id={`chk-${g.checklistId}`}>
+          {nomeDoChecklist(g.checklistId, queixas)}
+        </h2>
+        {g.usado && <Selo checklist={g.usado} />}
+      </div>
+      {g.usado && <p className="app-legenda">Versão {g.usado.versao} do checklist.</p>}
+
+      {g.abertos.length > 0 ? (
+        itens(g.abertos)
+      ) : (
+        <p className="app-status app-status-ok">
+          <IconeCheck />
+          Nenhum item faltou neste checklist.
+        </p>
+      )}
+
+      {g.totalFeitos > 0 && (
+        <>
+          <button
+            className="al-botao al-botao-texto app-ver-mais"
+            type="button"
+            aria-expanded={verFeitos}
+            aria-controls={idFeitos}
+            onClick={() => setVerFeitos((v) => !v)}
+          >
+            {verFeitos ? "Esconder os itens feitos" : rotuloFeitos}
+          </button>
+          <div id={idFeitos} className="app-recolhido" hidden={!verFeitos}>
+            {verFeitos && itens(g.feitos)}
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
+const SUGESTOES_VISIVEIS = 5;
+
+/** Perguntas sugeridas pela IA, fora da nota. Mostra 5 e recolhe o resto. */
+function PerguntasSugeridas({ perguntas }: { perguntas: string[] }) {
+  const [verTodas, setVerTodas] = useState(false);
+  const idResto = useId();
+  const primeiras = perguntas.slice(0, SUGESTOES_VISIVEIS);
+  const resto = perguntas.slice(SUGESTOES_VISIVEIS);
+
+  return (
+    <section className="app-secao" aria-labelledby="titulo-perguntas">
+      <h2 className="app-subtitulo" id="titulo-perguntas">
+        Perguntas que valem a pena
+      </h2>
+      <p className="app-ajuda">Sugestões para a próxima conversa. Não entram na nota.</p>
+      {primeiras.map((p) => (
+        <ItemSugestao key={p} titulo={p} />
+      ))}
+      {resto.length > 0 && (
+        <>
+          <div id={idResto} className="app-secao-itens" hidden={!verTodas}>
+            {verTodas && resto.map((p) => <ItemSugestao key={p} titulo={p} />)}
+          </div>
+          <button
+            className="al-botao al-botao-texto app-ver-mais"
+            type="button"
+            aria-expanded={verTodas}
+            aria-controls={idResto}
+            onClick={() => setVerTodas((v) => !v)}
+          >
+            {verTodas ? `Ver só as ${SUGESTOES_VISIVEIS} primeiras` : `Ver todas as ${perguntas.length} sugestões`}
+          </button>
+        </>
+      )}
+    </section>
   );
 }
 
@@ -275,43 +420,15 @@ export function Correcao() {
       )}
 
       {grupos.map((g) => (
-        <section key={g.checklistId} className="app-secao" aria-labelledby={`chk-${g.checklistId}`}>
-          <div className="app-checklist-topo">
-            <h2 className="app-subtitulo" id={`chk-${g.checklistId}`}>
-              {nomeDoChecklist(g.checklistId, queixas)}
-            </h2>
-            {g.usado && <Selo checklist={g.usado} />}
-          </div>
-          {g.usado && <p className="app-legenda">Versão {g.usado.versao} do checklist.</p>}
-          {g.secoes.map((s) => (
-            <div key={s.secao} className="app-secao-itens">
-              <h3 className="app-secao-titulo">{humanizar(s.secao)}</h3>
-              {s.itens.map((a) => {
-                const chave = `${a.checklist_id}:${a.item_id}`;
-                const aberto = contestando === chave;
-                return (
-                  <ItemChecklist
-                    key={chave}
-                    avaliacao={a}
-                    quemFalou={quemFalou(a.trecho, sessao.falas)}
-                    onContestar={() => setContestando(aberto ? null : chave)}
-                    contestando={aberto}
-                  >
-                    {a.contestacao && <ResultadoContestacao c={a.contestacao} />}
-                    {aberto && !a.contestacao && (
-                      <FormContestar
-                        sessao={sessao}
-                        item={a}
-                        onFechar={() => setContestando(null)}
-                        onAtualizada={(nova) => definir(nova)}
-                      />
-                    )}
-                  </ItemChecklist>
-                );
-              })}
-            </div>
-          ))}
-        </section>
+        <ChecklistCorrigido
+          key={g.checklistId}
+          grupo={g}
+          sessao={sessao}
+          queixas={queixas}
+          contestando={contestando}
+          onContestando={setContestando}
+          onAtualizada={definir}
+        />
       ))}
 
       {gerando && !sugestoes && (
@@ -325,15 +442,7 @@ export function Correcao() {
       )}
 
       {sugestoes && sugestoes.perguntas_sugeridas.length > 0 && (
-        <section className="app-secao" aria-labelledby="titulo-perguntas">
-          <h2 className="app-subtitulo" id="titulo-perguntas">
-            Perguntas que valem a pena
-          </h2>
-          <p className="app-ajuda">Sugestões para a próxima conversa. Não entram na nota.</p>
-          {sugestoes.perguntas_sugeridas.map((p) => (
-            <ItemSugestao key={p} titulo={p} />
-          ))}
-        </section>
+        <PerguntasSugeridas perguntas={sugestoes.perguntas_sugeridas} />
       )}
 
       <section className="app-secao" aria-labelledby="titulo-hipoteses">

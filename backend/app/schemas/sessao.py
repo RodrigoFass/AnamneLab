@@ -79,6 +79,14 @@ class ContestacaoCriar(BaseModel):
 # ---------- saída ----------
 
 
+class Saude(BaseModel):
+    """Resposta de GET /api/saude."""
+
+    ok: bool
+    modo_demonstracao: bool
+    """True quando o LLM ou a transcrição são falsos: a interface avisa o aluno."""
+
+
 class Termo(BaseModel):
     versao: str
     titulo: str

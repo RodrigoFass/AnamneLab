@@ -72,6 +72,14 @@ class CorrecaoLLM(BaseModel):
     itens: list[ItemCorrigido]
 
 
+class TrechoCumpreItem(BaseModel):
+    """Saída de verificar_contestacao: o trecho apontado pelo aluno mostra o item?"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    cumpre: bool
+
+
 class HipoteseIA(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -83,8 +91,9 @@ class HipoteseIA(BaseModel):
 class SugestoesIA(BaseModel):
     """Hipóteses sugeridas para estudo (nunca diagnóstico) e perguntas que ajudariam.
 
-    `perguntas_sugeridas` cobre a terceira camada da correção: queixa sem checklist
-    validado. Fica fora da nota.
+    `perguntas_sugeridas` cobre a terceira camada da correção: só existe quando alguma
+    queixa confirmada é "outra" ou não tem checklist. Nos outros casos o backend devolve
+    a lista vazia. Fica fora da nota.
     """
 
     model_config = ConfigDict(extra="forbid")

@@ -19,7 +19,7 @@ from app.auth import Usuario, usuario_atual
 from app.config import Settings, obter_settings
 from app.conteudo import QUEIXA_OUTRA, ErroConteudo
 from app.llm import ClienteLLM
-from app.pipeline.corrigir import ErroContestacao, contestar
+from app.pipeline.corrigir import ErroContestacao, contestar, item_do_checklist
 from app.pipeline.transcrever import Transcritor, apagar_audio
 from app.processamento import Processador
 from app.repositorio import Repositorio
@@ -31,6 +31,7 @@ from app.schemas.sessao import (
     ContestacaoCriar,
     HipotesesAluno,
     QueixaConfirmar,
+    Saude,
     Sessao,
     SessaoCriar,
     SessaoResumo,
@@ -206,9 +207,11 @@ def apagar_audios_antigos(pasta: Path, idade_maxima_s: float = IDADE_MAXIMA_AUDI
 rotas = APIRouter(prefix="/api")
 
 
-@rotas.get("/saude")
-def saude() -> dict[str, bool]:
-    return {"ok": True}
+@rotas.get("/saude", response_model=Saude)
+def saude(servicos: ServicosDep) -> Saude:
+    settings = servicos.settings
+    demonstracao = settings.llm_provedor == "falso" or settings.transcricao == "falso"
+    return Saude(ok=True, modo_demonstracao=demonstracao)
 
 
 @rotas.get("/queixas", response_model=list[Queixa])
@@ -439,6 +442,8 @@ def contestar_item(sessao_id: str, corpo: ContestacaoCriar, servicos: ServicosDe
     sessao = _sessao_do_dono(servicos, sessao_id, usuario)
     if not correcao_liberada(sessao) or not sessao.avaliacoes:
         raise HTTPException(409, "Escreva suas hipóteses antes de ver e contestar a correção.")
+    avaliacao = next((a for a in sessao.avaliacoes if a.item_id == corpo.item_id), None)
+    item = item_do_checklist(servicos.conteudo, avaliacao.checklist_id, corpo.item_id) if avaliacao else None
     try:
         resultado = contestar(
             sessao.avaliacoes,
@@ -447,6 +452,8 @@ def contestar_item(sessao_id: str, corpo: ContestacaoCriar, servicos: ServicosDe
             sessao.checklists_usados,
             servicos.conteudo.tipos_checklists(),
             sessao.notas,
+            item=item,
+            llm=servicos.llm,
         )
     except ErroContestacao as erro:
         raise HTTPException(erro.codigo, erro.mensagem) from None

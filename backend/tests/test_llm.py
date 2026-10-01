@@ -272,16 +272,17 @@ def test_falso_anamnese_marca_o_que_nao_foi_abordado():
     assert anamnese.antecedentes_familiares == "Não abordado."
 
 
-def test_falso_sugestoes_sao_exemplo_e_perguntas_vem_dos_itens_faltantes():
+@pytest.mark.parametrize(("pedir_perguntas", "esperadas"), [(True, ["Alergias"]), (False, [])])
+def test_falso_sugestoes_sao_exemplo_e_perguntas_so_quando_pedidas(pedir_perguntas, esperadas):
     sugestoes = ClienteFalso().gerar(
         tarefa="sugestoes",
         sistema="",
         mensagem="",
         saida=SugestoesIA,
-        contexto={"itens_faltantes": [{"id": "alergias", "texto": "Alergias"}]},
+        contexto={"itens_faltantes": [{"id": "alergias", "texto": "Alergias"}], "pedir_perguntas": pedir_perguntas},
     )
     assert "exemplo" in sugestoes.hipoteses[0].nome.lower()
-    assert sugestoes.perguntas_sugeridas == ["Alergias"]
+    assert sugestoes.perguntas_sugeridas == esperadas
 
 
 def test_anthropic_com_o_sdk_de_verdade_sem_rede():

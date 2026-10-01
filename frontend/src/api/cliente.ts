@@ -7,6 +7,7 @@ import type {
   HipotesesAluno,
   Queixa,
   QueixaConfirmar,
+  Saude,
   Sessao,
   SessaoCriar,
   SessaoResumo,
@@ -90,7 +91,7 @@ export function textoDoErro(erro: unknown): string {
 }
 
 export const api = {
-  saude: () => requisitar<{ ok: boolean }>("/saude"),
+  saude: () => requisitar<Saude>("/saude"),
   queixas: () => requisitar<Queixa[]>("/queixas"),
   sortearCartao: (queixa?: string) =>
     requisitar<Cartao>(

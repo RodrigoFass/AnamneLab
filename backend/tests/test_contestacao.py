@@ -1,8 +1,12 @@
 import pytest
 
-from app.pipeline.corrigir import ErroContestacao, contestar, corrigir
+from app.llm.falso import ClienteFalso
+from app.pipeline.corrigir import ErroContestacao, contestar, corrigir, item_do_checklist
 from app.schemas.sessao import ContestacaoCriar
 from tests.apoio import LLMFixo, falas_exemplo
+
+CONFIRMA = {"cumpre": True}
+NEGA = {"cumpre": False}
 
 
 @pytest.fixture
@@ -20,7 +24,9 @@ def correcao(conteudo):
     return corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
 
 
-def _contestar(correcao, conteudo, **pedido):
+def _contestar(correcao, conteudo, llm=None, **pedido):
+    avaliacao = next((a for a in correcao.avaliacoes if a.item_id == pedido["item_id"]), None)
+    item = item_do_checklist(conteudo, avaliacao.checklist_id, pedido["item_id"]) if avaliacao else None
     return contestar(
         correcao.avaliacoes,
         falas_exemplo(),
@@ -28,12 +34,24 @@ def _contestar(correcao, conteudo, **pedido):
         correcao.checklists_usados,
         conteudo.tipos_checklists(),
         correcao.notas,
+        item=item,
+        llm=llm if llm is not None else LLMFixo(CONFIRMA),
     )
 
 
-def test_trecho_que_existe_torna_o_item_feito_e_recalcula_a_nota(correcao, conteudo):
+def _pendente_sem_mudar_a_nota(resultado, correcao, item_id="idade"):
+    avaliacao = next(a for a in resultado.avaliacoes if a.item_id == item_id)
+    assert resultado.contestacao.resultado == "pendente_professor"
+    assert avaliacao.status == "faltou"
+    assert avaliacao.trecho is None
+    assert avaliacao.contestacao is not None and avaliacao.contestacao.resultado == "pendente_professor"
+    assert resultado.notas == correcao.notas
+
+
+def test_trecho_que_existe_e_o_llm_confirma_torna_o_item_feito(correcao, conteudo):
     assert correcao.notas.geral == 50  # nome (2) + tabagismo (3) de 10
-    resultado = _contestar(correcao, conteudo, item_id="idade", trecho="quantos anos o senhor tem")
+    llm = LLMFixo(CONFIRMA)
+    resultado = _contestar(correcao, conteudo, llm=llm, item_id="idade", trecho="quantos anos o senhor tem")
     idade = next(a for a in resultado.avaliacoes if a.item_id == "idade")
     assert resultado.contestacao.resultado == "procedente"
     assert idade.status == "feito"
@@ -43,6 +61,39 @@ def test_trecho_que_existe_torna_o_item_feito_e_recalcula_a_nota(correcao, conte
     assert resultado.notas.geral == 80
     assert resultado.notas.queixa == correcao.notas.queixa
     assert resultado.notas.provisoria is True
+    # O LLM recebeu o item, a pergunta de exemplo e o trecho.
+    chamada = llm.chamadas[0]
+    assert chamada["tarefa"] == "verificar_contestacao"
+    assert "Idade" in chamada["mensagem"]
+    assert "quantos anos o senhor tem" in chamada["mensagem"]
+    assert chamada["contexto"]["item"]["palavras_chave"] == ["quantos anos"]
+
+
+def test_trecho_que_existe_mas_o_llm_nega_fica_pendente(correcao, conteudo):
+    resultado = _contestar(correcao, conteudo, llm=LLMFixo(NEGA), item_id="idade", trecho="O senhor fuma?")
+    _pendente_sem_mudar_a_nota(resultado, correcao)
+
+
+def test_falha_do_llm_fica_pendente_sem_bloquear_o_aluno(correcao, conteudo):
+    llm = LLMFixo("{isso não é json", '{"cumpre": "talvez"}')
+    resultado = _contestar(correcao, conteudo, llm=llm, item_id="idade", trecho="Quantos anos o senhor tem?")
+    _pendente_sem_mudar_a_nota(resultado, correcao)
+    assert len(llm.chamadas) == 2  # uma nova tentativa, depois desiste
+
+
+def test_trecho_que_nao_existe_fica_pendente_sem_chamar_o_llm(correcao, conteudo):
+    llm = LLMFixo(CONFIRMA)
+    resultado = _contestar(correcao, conteudo, llm=llm, item_id="idade", trecho="Qual é a sua idade?")
+    _pendente_sem_mudar_a_nota(resultado, correcao)
+    assert llm.chamadas == []
+
+
+def test_llm_falso_confere_as_palavras_chave_do_item(correcao, conteudo):
+    llm = ClienteFalso()
+    sem_relacao = _contestar(correcao, conteudo, llm=llm, item_id="idade", trecho="O senhor fuma?")
+    _pendente_sem_mudar_a_nota(sem_relacao, correcao)
+    com_relacao = _contestar(correcao, conteudo, llm=llm, item_id="idade", trecho="Quantos anos o senhor tem?")
+    assert com_relacao.contestacao.resultado == "procedente"
 
 
 def test_contestacao_na_queixa_recalcula_a_nota_da_queixa(correcao, conteudo):
@@ -56,13 +107,10 @@ def test_contestacao_na_queixa_recalcula_a_nota_da_queixa(correcao, conteudo):
     [None, "", "Perguntei se ele tinha alergia a remédio.", "sim", "Entrevistador:", "Paciente: Entrevistador:"],
 )
 def test_sem_trecho_valido_fica_pendente_e_a_nota_nao_muda(correcao, conteudo, trecho):
-    resultado = _contestar(correcao, conteudo, item_id="idade", trecho=trecho)
-    idade = next(a for a in resultado.avaliacoes if a.item_id == "idade")
-    assert resultado.contestacao.resultado == "pendente_professor"
-    assert idade.status == "faltou"
-    assert idade.trecho is None
-    assert idade.contestacao is not None and idade.contestacao.resultado == "pendente_professor"
-    assert resultado.notas == correcao.notas
+    llm = LLMFixo(CONFIRMA)
+    resultado = _contestar(correcao, conteudo, llm=llm, item_id="idade", trecho=trecho)
+    _pendente_sem_mudar_a_nota(resultado, correcao)
+    assert llm.chamadas == []
 
 
 def test_nao_contesta_item_feito(correcao, conteudo):

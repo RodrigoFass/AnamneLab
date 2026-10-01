@@ -110,6 +110,13 @@ export interface ContestacaoCriar {
 
 // saída
 
+/** Resposta de GET /api/saude. */
+export interface Saude {
+  ok: boolean;
+  /** LLM ou transcrição falsos: a interface avisa em todas as telas. */
+  modo_demonstracao: boolean;
+}
+
 export interface Termo {
   versao: string;
   titulo: string;

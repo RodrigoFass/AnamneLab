@@ -84,6 +84,21 @@ legend {
   animation: app-entrar 0.3s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
+/* Modo de demonstração: aviso discreto acima de todas as telas, na mesma coluna. */
+.app-demonstracao {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: max(var(--espaco-2), env(safe-area-inset-top)) max(var(--espaco-4), env(safe-area-inset-right)) 0
+    max(var(--espaco-4), env(safe-area-inset-left));
+}
+.app-demonstracao .app-aviso {
+  padding: var(--espaco-2) var(--espaco-3);
+  box-shadow: none;
+}
+.app-demonstracao .app-aviso-texto {
+  color: var(--tinta-suave);
+}
+
 @keyframes app-entrar {
   from {
     opacity: 0;
@@ -592,6 +607,23 @@ legend {
 
 .app-item-corpo {
   min-width: 0;
+}
+
+/* Botão que abre no lugar o que estava recolhido (itens feitos, mais sugestões). */
+.app-ver-mais {
+  align-self: flex-start;
+  min-height: 48px;
+  margin-left: calc(-1 * var(--espaco-3));
+}
+
+.app-recolhido {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+.app-recolhido[hidden],
+.app-secao-itens[hidden] {
+  display: none;
 }
 
 .app-item-fora {

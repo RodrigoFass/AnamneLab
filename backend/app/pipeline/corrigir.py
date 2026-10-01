@@ -12,10 +12,10 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 
 from app.conteudo import QUEIXA_OUTRA, Conteudo
-from app.llm import ClienteLLM
+from app.llm import ClienteLLM, ErroLLM
 from app.pipeline.comum import falas_para_contexto, formatar_falas
 from app.schemas.conteudo import Checklist, Item, Secao
-from app.schemas.llm import CorrecaoLLM, Fala
+from app.schemas.llm import CorrecaoLLM, Fala, TrechoCumpreItem
 from app.schemas.sessao import (
     Avaliacao,
     ChecklistUsado,
@@ -43,6 +43,20 @@ ser perguntado só conta se o entrevistador voltou ao assunto.
 - Sem fala que prove o item: feito é false e trecho é null. Na dúvida, false.
 - Responda exatamente um registro por item, com o item_id igual ao enviado. Não crie itens.
 - Não avalie diagnóstico nem conduta; só a técnica da entrevista.
+"""
+
+
+SISTEMA_CONTESTACAO = """\
+Você é um preceptor que confere a contestação de um estudante de Medicina numa simulação \
+de anamnese entre dois estudantes. O entrevistador faz o médico.
+
+O estudante diz que fez um item do checklist e aponta um trecho da conversa. Diga se esse \
+trecho mostra que o entrevistador investigou o item.
+
+Regras:
+- Avalie só a técnica da entrevista, não o diagnóstico nem a conduta.
+- O trecho precisa tratar do item. Uma fala sobre outro assunto não cumpre o item.
+- Na dúvida, cumpre é false: a contestação vai para o professor.
 """
 
 
@@ -237,6 +251,38 @@ def corrigir(
 # ---------- contestação ----------
 
 
+def item_do_checklist(conteudo: Conteudo, checklist_id: str, item_id: str) -> Item | None:
+    """O item como está no conteúdo, para levar o texto e a pergunta de exemplo ao LLM."""
+    checklist = conteudo.checklists.get(checklist_id)
+    if checklist is None:
+        return None
+    return next((i for i in checklist.itens if i.id == item_id), None)
+
+
+def trecho_cumpre_item(trecho: str, texto_item: str, item: Item | None, llm: ClienteLLM) -> bool:
+    """O LLM confere se o trecho mostra o item. Falha do LLM conta como não (vai ao professor)."""
+    pergunta = item.pergunta_exemplo if item and item.pergunta_exemplo else "não há"
+    mensagem = (
+        f"Item do checklist: {texto_item}\n"
+        f"Pergunta de exemplo: {pergunta}\n\n"
+        f"Trecho apontado pelo estudante:\n<trecho>\n{trecho}\n</trecho>"
+    )
+    try:
+        resposta = llm.gerar(
+            tarefa="verificar_contestacao",
+            sistema=SISTEMA_CONTESTACAO,
+            mensagem=mensagem,
+            saida=TrechoCumpreItem,
+            contexto={
+                "item": {"texto": texto_item, "palavras_chave": item.palavras_chave if item else []},
+                "trecho": trecho,
+            },
+        )
+    except ErroLLM:
+        return False
+    return resposta.cumpre
+
+
 def contestar(
     avaliacoes: list[Avaliacao],
     falas: list[Fala],
@@ -244,9 +290,15 @@ def contestar(
     checklists_usados: list[ChecklistUsado],
     tipos: dict[str, str],
     notas_atuais: Notas | None,
+    *,
+    item: Item | None,
+    llm: ClienteLLM,
 ) -> ResultadoContestacao:
-    """Trecho que existe na transcrição: item vira feito e a nota é recalculada.
-    Sem trecho válido: fica pendente para o professor e a nota não muda."""
+    """Procedente só se o trecho existe na transcrição e o LLM confirma que ele mostra o item:
+    o item vira feito e a nota é recalculada. Nos outros casos (sem trecho, trecho que não
+    existe, LLM que nega ou falha), fica pendente para o professor e a nota não muda.
+
+    `item` é o item como está no conteúdo (texto, pergunta de exemplo, palavras-chave)."""
     indice = next((i for i, a in enumerate(avaliacoes) if a.item_id == pedido.item_id), None)
     if indice is None:
         raise ErroContestacao(404, "Esse item não está na correção desta sessão.")
@@ -254,11 +306,14 @@ def contestar(
     if atual.status == "feito":
         raise ErroContestacao(409, "Esse item já está como feito.")
 
-    procedente = TranscricaoNormalizada.de(falas).tem(pedido.trecho)
+    trecho = pedido.trecho.strip() if pedido.trecho else None
+    procedente = bool(
+        trecho and TranscricaoNormalizada.de(falas).tem(trecho) and trecho_cumpre_item(trecho, atual.texto, item, llm)
+    )
     contestacao = Contestacao(
         item_id=pedido.item_id,
         motivo=pedido.motivo.strip(),
-        trecho=pedido.trecho.strip() if pedido.trecho else None,
+        trecho=trecho,
         resultado="procedente" if procedente else "pendente_professor",
         criada_em=datetime.now(UTC),
     )

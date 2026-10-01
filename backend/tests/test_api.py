@@ -76,7 +76,7 @@ def arquivos_de_audio(settings) -> list[Path]:
 
 
 def test_rotas_de_conteudo(cliente):
-    assert cliente.get("/api/saude").json() == {"ok": True}
+    assert cliente.get("/api/saude").json() == {"ok": True, "modo_demonstracao": True}
     assert [q["id"] for q in cliente.get("/api/queixas").json()] == ["dor-toracica", "cefaleia"]
     assert cliente.get("/api/termo").json()["versao"] == "1"
     assert cliente.get("/api/cartoes/sortear").json()["id"] == "dor-toracica-teste-1"
@@ -143,6 +143,8 @@ def test_fluxo_completo(cliente, settings, repositorio):
     falas = sessao["falas"]
     falas.insert(2, {"papel": "entrevistador", "texto": "O senhor tem alguma alergia a remédio?"})
     falas.insert(3, {"papel": "paciente", "texto": "Não que eu saiba."})
+    # E o paciente conta que quase desmaiou, sem o entrevistador ter perguntado.
+    falas.append({"papel": "paciente", "texto": "Ah, e na hora da dor eu achei que ia desmaiar."})
     resposta = cliente.put(f"/api/sessoes/{sessao_id}/transcricao", json={"falas": falas})
     assert resposta.status_code == 200
     assert resposta.json()["transcricao_editada"] is True
@@ -184,10 +186,12 @@ def test_fluxo_completo(cliente, settings, repositorio):
     assert avaliacoes["sincope"]["status"] == "faltou"
     assert avaliacoes["sincope"]["mensagem"] == "Faltou perguntar se desmaiou ou quase desmaiou."
     assert sessao["notas"] == {"geral": 100, "queixa": 71, "provisoria": True}
-    assert sessao["sugestoes"]["perguntas_sugeridas"] == ["Desmaio ou sensação de desmaio"]
+    # Dor torácica tem checklist: sem perguntas sugeridas fora da nota.
+    assert sessao["sugestoes"]["perguntas_sugeridas"] == []
+    assert sessao["sugestoes"]["hipoteses"]
     assert cliente.get("/api/sessoes").json()[0]["notas"]["queixa"] == 71
 
-    # Contestação sem trecho válido: pendente, nota igual.
+    # Contestação com trecho que não está na conversa: pendente, nota igual.
     resposta = cliente.post(
         f"/api/sessoes/{sessao_id}/contestacoes",
         json={"item_id": "sincope", "motivo": "Acho que perguntei.", "trecho": "Já desmaiou alguma vez?"},
@@ -197,7 +201,20 @@ def test_fluxo_completo(cliente, settings, repositorio):
     assert sincope["contestacao"]["resultado"] == "pendente_professor"
     assert resposta.json()["notas"]["queixa"] == 71
 
-    # Contestação com trecho que existe: procedente, nota recalculada.
+    # Fala que existe, mas sem relação com o item: continua pendente, nota igual.
+    resposta = cliente.post(f"/api/sessoes/{sessao_id}/contestacoes", json=contestacao)
+    assert resposta.status_code == 200
+    sincope = next(a for a in resposta.json()["avaliacoes"] if a["item_id"] == "sincope")
+    assert sincope["status"] == "faltou"
+    assert sincope["contestacao"]["resultado"] == "pendente_professor"
+    assert resposta.json()["notas"]["queixa"] == 71
+
+    # Fala que existe e mostra o item: procedente, nota recalculada.
+    contestacao = {
+        "item_id": "sincope",
+        "motivo": "O paciente falou do desmaio.",
+        "trecho": "Ah, e na hora da dor eu achei que ia desmaiar.",
+    }
     resposta = cliente.post(f"/api/sessoes/{sessao_id}/contestacoes", json=contestacao)
     assert resposta.status_code == 200
     sincope = next(a for a in resposta.json()["avaliacoes"] if a["item_id"] == "sincope")
@@ -252,6 +269,7 @@ def test_queixa_outra_vai_para_a_fila_e_usa_so_o_geral(cliente, repositorio):
     sessao = esperar(cliente, sessao_id, "concluida")
     assert {a["checklist_id"] for a in sessao["avaliacoes"]} == {"geral"}
     assert sessao["notas"]["queixa"] is None
+    assert sessao["sugestoes"]["perguntas_sugeridas"]  # queixa sem critério: perguntas fora da nota
     assert [c["id"] for c in sessao["checklists_usados"]] == ["geral"]
 
 

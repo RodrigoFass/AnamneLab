@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth/Autenticacao";
+import { AvisoDemonstracao } from "./componentes/AvisoDemonstracao";
 import { Carregando } from "./componentes/Tela";
 import { ConfirmarQueixa } from "./telas/ConfirmarQueixa";
 import { Correcao } from "./telas/Correcao";
@@ -15,6 +16,15 @@ import { Termo } from "./telas/Termo";
 import { Transcricao } from "./telas/Transcricao";
 
 export function App() {
+  return (
+    <>
+      <AvisoDemonstracao />
+      <Telas />
+    </>
+  );
+}
+
+function Telas() {
   const { carregando, logado } = useAuth();
 
   if (carregando) {

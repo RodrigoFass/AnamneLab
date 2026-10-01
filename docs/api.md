@@ -17,7 +17,7 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 
 | Método | Rota | Corpo | Resposta | O que faz |
 | --- | --- | --- | --- | --- |
-| GET | `/api/saude` | | `{"ok": true}` | Verificação simples |
+| GET | `/api/saude` | | `Saude` | Verificação simples. `{"ok": true, "modo_demonstracao": <bool>}`: `modo_demonstracao` vem `true` quando `LLM_PROVEDOR=falso` ou `TRANSCRICAO=falso`, e a interface mostra em todas as telas que a transcrição e a correção são de exemplo |
 | GET | `/api/queixas` | | `Queixa[]` | Biblioteca fechada de queixas |
 | GET | `/api/cartoes/sortear?queixa=<id>` | | `Cartao` | Sorteia um cartão (queixa opcional) |
 | GET | `/api/termo` | | `Termo` | Termo de gravação vigente (versão e texto) |
@@ -30,7 +30,7 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 | PUT | `/api/sessoes/{id}/transcricao` | `TranscricaoEditar` | `Sessao` | Corrige quem disse o quê ou um erro de transcrição; marca `transcricao_editada` |
 | POST | `/api/sessoes/{id}/queixa` | `QueixaConfirmar` | `Sessao` | Aluno confirma a queixa. `outra` vale sozinha (não se mistura com queixa da lista) e entra na `fila_queixas`. Dispara anamnese e correção em segundo plano |
 | POST | `/api/sessoes/{id}/hipoteses` | `HipotesesAluno` | `Sessao` | Aluno escreve as hipóteses. Libera a correção e dispara as sugestões da IA |
-| POST | `/api/sessoes/{id}/contestacoes` | `ContestacaoCriar` | `Sessao` | Contesta um item. Trecho que existe na transcrição: item vira feito e a nota é recalculada. Sem trecho válido: fica `pendente_professor` e a nota não muda |
+| POST | `/api/sessoes/{id}/contestacoes` | `ContestacaoCriar` | `Sessao` | Contesta um item. O trecho precisa existir na transcrição e o LLM confere se ele mostra que o entrevistador investigou o item (tarefa `verificar_contestacao`, saída `TrechoCumpreItem`). Confirmado: `procedente`, o item vira feito com esse trecho e a nota é recalculada. Sem trecho, trecho que não existe, LLM que nega ou que falha: `pendente_professor` e a nota não muda |
 
 ## Ciclo da sessão
 
@@ -40,7 +40,7 @@ criada
                                    └──────────────► aguardando_queixa
   POST queixa ─────────────────► corrigindo        (anamnese, correção, conferência dos trechos, notas)
                                    └──────────────► aguardando_hipoteses
-  POST hipoteses ──────────────► gerando_sugestoes (hipóteses sugeridas e perguntas sugeridas)
+  POST hipoteses ──────────────► gerando_sugestoes (hipóteses sugeridas; perguntas sugeridas só se falta checklist)
                                    └──────────────► concluida
 qualquer etapa com falha ───────► erro (mensagem_erro em PT-BR)
 ```
@@ -50,6 +50,14 @@ qualquer etapa com falha ───────► erro (mensagem_erro em PT-BR)
   escreve as hipóteses antes de ver a correção.
 - Enquanto `aguardando_queixa`, o aluno pode editar a transcrição.
 - Duração máxima do áudio: 20 minutos; tamanho máximo: 25 MB.
+
+## Sugestões da IA
+
+- `sugestoes.hipoteses`: hipóteses para estudo, sempre "sugestão, não gabarito".
+- `sugestoes.perguntas_sugeridas`: terceira camada da correção, fora da nota. Só vem
+  preenchida quando alguma queixa confirmada é `outra` ou não tem checklist; nos outros
+  casos o backend devolve `[]`, mesmo que o LLM mande perguntas. A interface só mostra a
+  seção quando há alguma.
 
 ## Notas
 
