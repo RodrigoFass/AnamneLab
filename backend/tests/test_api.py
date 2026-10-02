@@ -189,6 +189,7 @@ def test_fluxo_completo(cliente, settings, repositorio):
     assert avaliacoes["alergias"]["status"] == "feito"  # veio da transcrição editada
     assert avaliacoes["sincope"]["status"] == "faltou"
     assert avaliacoes["sincope"]["mensagem"] == "Faltou perguntar se desmaiou ou quase desmaiou."
+    assert sessao["sexo_paciente"] == "masculino"  # detectado ("o senhor") e mantido na confirmação
     assert sessao["notas"] == {"geral": 100, "queixa": 71, "provisoria": True}
     # Dor torácica tem checklist: sem perguntas sugeridas fora da nota.
     assert sessao["sugestoes"]["perguntas_sugeridas"] == []
@@ -424,3 +425,22 @@ def test_audio_esquecido_e_apagado_no_proximo_envio(cliente, settings):
     gravada(cliente)
     assert not esquecido.exists()
     assert arquivos_de_audio(settings) == []
+
+
+@pytest.mark.parametrize("sexo", ["feminino", None])
+def test_aluno_corrige_o_sexo_do_paciente_na_confirmacao(cliente, sexo):
+    sessao_id = gravada(cliente)
+    assert cliente.get(f"/api/sessoes/{sessao_id}").json()["sexo_paciente"] == "masculino"  # detectado
+    resposta = cliente.post(
+        f"/api/sessoes/{sessao_id}/queixa", json={"queixas": ["dor-toracica"], "sexo_paciente": sexo}
+    )
+    assert resposta.status_code == 200
+    assert esperar(cliente, sessao_id, "aguardando_hipoteses")["sexo_paciente"] == sexo
+
+
+def test_sexo_invalido_e_recusado(cliente):
+    sessao_id = gravada(cliente)
+    resposta = cliente.post(
+        f"/api/sessoes/{sessao_id}/queixa", json={"queixas": ["dor-toracica"], "sexo_paciente": "x"}
+    )
+    assert resposta.status_code == 422

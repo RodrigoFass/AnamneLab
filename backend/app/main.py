@@ -398,10 +398,13 @@ def confirmar_queixa(
             # Entra na fila uma vez por sessão, inclusive quando a confirmação vem numa nova tentativa.
             servicos.repositorio.registrar_queixa_outra(descricao)
 
+    # Sem o campo no pedido, fica o sexo detectado na conversa; null é "não sei".
+    sexo = corpo.sexo_paciente if "sexo_paciente" in corpo.model_fields_set else sessao.sexo_paciente
     servicos.repositorio.atualizar_sessao(
         sessao_id,
         queixas_confirmadas=queixas,
         descricao_outra=descricao,
+        sexo_paciente=sexo,
         status="corrigindo",
         progresso=5,
         mensagem_erro=None,

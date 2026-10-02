@@ -107,15 +107,31 @@ def _queixa(contexto: dict[str, Any]) -> dict[str, Any]:
     falas: list[dict[str, str]] = contexto.get("falas", [])
     queixas: list[dict[str, Any]] = contexto.get("queixas", [])
     janela = _falas_do_motivo(falas)[:FALAS_PARA_QUEIXA]
+    sexo = _sexo(falas)
 
     for fala in janela:
         texto = normalizar(fala["texto"])
         for queixa in queixas:
             termos = [normalizar(t) for t in [queixa["nome"], *queixa.get("sinonimos", [])] if normalizar(t)]
             if any(termo in texto for termo in termos):
-                return {"queixas": [queixa["id"]], "descricao_outra": None, "trecho": fala["texto"]}
+                return {
+                    "queixas": [queixa["id"]],
+                    "descricao_outra": None,
+                    "trecho": fala["texto"],
+                    "sexo_paciente": sexo,
+                }
     primeira = janela[0]["texto"] if janela else ""
-    return {"queixas": ["outra"], "descricao_outra": primeira[:80] or None, "trecho": primeira}
+    return {"queixas": ["outra"], "descricao_outra": primeira[:80] or None, "trecho": primeira, "sexo_paciente": sexo}
+
+
+def _sexo(falas: list[dict[str, str]]) -> str | None:
+    """Pelo tratamento que o entrevistador usa: "a senhora" ou "o senhor"."""
+    texto = f" {normalizar(' '.join(f['texto'] for f in falas if f['papel'] == 'entrevistador'))} "
+    if " senhora " in texto:
+        return "feminino"
+    if " senhor " in texto:
+        return "masculino"
+    return None
 
 
 def _falas_do_motivo(falas: list[dict[str, str]]) -> list[dict[str, str]]:

@@ -3,7 +3,7 @@
 Tabelas e colunas usadas (a migração fica em supabase/migrations/):
 - usuarios: id
 - sessoes: id, dono_id, criada_em, status, progresso, mensagem_erro, origem_caso, cartao_id,
-  queixa_detectada, queixa_trecho, queixas_confirmadas, descricao_outra,
+  queixa_detectada, queixa_trecho, queixas_confirmadas, descricao_outra, sexo_paciente,
   checklists_usados (jsonb), anamnese (jsonb), hipoteses_aluno (jsonb), notas (jsonb),
   sugestoes (jsonb)
 - consentimentos: id, sessao_id, papel, nome_informado, versao_termo, aceito_em

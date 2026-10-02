@@ -667,6 +667,7 @@
           "pergunta_exemplo": "Existe chance de você estar grávida? Quando foi sua última menstruação?",
           "faltou": "Faltou perguntar sobre a possibilidade de gravidez.",
           "peso": 2,
+          "sexo": "feminino",
           "palavras_chave": [
             "grávida",
             "gravidez",

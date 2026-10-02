@@ -25,8 +25,8 @@ supabase link --project-ref <ref-do-projeto>
 supabase db push
 ```
 
-Sem a CLI: abra o SQL Editor do painel, cole o conteúdo de
-`migrations/20261001000000_inicial.sql` e rode uma vez.
+Sem a CLI: abra o SQL Editor do painel, cole o conteúdo de cada arquivo de `migrations/`,
+em ordem de data, e rode uma vez cada.
 
 ## O que o esquema garante
 

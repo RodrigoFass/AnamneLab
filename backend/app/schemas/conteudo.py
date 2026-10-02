@@ -28,6 +28,8 @@ class Item(BaseModel):
     faltou: str
     peso: int
     palavras_chave: list[str] = []
+    sexo: Literal["feminino", "masculino"] | None = None
+    """Só vale para pacientes deste sexo (ex.: data da última menstruação). Sem o campo, vale para todos."""
     fonte: Fonte
 
 

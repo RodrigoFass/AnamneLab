@@ -395,3 +395,45 @@ def test_corrigir_em_pedidos_menores_da_o_mesmo_resultado(conteudo):
     assert len(llm.chamadas) == 7  # um item por pedido
     assert em_partes.avaliacoes == inteiro.avaliacoes
     assert em_partes.notas == inteiro.notas
+
+
+# ---------- itens de um sexo só ----------
+
+
+def _com_sincope_so_feminino(conteudo: Conteudo) -> Conteudo:
+    checklists = dict(conteudo.checklists)
+    queixa = checklists["dor-toracica"]
+    secoes = [
+        s.model_copy(
+            update={"itens": [i.model_copy(update={"sexo": "feminino"}) if i.id == "sincope" else i for i in s.itens]}
+        )
+        for s in queixa.secoes
+    ]
+    checklists["dor-toracica"] = queixa.model_copy(update={"secoes": secoes})
+    return Conteudo(queixas=conteudo.queixas, checklists=checklists, cartoes=conteudo.cartoes, termo=conteudo.termo)
+
+
+@pytest.mark.parametrize("sexo, tem_sincope", [("masculino", False), ("feminino", True), (None, True)])
+def test_item_so_de_um_sexo_sai_quando_o_paciente_e_do_outro(conteudo, sexo, tem_sincope):
+    conteudo = _com_sincope_so_feminino(conteudo)
+    llm = LLMRepete(resposta())
+    resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True, sexo_paciente=sexo)
+    assert ("sincope" in por_id(resultado)) is tem_sincope
+    # O LLM nem recebe o item que não vale.
+    assert ("sincope" in _ids_pedidos(llm.chamadas[1])) is tem_sincope
+
+
+def test_item_que_nao_vale_nao_pesa_na_nota(conteudo):
+    conteudo = _com_sincope_so_feminino(conteudo)
+    registros = resposta(("irradiacao", True, [5]), ("sudorese", True, [9]))
+    homem = corrigir(
+        falas_exemplo(),
+        ["dor-toracica"],
+        conteudo,
+        LLMRepete(registros),
+        contar_rascunho=True,
+        sexo_paciente="masculino",
+    )
+    sem_saber = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, LLMRepete(registros), contar_rascunho=True)
+    assert homem.notas.queixa == 100  # irradiação e sudorese, os dois que valem
+    assert sem_saber.notas.queixa < 100

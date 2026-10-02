@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
-import type { QueixaConfirmar } from "../api/tipos";
+import type { QueixaConfirmar, Sexo } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
 import { Avatar } from "../componentes/Avatar";
 import { Etapas } from "../componentes/Etapas";
@@ -11,6 +11,11 @@ import { nomesDaSessao } from "../util/nomes";
 import { nomesDasQueixas, rotaDaSessao, useQueixas, useSessao } from "../util/sessao";
 import { etapasDoAudio } from "./Processando";
 import { useNavegar } from "../util/movimento";
+
+const SEXOS: { valor: Sexo; rotulo: string }[] = [
+  { valor: "masculino", rotulo: "Homem" },
+  { valor: "feminino", rotulo: "Mulher" },
+];
 
 export function ConfirmarQueixa() {
   const { id } = useParams();
@@ -24,6 +29,8 @@ export function ConfirmarQueixa() {
   const [descricao, setDescricao] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  // undefined: o aluno ainda não mexeu, vale o que a IA detectou na conversa.
+  const [sexoEscolhido, setSexoEscolhido] = useState<Sexo | null | undefined>(undefined);
 
   if (!id) return <Navigate to="/" replace />;
   if (sessao && sessao.status !== "aguardando_queixa") return <Navigate to={rotaDaSessao(sessao)} replace />;
@@ -32,11 +39,13 @@ export function ConfirmarQueixa() {
   const semDeteccao = sessao !== null && detectada.length === 0;
   const mostrarLista = trocando || semDeteccao;
 
+  const sexo = sexoEscolhido === undefined ? (sessao?.sexo_paciente ?? null) : sexoEscolhido;
+
   const enviar = async (dados: QueixaConfirmar) => {
     setEnviando(true);
     setErro(null);
     try {
-      await api.confirmarQueixa(id, dados);
+      await api.confirmarQueixa(id, { ...dados, sexo_paciente: sexo });
       navegar(`/sessao/${id}/hipoteses`, { replace: true });
     } catch (e) {
       setErro(textoDoErro(e));
@@ -100,6 +109,29 @@ export function ConfirmarQueixa() {
               </ul>
             </section>
           )}
+
+          <fieldset className="app-grupo">
+            <legend className="app-subtitulo">O paciente simulado é</legend>
+            <div className="app-segmentado">
+              {SEXOS.map((o) => (
+                <label key={o.valor} className={sexo === o.valor ? "is-marcada" : ""}>
+                  <input
+                    type="radio"
+                    name="sexo-paciente"
+                    value={o.valor}
+                    checked={sexo === o.valor}
+                    onChange={() => setSexoEscolhido(o.valor)}
+                  />
+                  {o.rotulo}
+                </label>
+              ))}
+            </div>
+            <p className="app-ajuda">
+              {sexo === null
+                ? "Escolha para o app tirar da nota as perguntas que não valem para este paciente."
+                : "Perguntas que não valem para este paciente, como a data da última menstruação num homem, saem da nota."}
+            </p>
+          </fieldset>
 
           {!semDeteccao && !trocando && (
             <QueixaDetectada

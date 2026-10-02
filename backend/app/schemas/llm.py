@@ -38,6 +38,8 @@ class QueixaDetectada(BaseModel):
     """Quando 'outra': a queixa como o paciente disse, curta."""
     trecho: str
     """Fala do paciente que mostra a queixa principal, copiada literalmente."""
+    sexo_paciente: Literal["feminino", "masculino"] | None
+    """Sexo do paciente simulado, pelo que a conversa mostra. Null se não der para saber."""
 
 
 class AnamneseEstruturada(BaseModel):

@@ -20,7 +20,7 @@ from app.llm.gemini import (
 )
 from app.schemas.llm import AnamneseEstruturada, CorrecaoLLM, FalasRotuladas, QueixaDetectada, SugestoesIA
 
-VALIDO = {"queixas": ["dor-toracica"], "descricao_outra": None, "trecho": "Dor no peito."}
+VALIDO = {"queixas": ["dor-toracica"], "descricao_outra": None, "trecho": "Dor no peito.", "sexo_paciente": None}
 SEGREDO = "Carlos Alberto, 54 anos, mora na rua tal"
 """Texto que faz as vezes de transcrição: não pode aparecer em log nenhum."""
 

@@ -515,6 +515,7 @@
           "pergunta_exemplo": "Existe chance de você estar grávida? O inchaço muda com a menstruação?",
           "faltou": "Faltou perguntar sobre gravidez e relação com a menstruação.",
           "peso": 3,
+          "sexo": "feminino",
           "palavras_chave": [
             "grávida",
             "gravidez",

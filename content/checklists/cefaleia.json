@@ -562,6 +562,7 @@
           "pergunta_exemplo": "Você está grávida ou teve bebê nas últimas semanas?",
           "faltou": "Faltou perguntar sobre gravidez ou parto recente.",
           "peso": 3,
+          "sexo": "feminino",
           "palavras_chave": [
             "grávida",
             "gravidez",

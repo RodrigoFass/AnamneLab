@@ -26,6 +26,7 @@ StatusSessao = Literal[
 ]
 
 StatusItem = Literal["feito", "faltou"]
+SexoPaciente = Literal["feminino", "masculino"]
 
 
 # ---------- entrada ----------
@@ -59,6 +60,8 @@ class QueixaConfirmar(BaseModel):
     queixas: list[str] = Field(min_length=1)
     """Ids da biblioteca, ou ['outra']."""
     descricao_outra: str | None = None
+    sexo_paciente: SexoPaciente | None = None
+    """Sexo do paciente simulado. Sem o campo, fica o detectado; null é 'não sei'."""
 
 
 class HipotesesAluno(BaseModel):
@@ -159,6 +162,8 @@ class Sessao(BaseModel):
     queixa_trecho: str | None = None
     queixas_confirmadas: list[str] = []
     descricao_outra: str | None = None
+    sexo_paciente: SexoPaciente | None = None
+    """Detectado na conversa e confirmado pelo aluno com a queixa. Item só de um sexo não vale para o outro."""
     checklists_usados: list[ChecklistUsado] = []
     anamnese: AnamneseEstruturada | None = None
     hipoteses_aluno: list[str] = []

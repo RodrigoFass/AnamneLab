@@ -95,6 +95,8 @@ export interface QueixaConfirmar {
   /** Ids da biblioteca, ou ["outra"]. */
   queixas: string[];
   descricao_outra?: string | null;
+  /** Sem o campo, fica o detectado na conversa; null é "não sei". */
+  sexo_paciente?: Sexo | null;
 }
 
 export interface HipotesesAluno {
@@ -190,6 +192,8 @@ export interface Sessao {
   queixa_trecho: string | null;
   queixas_confirmadas: string[];
   descricao_outra: string | null;
+  /** Detectado na conversa e confirmado com a queixa. */
+  sexo_paciente: Sexo | null;
   checklists_usados: ChecklistUsado[];
   anamnese: AnamneseEstruturada | null;
   hipoteses_aluno: string[];

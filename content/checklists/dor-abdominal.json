@@ -514,6 +514,7 @@
           "pergunta_exemplo": "Quando foi sua última menstruação? Ela está atrasada?",
           "faltou": "Faltou perguntar a data da última menstruação.",
           "peso": 3,
+          "sexo": "feminino",
           "palavras_chave": [
             "menstruação",
             "menstruou",
@@ -533,6 +534,7 @@
           "pergunta_exemplo": "Existe chance de você estar grávida? Tem tido relações e usa algum método para evitar gravidez?",
           "faltou": "Faltou perguntar sobre a possibilidade de gravidez.",
           "peso": 3,
+          "sexo": "feminino",
           "palavras_chave": [
             "grávida",
             "gravidez",
@@ -553,6 +555,7 @@
           "pergunta_exemplo": "Notou algum corrimento diferente ou sangramento pela vagina fora da menstruação?",
           "faltou": "Faltou perguntar sobre corrimento ou sangramento vaginal.",
           "peso": 2,
+          "sexo": "feminino",
           "palavras_chave": [
             "corrimento",
             "sangramento",

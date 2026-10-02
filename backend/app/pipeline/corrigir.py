@@ -140,14 +140,19 @@ def registrar_checklists(checklists: list[Checklist], contar_rascunho: bool) -> 
     ]
 
 
-def itens_aplicaveis(checklists: list[Checklist], contar_rascunho: bool) -> list[ItemAplicavel]:
-    """Itens na ordem dos checklists. Id repetido entre checklists conta uma vez (fica o primeiro)."""
+def itens_aplicaveis(
+    checklists: list[Checklist], contar_rascunho: bool, sexo_paciente: str | None = None
+) -> list[ItemAplicavel]:
+    """Itens na ordem dos checklists. Id repetido entre checklists conta uma vez (fica o primeiro).
+    Item só de um sexo sai quando o paciente é do outro; sexo desconhecido mantém todos."""
     vistos: set[str] = set()
     itens: list[ItemAplicavel] = []
     for checklist in checklists:
         for secao in checklist.secoes:
             for item in secao.itens:
                 if item.id in vistos:
+                    continue
+                if item.sexo and sexo_paciente and item.sexo != sexo_paciente:
                     continue
                 vistos.add(item.id)
                 itens.append(ItemAplicavel(item, secao, checklist, conta_na_nota(checklist, contar_rascunho)))
@@ -360,10 +365,11 @@ def corrigir(
     *,
     contar_rascunho: bool,
     itens_por_pedido: int = 0,
+    sexo_paciente: str | None = None,
 ) -> ResultadoCorrecao:
     """Um pedido ao LLM por checklist, ou mais de um se ele passa de `itens_por_pedido` itens."""
     checklists = checklists_aplicaveis(queixas_confirmadas, conteudo)
-    itens = itens_aplicaveis(checklists, contar_rascunho)
+    itens = itens_aplicaveis(checklists, contar_rascunho, sexo_paciente)
     registros: list[ItemCorrigido] = []
     for checklist in checklists:
         do_checklist = [a for a in itens if a.checklist.id == checklist.id]
