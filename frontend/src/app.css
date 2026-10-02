@@ -1862,6 +1862,21 @@ a.app-lista-linha:active {
 .app-topo-canto a:active {
   transform: scale(0.9);
 }
+.app-topo-botao {
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--tinta);
+}
+.app-topo-botao:hover {
+  background: var(--petroleo-suave);
+  color: var(--petroleo);
+}
+.app-topo-botao .al-icone {
+  width: 24px;
+  height: 24px;
+}
 
 /* ---------- evolução ---------- */
 
@@ -2610,6 +2625,131 @@ a.app-lista-linha:active {
   .app-topo-canto a:active {
     transform: none;
   }
+}
+
+/* Mesmo movimento reduzido, escolhido nas configurações do app (data-movimento no <html>). */
+
+html[data-movimento="reduzido"] .app-tela {
+  animation: app-surgir 0.15s linear both;
+}
+html[data-movimento="reduzido"] .app-girando {
+  animation: none;
+}
+html[data-movimento="reduzido"] .app-barra-progresso span {
+  transition: none;
+}
+/* Deslocamento vira fade curto; anéis, onda, molas e contagens ficam parados. */
+html[data-movimento="reduzido"] .app-cascata > *,
+html[data-movimento="reduzido"] .app-surge,
+html[data-movimento="reduzido"] .app-ultima,
+html[data-movimento="reduzido"] .app-cartao,
+html[data-movimento="reduzido"] .app-chip-hipotese,
+html[data-movimento="reduzido"] .app-troca .app-avatar,
+html[data-movimento="reduzido"] .app-folha,
+html[data-movimento="reduzido"] .app-recado,
+html[data-movimento="reduzido"] .app-passo,
+html[data-movimento="reduzido"] .app-revela,
+html[data-movimento="reduzido"] .app-revela-tarde,
+html[data-movimento="reduzido"] .app-grafico,
+html[data-movimento="reduzido"] .app-grafico-etiqueta,
+html[data-movimento="reduzido"] .app-placar,
+html[data-movimento="reduzido"] .app-queixa,
+html[data-movimento="reduzido"] .app-virar-costas,
+html[data-movimento="reduzido"] .app-pronto .app-boas-titulo,
+html[data-movimento="reduzido"] .app-pronto .app-descritor {
+  animation: app-surgir 0.15s linear both;
+  animation-delay: 0s;
+}
+html[data-movimento="reduzido"] .app-recado {
+  --recado-desce: 0px;
+  transform: translateX(-50%);
+}
+/* Saídas mantêm o nome da animação: o fim dela é que remove o elemento. */
+html[data-movimento="reduzido"] .app-recado.is-saindo {
+  animation: app-recado-sai 0.15s linear forwards;
+}
+html[data-movimento="reduzido"] .app-chip-hipotese.is-saindo {
+  --desloca: 0px;
+  animation: app-chip-sai 0.15s linear forwards;
+}
+html[data-movimento="reduzido"] .app-gravar-bloco.is-gravando .app-gravar-aneis,
+html[data-movimento="reduzido"] .app-gravar-bloco.is-gravando .app-gravar-aneis::after,
+html[data-movimento="reduzido"] .app-tela-gravar:has(.app-gravar-bloco.is-gravando) .app-titulo::before,
+html[data-movimento="reduzido"] .app-etapa.is-atual .app-etapa-marca,
+html[data-movimento="reduzido"] .app-etapa.is-feita .app-etapa-marca,
+html[data-movimento="reduzido"] .app-onda.is-parada,
+html[data-movimento="reduzido"] .app-onda span,
+html[data-movimento="reduzido"] .app-brilho,
+html[data-movimento="reduzido"] .app-etapa.is-atual > span:nth-child(2),
+html[data-movimento="reduzido"] .al-botao.is-enviando::after,
+html[data-movimento="reduzido"] .app-tela-gravar .app-titulo,
+html[data-movimento="reduzido"] .app-marca-anima img,
+html[data-movimento="reduzido"] .app-boas-titulo > span,
+html[data-movimento="reduzido"] .app-boas-titulo > b,
+html[data-movimento="reduzido"] .app-pronto-circulo,
+html[data-movimento="reduzido"] .app-envelope,
+html[data-movimento="reduzido"] .app-virar-dado,
+html[data-movimento="reduzido"] .app-grafico-ponto,
+html[data-movimento="reduzido"] .app-item .al-item-status,
+html[data-movimento="reduzido"] .app-perfil-topo .app-avatar-letra,
+html[data-movimento="reduzido"] .app-aba[aria-current="page"] .al-icone,
+html[data-movimento="reduzido"] .app-periodo.is-marcada,
+html[data-movimento="reduzido"] .app-origem.is-marcada .al-icone {
+  animation: none;
+}
+html[data-movimento="reduzido"] .app-brilho,
+html[data-movimento="reduzido"] .app-etapa.is-atual > span:nth-child(2) {
+  color: var(--tinta-suave);
+  background: none;
+}
+html[data-movimento="reduzido"] .app-linha-traco,
+html[data-movimento="reduzido"] .app-grafico-linha,
+html[data-movimento="reduzido"] .app-check-desenha path,
+html[data-movimento="reduzido"] .app-item .al-item-status path {
+  animation: none;
+  stroke-dashoffset: 0;
+}
+html[data-movimento="reduzido"] .app-tic-coluna,
+html[data-movimento="reduzido"] .app-abas-marca,
+html[data-movimento="reduzido"] .app-passos span,
+html[data-movimento="reduzido"] .app-virar-miolo,
+html[data-movimento="reduzido"] .app-gravar-icone,
+html[data-movimento="reduzido"] .app-origem::before,
+html[data-movimento="reduzido"] .app-folha {
+  transition: none;
+}
+html[data-movimento="reduzido"] .app-virar-face {
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+}
+html[data-movimento="reduzido"] .app-virar-miolo,
+html[data-movimento="reduzido"] .app-virar.is-virado .app-virar-miolo,
+html[data-movimento="reduzido"] .app-virar-frente {
+  transform: none;
+}
+html[data-movimento="reduzido"] .app-virar.is-virado .app-virar-costas,
+html[data-movimento="reduzido"] .app-virar:not(.is-virado) .app-virar-frente {
+  visibility: hidden;
+}
+html[data-movimento="reduzido"] .al-botao:not(:disabled):active,
+html[data-movimento="reduzido"] .app-origem:active,
+html[data-movimento="reduzido"] .app-gravar-bloco .al-gravar:active,
+html[data-movimento="reduzido"] .app-aba:active .al-icone,
+html[data-movimento="reduzido"] .app-periodo:active,
+html[data-movimento="reduzido"] .app-topo-canto a:active {
+  transform: none;
+}
+html[data-movimento="reduzido"] .al-gravar.is-gravando {
+  animation: none;
+}
+
+/* ---------- tamanho do texto (configurações) ---------- */
+
+html[data-texto="grande"] body {
+  zoom: 1.12;
+}
+html[data-texto="maior"] body {
+  zoom: 1.25;
 }
 
 @keyframes app-surgir {

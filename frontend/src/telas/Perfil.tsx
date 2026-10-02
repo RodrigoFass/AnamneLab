@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../api/cliente";
 import type { SessaoResumo } from "../api/tipos";
 import { useAuth } from "../auth/Autenticacao";
 import { Avatar } from "../componentes/Avatar";
 import { Contador } from "../componentes/Contador";
-import { IconeCheck } from "../componentes/Icones";
+import { IconeCheck, IconeEngrenagem } from "../componentes/Icones";
 import { Recado } from "../componentes/Recado";
 import { Tela } from "../componentes/Tela";
 import { retirarAceiteDoDono, useAceiteDono } from "../util/aceites";
@@ -88,7 +89,15 @@ export function Perfil() {
   const media = notas.length ? Math.round(notas.reduce((a, b) => a + b, 0) / notas.length) : null;
 
   return (
-    <Tela titulo="Perfil" className="app-tela-abas">
+    <Tela
+      titulo="Perfil"
+      className="app-tela-abas"
+      canto={
+        <Link className="app-topo-botao" to="/configuracoes" aria-label="Configurações" title="Configurações">
+          <IconeEngrenagem />
+        </Link>
+      }
+    >
       <section className="app-perfil-topo app-surge">
         <Avatar nome={salvo.nome} papel="medico" tamanho={64} />
         <div>

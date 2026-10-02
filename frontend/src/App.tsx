@@ -6,6 +6,7 @@ import { Carregando } from "./componentes/Tela";
 import { BoasVindas } from "./telas/BoasVindas";
 import { Evolucao } from "./telas/Evolucao";
 import { Perfil } from "./telas/Perfil";
+import { Configuracoes } from "./telas/Configuracoes";
 import { ConfirmarQueixa } from "./telas/ConfirmarQueixa";
 import { Correcao } from "./telas/Correcao";
 import { Gravar } from "./telas/Gravar";
@@ -37,6 +38,7 @@ export const rotas: RouteObject[] = [
           { path: "/perfil", element: <Perfil /> },
         ],
       },
+      { path: "/configuracoes", element: <Configuracoes /> },
       { path: "/sessao/nova", element: <NovaSessao /> },
       { path: "/sessao/:id", element: <SessaoRedireciona /> },
       { path: "/sessao/:id/termo", element: <Termo /> },
