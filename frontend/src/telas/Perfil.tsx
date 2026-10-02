@@ -7,6 +7,8 @@ import { Contador } from "../componentes/Contador";
 import { IconeCheck } from "../componentes/Icones";
 import { Recado } from "../componentes/Recado";
 import { Tela } from "../componentes/Tela";
+import { retirarAceiteDoDono, useAceiteDono } from "../util/aceites";
+import { formatarData } from "../util/formato";
 import { useNavegar, vibrar } from "../util/movimento";
 import { linhaDoPerfil, salvarPerfil, usePerfil, type Perfil as TipoPerfil } from "../util/perfil";
 
@@ -65,6 +67,7 @@ export function Perfil() {
   const navegar = useNavegar();
   const salvo = usePerfil();
   const { loginAtivo, email, sair } = useAuth();
+  const aceite = useAceiteDono();
   const [perfil, setPerfil] = useState(salvo);
   const [recado, setRecado] = useState<string | null>(null);
   const [sessoes, setSessoes] = useState<SessaoResumo[] | null>(null);
@@ -134,6 +137,34 @@ export function Perfil() {
           )}
         </button>
       </form>
+
+      <section className="app-secao" aria-labelledby="titulo-termo">
+        <h2 className="app-subtitulo" id="titulo-termo">
+          Termo de gravação
+        </h2>
+        {aceite ? (
+          <>
+            <p className="app-ajuda">
+              Você aceitou o termo (v{aceite.versao}) em {formatarData(aceite.em)}. Ele vale para as suas
+              sessões neste aparelho. O colega que faz o outro papel confirma a cada gravação.
+            </p>
+            <button
+              className="al-botao al-botao-texto app-botao-largo"
+              type="button"
+              onClick={() => {
+                retirarAceiteDoDono();
+                setRecado("Aceite retirado. O termo aparece de novo na próxima gravação.");
+              }}
+            >
+              Retirar o aceite
+            </button>
+          </>
+        ) : (
+          <p className="app-ajuda">
+            Você ainda não aceitou o termo. Ele aparece uma vez, antes da sua próxima gravação.
+          </p>
+        )}
+      </section>
 
       <section className="app-secao" aria-labelledby="titulo-conta">
         <h2 className="app-subtitulo" id="titulo-conta">

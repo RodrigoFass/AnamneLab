@@ -7,6 +7,7 @@ import { CartaoPaciente } from "../componentes/CartaoPaciente";
 import { IconeDado, IconeGlobo, IconeLapis, IconeLivro } from "../componentes/Icones";
 import { Tela } from "../componentes/Tela";
 import { guardarNomes, lerNomes, type Nomes } from "../util/nomes";
+import { usePerfil } from "../util/perfil";
 import { useQueixas } from "../util/sessao";
 import { useNavegar, vibrar } from "../util/movimento";
 
@@ -32,7 +33,12 @@ const PAPEIS: { papel: Papel; rotulo: string }[] = [
 export function NovaSessao() {
   const navegar = useNavegar();
   const { queixas } = useQueixas();
-  const [nomes, setNomes] = useState<Nomes>(lerNomes);
+  const perfil = usePerfil();
+  // Na primeira sessão da aba, quem usa o app faz o médico; dá para trocar.
+  const [nomes, setNomes] = useState<Nomes>(() => {
+    const n = lerNomes();
+    return n.medico || n.paciente ? n : { ...n, medico: perfil.nome };
+  });
   const [origem, setOrigem] = useState<OrigemCaso | null>(null);
   const [filtroQueixa, setFiltroQueixa] = useState("");
   const [cartao, setCartao] = useState<Cartao | null>(null);

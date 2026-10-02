@@ -14,7 +14,7 @@ import { Aviso } from "../componentes/Aviso";
 import { Avatar } from "../componentes/Avatar";
 import { BarraProgresso } from "../componentes/BarraProgresso";
 import { Folha } from "../componentes/Folha";
-import { IconeArco, IconeAviso, IconeCheck, IconeLampada, IconeTrocar } from "../componentes/Icones";
+import { IconeArco, IconeAviso, IconeCasa, IconeCheck, IconeLampada, IconeTrocar } from "../componentes/Icones";
 import { ItemChecklist, ItemSugestao } from "../componentes/ItemChecklist";
 import { Recado } from "../componentes/Recado";
 import { Selo } from "../componentes/Selo";
@@ -575,6 +575,14 @@ export function Correcao() {
         >
           <IconeTrocar />
           Trocar de papel e gravar
+        </button>
+        <button
+          className="al-botao al-botao-secundario app-botao-largo"
+          type="button"
+          onClick={() => navegar("/", { direcao: "voltar" })}
+        >
+          <IconeCasa />
+          Voltar ao início
         </button>
 
         {!confirmarExclusao ? (

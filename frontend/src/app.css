@@ -1205,18 +1205,19 @@ a.app-lista-linha:active {
   max-width: 5px;
   border-radius: var(--raio-pilula);
   background: var(--petroleo);
-  transform: scaleY(0.12);
-  transition: transform 0.08s linear;
+  /* A altura vem do Onda.tsx a cada quadro, já suavizada; sem transição para não atrasar. */
+  transform: scaleY(0.08);
 }
+/* Parada: pontos no lugar, que só respiram. Nada anda para os lados. */
 .app-onda.is-parada {
   height: 64px;
-  background: radial-gradient(circle, var(--petroleo) 1.5px, transparent 2px) 0 50% / 8px 8px repeat-x;
+  background: radial-gradient(circle, var(--petroleo) 1.5px, transparent 2px) 50% 50% / 8px 8px repeat-x;
   opacity: 0.8;
-  animation: app-pontos-andam 1s linear infinite;
+  animation: app-pontos-respiram 2.4s ease-in-out infinite;
 }
-@keyframes app-pontos-andam {
-  to {
-    background-position: 8px 50%;
+@keyframes app-pontos-respiram {
+  50% {
+    opacity: 0.35;
   }
 }
 
@@ -1240,6 +1241,8 @@ a.app-lista-linha:active {
 
 .app-gravar-bloco {
   position: relative;
+  /* O anel do botão pulsa até 13px para fora; o texto fica longe dele. */
+  gap: calc(var(--espaco-5) + var(--espaco-1));
 }
 /* Dois anéis que se abrem do botão enquanto grava. */
 .app-gravar-aneis,
@@ -2577,7 +2580,6 @@ a.app-lista-linha:active {
     animation: none;
     stroke-dashoffset: 0;
   }
-  .app-onda span,
   .app-tic-coluna,
   .app-abas-marca,
   .app-passos span,
