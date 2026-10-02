@@ -29,6 +29,10 @@ class Settings(BaseSettings):
     gemini_api_key: SecretStr | None = None
     gemini_modelos: str = "gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite"
     """Modelos do Gemini em ordem, separados por vírgula: se um esgota a cota grátis, tenta o próximo."""
+    gemini_modelos_leves: str = "gemini-3.5-flash-lite"
+    """Modelos para as tarefas mais simples (queixa, anamnese e sugestões), antes dos de
+    `gemini_modelos`. Guarda a cota dos modelos melhores para separar as falas e corrigir.
+    Vazio: todas as tarefas usam `gemini_modelos`."""
     gemini_temperatura: float | None = None
     """Temperatura do Gemini. Vazia: o padrão do modelo. Mais baixa dá correções mais parecidas
     entre si. Só vale para o Gemini: os modelos atuais da Claude não aceitam temperature."""
@@ -78,6 +82,10 @@ class Settings(BaseSettings):
     @property
     def lista_modelos_gemini(self) -> list[str]:
         return [modelo.strip() for modelo in self.gemini_modelos.split(",") if modelo.strip()]
+
+    @property
+    def lista_modelos_gemini_leves(self) -> list[str]:
+        return [modelo.strip() for modelo in self.gemini_modelos_leves.split(",") if modelo.strip()]
 
     @property
     def tamanho_maximo_bytes(self) -> int:

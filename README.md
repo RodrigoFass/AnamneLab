@@ -80,7 +80,10 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
 - **IA de correção grátis (Gemini):** crie uma chave no Google AI Studio
   (https://aistudio.google.com/apikey, sem cartão) e ponha `LLM_PROVEDOR=gemini` e
   `GEMINI_API_KEY`. `GEMINI_MODELOS` é a lista de modelos em ordem: quando um esgota a cota
-  grátis, o app tenta o próximo. No plano grátis o Google pode guardar o texto, usar para
+  grátis, o app tenta o próximo (com cota por minuto e espera curta, espera e tenta o mesmo).
+  As tarefas simples começam por `GEMINI_MODELOS_LEVES`, para sobrar cota dos modelos melhores
+  para separar as falas e corrigir. A cota grátis dos modelos melhores é pequena: evite rodar
+  muitos testes no dia de uma demonstração. No plano grátis o Google pode guardar o texto, usar para
   melhorar os produtos dele e ter pessoas revisando; o termo (v2) avisa disso. Para conferir a
   chave e os modelos, rode `uv run python -m app.testar_ia` dentro de `backend/` (no Windows
   sem uv: `.venv\Scripts\python -m app.testar_ia`); `--modelos` lista os modelos da chave.
@@ -106,7 +109,8 @@ Backend (`backend/.env`, modelo em `backend/.env.example`):
 | `ANTHROPIC_API_KEY` | chave da API | |
 | `GEMINI_API_KEY` | chave do Google AI Studio | |
 | `GEMINI_MODELOS` | modelos em ordem, separados por vírgula | `gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite` |
-| `GEMINI_TEMPERATURA` | temperatura do Gemini; vazia usa o padrão do modelo | vazia |
+| `GEMINI_MODELOS_LEVES` | modelos que começam as tarefas simples (queixa, anamnese, sugestões); vazio usa `GEMINI_MODELOS` | `gemini-3.5-flash-lite` |
+| `GEMINI_TEMPERATURA` | temperatura do Gemini; vazia usa o padrão do modelo (o `.env.example` sugere `0`) | vazia |
 | `TRANSCRICAO` | `local`, `api`, `falso` | `falso` |
 | `WHISPER_MODELO_LOCAL` | tamanho do faster-whisper | `small` |
 | `OPENAI_API_KEY` | chave da API (Whisper) | |

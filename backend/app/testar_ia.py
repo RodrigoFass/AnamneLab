@@ -63,6 +63,8 @@ def testar(settings: Settings) -> None:
     print(f"IA de correção: {settings.llm_provedor}")
     if settings.llm_provedor == "gemini":
         print(f"Modelos, em ordem: {', '.join(settings.lista_modelos_gemini) or '(nenhum)'}")
+        if settings.lista_modelos_gemini_leves:
+            print(f"Antes, nas tarefas simples: {', '.join(settings.lista_modelos_gemini_leves)}")
         if not settings.gemini_api_key:
             sys.exit("Falta GEMINI_API_KEY no backend/.env.")
     elif settings.llm_provedor == "anthropic":

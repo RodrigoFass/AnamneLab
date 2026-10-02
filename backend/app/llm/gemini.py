@@ -7,7 +7,9 @@ caso é sempre simulado.
 
 Cada modelo tem a sua cota gratuita. `GEMINI_MODELOS` é uma lista em ordem: quando um
 modelo esgota a cota (429), não existe (404) ou está sobrecarregado (5xx), tenta o
-próximo. Nada do conteúdo (transcrição, falas) vai para o log, só códigos de erro.
+próximo. As tarefas simples (TAREFAS_LEVES) começam por `GEMINI_MODELOS_LEVES`, para
+sobrar cota dos modelos melhores para separar as falas e corrigir. Nada do conteúdo
+(transcrição, falas) vai para o log, só códigos de erro.
 """
 
 import copy
@@ -46,6 +48,12 @@ TENTAR_DE_NOVO = {500, 502, 503, 504}
 """Sobrecarga passageira: o mesmo modelo ganha mais uma chance antes do próximo da lista,
 que costuma ser mais fraco (o flash-lite corrige pior)."""
 ESPERA_NOVA_TENTATIVA_S = 2.0
+ESPERA_MAXIMA_COTA_S = 20.0
+"""Cota por minuto (429 que não é do dia): se o Google pede para esperar até isso, o mesmo
+modelo ganha mais uma chance depois da espera, em vez de cair para um modelo mais fraco."""
+
+TAREFAS_LEVES = {"queixa", "anamnese", "sugestoes"}
+"""Tarefas em que um modelo mais simples basta. Separar as falas e corrigir pedem o melhor."""
 
 PARADA_RECUSA = {
     "SAFETY",
@@ -71,6 +79,10 @@ class ErroGemini:
     codigo: str | None
     mensagem: str
     cota_do_dia: bool = False
+    cota: str | None = None
+    """quotaId da cota que acabou, no 429 (ex.: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier")."""
+    espera_s: float | None = None
+    """Quanto o Google pede para esperar antes de tentar de novo (RetryInfo), no 429."""
 
 
 def schema_para_gemini(modelo: type[BaseModel]) -> dict[str, Any]:
@@ -107,11 +119,33 @@ class ClienteGemini(ClienteLLM):
         chave = settings.gemini_api_key
         self._chave = chave.get_secret_value() if chave else None
         self._modelos = settings.lista_modelos_gemini
+        leves = settings.lista_modelos_gemini_leves
+        self._modelos_leves = leves + [m for m in self._modelos if m not in leves]
         self._client = client or httpx.Client(base_url=URL_BASE, timeout=TEMPOS)
         self.ultimo_erro: ErroGemini | None = None
         self.ultimo_modelo: str | None = None
         self.espera_nova_tentativa_s = ESPERA_NOVA_TENTATIVA_S
+        self.dormir = time.sleep
         self._temperatura = settings.gemini_temperatura
+
+    def modelos_da_tarefa(self, tarefa: str) -> list[str]:
+        return self._modelos_leves if tarefa in TAREFAS_LEVES else self._modelos
+
+    def _espera_para_tentar_de_novo(self, modelo: str) -> float | None:
+        """Segundos até a segunda chance no mesmo modelo, ou None se é para passar ao próximo."""
+        anterior = self.ultimo_erro
+        if not anterior or anterior.modelo != modelo:
+            return None
+        if anterior.status_http in TENTAR_DE_NOVO:
+            return self.espera_nova_tentativa_s
+        if (
+            anterior.status_http == 429
+            and not anterior.cota_do_dia
+            and anterior.espera_s is not None
+            and anterior.espera_s <= ESPERA_MAXIMA_COTA_S
+        ):
+            return anterior.espera_s
+        return None
 
     def _gerar_json(
         self,
@@ -127,7 +161,8 @@ class ClienteGemini(ClienteLLM):
         if not self._chave:
             logger.warning("GEMINI_API_KEY ausente (tarefa=%s)", tarefa)
             raise ErroLLM(MENSAGEM_SEM_CHAVE)
-        if not self._modelos:
+        modelos = self.modelos_da_tarefa(tarefa)
+        if not modelos:
             logger.warning("GEMINI_MODELOS vazio (tarefa=%s)", tarefa)
             raise ErroLLM(MENSAGEM_PADRAO)
 
@@ -147,14 +182,14 @@ class ClienteGemini(ClienteLLM):
         # A cota esgotada vale mais que o erro do último modelo: é o que o aluno precisa saber.
         cotas: list[ErroGemini] = []
         mensagem_final = MENSAGEM_PADRAO
-        tentativas = [(modelo, vez) for modelo in self._modelos for vez in (1, 2)]
+        tentativas = [(modelo, vez) for modelo in modelos for vez in (1, 2)]
         for modelo, vez in tentativas:
             if vez == 2:
-                # Segunda chance só depois de sobrecarga (5xx) no mesmo modelo.
-                anterior = self.ultimo_erro
-                if not (anterior and anterior.modelo == modelo and anterior.status_http in TENTAR_DE_NOVO):
+                # Segunda chance só depois de sobrecarga (5xx) ou de cota por minuto no mesmo modelo.
+                espera = self._espera_para_tentar_de_novo(modelo)
+                if espera is None:
                     continue
-                time.sleep(self.espera_nova_tentativa_s)
+                self.dormir(espera)
             try:
                 resposta = self._client.post(
                     f"/models/{modelo}:generateContent",
@@ -184,7 +219,13 @@ class ClienteGemini(ClienteLLM):
             self.ultimo_erro = erro
             # Só o código HTTP e o código do Google vão para o log, nunca a mensagem.
             logger.warning(
-                "Gemini respondeu HTTP %s (%s) (tarefa=%s, modelo=%s)", erro.status_http, erro.codigo, tarefa, modelo
+                "Gemini respondeu HTTP %s (%s) (tarefa=%s, modelo=%s, cota=%s, espera=%s)",
+                erro.status_http,
+                erro.codigo,
+                tarefa,
+                modelo,
+                erro.cota,
+                erro.espera_s,
             )
             if resposta.status_code in PASSAR_AO_PROXIMO:
                 if resposta.status_code == 429:
@@ -258,21 +299,42 @@ def _ler_erro(resposta: httpx.Response, modelo: str) -> ErroGemini:
         erro = {}
     codigo = erro.get("status")
     cota_do_dia = False
+    cota = None
+    espera = None
     for detalhe in erro.get("details") or []:
         if not isinstance(detalhe, dict):
             continue
         if detalhe.get("reason") and codigo == erro.get("status"):
             codigo = f"{codigo}/{detalhe['reason']}" if codigo else detalhe["reason"]
         for violacao in detalhe.get("violations") or []:
-            if isinstance(violacao, dict) and "PerDay" in str(violacao.get("quotaId", "")):
+            if not isinstance(violacao, dict):
+                continue
+            quota_id = str(violacao.get("quotaId", ""))
+            cota = cota or quota_id or None
+            if "PerDay" in quota_id:
                 cota_do_dia = True
+                cota = quota_id
+        espera = espera if espera is not None else _segundos(detalhe.get("retryDelay"))
     return ErroGemini(
         modelo,
         resposta.status_code,
         str(codigo) if codigo else None,
         str(erro.get("message") or resposta.reason_phrase),
         cota_do_dia,
+        cota,
+        espera,
     )
+
+
+def _segundos(duracao: object) -> float | None:
+    """Duração no formato do Google ("12s", "1.5s") em segundos; None se não der para ler."""
+    if not isinstance(duracao, str) or not duracao.endswith("s"):
+        return None
+    try:
+        segundos = float(duracao[:-1])
+    except ValueError:
+        return None
+    return segundos if segundos >= 0 else None
 
 
 def listar_modelos(settings: Settings, client: httpx.Client | None = None) -> list[str]:

@@ -26,7 +26,12 @@ SEGREDO = "Carlos Alberto, 54 anos, mora na rua tal"
 
 
 def _settings(**extra) -> Settings:
-    valores = {"llm_provedor": "gemini", "gemini_api_key": "chave-de-teste", "gemini_modelos": "modelo-a, modelo-b"}
+    valores = {
+        "llm_provedor": "gemini",
+        "gemini_api_key": "chave-de-teste",
+        "gemini_modelos": "modelo-a, modelo-b",
+        "gemini_modelos_leves": "",
+    }
     return Settings(_env_file=None, **{**valores, **extra})
 
 
@@ -68,6 +73,8 @@ def _cliente(servidor: Servidor, **extra) -> ClienteGemini:
     http = httpx.Client(base_url="https://gemini.teste/v1beta", transport=httpx.MockTransport(servidor))
     cliente = ClienteGemini(_settings(**extra), client=http)
     cliente.espera_nova_tentativa_s = 0
+    cliente.esperas = []  # type: ignore[attr-defined]
+    cliente.dormir = cliente.esperas.append  # type: ignore[attr-defined]
     return cliente
 
 
@@ -199,13 +206,13 @@ def test_todos_sem_cota_vira_mensagem_de_cota():
     assert (cliente.ultimo_erro.modelo, cliente.ultimo_erro.status_http) == ("modelo-b", 429)
 
 
-def _cota(quota_id: str) -> httpx.Response:
+def _cota(quota_id: str, espera: str = "30s") -> httpx.Response:
     detalhes = [
         {
             "@type": "type.googleapis.com/google.rpc.QuotaFailure",
             "violations": [{"quotaMetric": "generate_content_free_tier_requests", "quotaId": quota_id}],
         },
-        {"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": "30s"},
+        {"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": espera},
     ]
     corpo = {"error": {"code": 429, "message": "quota", "status": "RESOURCE_EXHAUSTED", "details": detalhes}}
     return httpx.Response(429, json=corpo)
@@ -225,6 +232,66 @@ def test_cota_por_minuto_em_algum_modelo_pede_para_tentar_mais_tarde():
     with pytest.raises(ErroLLM) as erro:
         _gerar(_cliente(servidor))
     assert erro.value.mensagem == MENSAGEM_COTA
+
+
+POR_MINUTO = "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+POR_DIA = "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+
+
+def test_cota_por_minuto_com_espera_curta_espera_e_tenta_o_mesmo_modelo():
+    servidor = Servidor(_cota(POR_MINUTO, "12.5s"), _resposta_ok(VALIDO))
+    cliente = _cliente(servidor)
+    assert _gerar(cliente).queixas == ["dor-toracica"]
+    assert servidor.modelos() == ["modelo-a", "modelo-a"]
+    assert cliente.esperas == [12.5]
+
+
+@pytest.mark.parametrize(
+    "resposta",
+    [_cota(POR_MINUTO, "45s"), _cota(POR_MINUTO, "logo"), _cota(POR_DIA, "12s"), _erro(429, "RESOURCE_EXHAUSTED")],
+)
+def test_cota_sem_espera_curta_passa_ao_proximo_sem_esperar(resposta):
+    servidor = Servidor(resposta, _resposta_ok(VALIDO))
+    cliente = _cliente(servidor)
+    assert _gerar(cliente).queixas == ["dor-toracica"]
+    assert servidor.modelos() == ["modelo-a", "modelo-b"]
+    assert cliente.esperas == []
+
+
+def test_cota_por_minuto_duas_vezes_passa_ao_proximo():
+    servidor = Servidor(_cota(POR_MINUTO, "5s"), _cota(POR_MINUTO, "5s"), _resposta_ok(VALIDO))
+    cliente = _cliente(servidor)
+    assert _gerar(cliente).queixas == ["dor-toracica"]
+    assert servidor.modelos() == ["modelo-a", "modelo-a", "modelo-b"]
+
+
+def test_erro_guarda_a_cota_e_a_espera():
+    servidor = Servidor(_cota(POR_DIA, "7s"), _cota(POR_DIA, "7s"))
+    cliente = _cliente(servidor)
+    with pytest.raises(ErroLLM):
+        _gerar(cliente)
+    assert (cliente.ultimo_erro.cota, cliente.ultimo_erro.espera_s) == (POR_DIA, 7.0)
+
+
+def test_tarefas_leves_comecam_pelos_modelos_leves():
+    cliente = _cliente(Servidor(), gemini_modelos_leves="modelo-leve, modelo-b")
+    assert cliente.modelos_da_tarefa("queixa") == ["modelo-leve", "modelo-b", "modelo-a"]
+    assert cliente.modelos_da_tarefa("anamnese") == ["modelo-leve", "modelo-b", "modelo-a"]
+    assert cliente.modelos_da_tarefa("sugestoes") == ["modelo-leve", "modelo-b", "modelo-a"]
+    # Separar as falas e corrigir guardam os modelos melhores.
+    assert cliente.modelos_da_tarefa("rotular") == ["modelo-a", "modelo-b"]
+    assert cliente.modelos_da_tarefa("corrigir") == ["modelo-a", "modelo-b"]
+    assert cliente.modelos_da_tarefa("verificar_contestacao") == ["modelo-a", "modelo-b"]
+
+    servidor = Servidor(_erro(429, "RESOURCE_EXHAUSTED"), _resposta_ok(VALIDO))
+    cliente = _cliente(servidor, gemini_modelos_leves="modelo-leve")
+    assert _gerar(cliente).queixas == ["dor-toracica"]
+    assert servidor.modelos() == ["modelo-leve", "modelo-a"]
+
+
+def test_sem_modelos_leves_todas_as_tarefas_usam_a_lista_principal():
+    cliente = _cliente(Servidor())
+    assert cliente.modelos_da_tarefa("queixa") == ["modelo-a", "modelo-b"]
 
 
 def test_cota_vale_mais_que_o_erro_do_ultimo_modelo():
