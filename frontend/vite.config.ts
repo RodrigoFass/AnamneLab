@@ -33,6 +33,9 @@ export default defineConfig({
     }),
   ],
   server: {
+    // Endereços públicos do túnel grátis da Cloudflare, para abrir o app no celular com HTTPS
+    // (sem HTTPS o celular não libera o microfone).
+    allowedHosts: [".trycloudflare.com"],
     proxy: {
       "/api": {
         target: "http://localhost:8000",

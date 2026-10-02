@@ -1,13 +1,16 @@
 import { useCallback } from "react";
 import { useNavigate, type NavigateOptions, type To } from "react-router-dom";
+import { lerPreferencias } from "./preferencias";
 
+/** Movimento reduzido no sistema ou nas configurações do app. */
 export function movimentoReduzido(): boolean {
+  if (lerPreferencias().movimento === "reduzido") return true;
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 }
 
-/** Vibração curta no toque, onde o aparelho tem (Android). Nunca com movimento reduzido. */
+/** Vibração curta no toque, onde o aparelho tem (Android). Nunca com movimento reduzido ou desligada. */
 export function vibrar(padrao: number | number[]): void {
-  if (movimentoReduzido()) return;
+  if (movimentoReduzido() || !lerPreferencias().vibracao) return;
   try {
     navigator.vibrate?.(padrao);
   } catch {

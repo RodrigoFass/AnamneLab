@@ -5,7 +5,8 @@ App de treino de anamnese para estudantes de Medicina. Dois alunos simulam uma c
 ## Escopo deste repositório
 
 - Só **Modo Livre**. O app vale para qualquer queixa: checklist geral + um checklist por queixa da biblioteca (`content/queixas.json`). Queixa nova é só um JSON em `content/checklists/`; o código não depende de queixa nenhuma.
-- Não implementar: Modo Caso, Paciente Virtual, Modo Aula, painel ou conta de professor, pagamento, app nativo, gravação offline.
+- Paciente pela IA (protótipo, pedido do Rodrigo em 2026-10-02): o aluno entrevista um paciente simulado, por escrito ou por voz. O caso parte de um cartão de `content/cartoes/`; a IA monta uma ficha fictícia (`caso_ia`, escondida até o fim da conversa) e responde só pela ficha. A conversa vira as falas da sessão e passa pela mesma correção. Sem colega. Dois modos: chat (o aluno escreve ou manda áudio; o paciente responde por escrito) e voz (conversa contínua, sem botão: o app percebe a pausa da fala e o paciente responde falando). Áudio só com o aceite do termo do dono na sessão; o Whisper do app transcreve e o áudio é apagado em seguida. A voz do paciente vem do backend (`VOZ_PACIENTE=edge` ou `piper`) ou do navegador.
+- Não implementar: Modo Caso, Modo Aula, painel ou conta de professor, pagamento, app nativo, gravação offline.
 - Usuários: só estudantes de Medicina. Nunca paciente real; o app avisa antes de cada gravação.
 
 ## Stack
@@ -23,7 +24,7 @@ backend/app/
   main.py            rotas (contrato em docs/api.md)
   processamento.py   etapas em segundo plano, com status e progresso
   pipeline/          transcrever.py, rotular_falas.py, queixa.py, anamnese.py, corrigir.py, sugestoes.py
-  llm/               um cliente por provedor, mesma interface (anthropic, falso)
+  llm/               um cliente por provedor, mesma interface (anthropic, gemini, falso)
   repositorio/       memoria (dev e testes) e supabase
   schemas/           modelos Pydantic (conteúdo, saída do LLM, sessão)
   conteudo.py        carrega e valida content/
@@ -46,13 +47,14 @@ docs/api.md
 2. A queixa vem de `content/queixas.json` ou é "outra". O aluno confirma a queixa antes da correção. "Outra" vai para `fila_queixas` e é corrigida só pelo checklist geral.
 3. Só checklist com `status: "aprovado"` conta na nota. Rascunho aparece como sugestão, fora da nota. Exceção do protótipo: com `CONTAR_RASCUNHO=true` (padrão enquanto nenhum checklist foi assinado), rascunho entra na conta e a nota aparece como provisória.
 4. Checklists nunca são gerados pelo LLM em tempo de execução. A sessão guarda o id e a versão de cada checklist usado.
-5. O caso é sempre do aluno. O app não guarda o texto do caso, só a transcrição. Professor não tem conta: a assinatura dele fica no JSON (`validado_por`, `validado_em`, `versao`).
+5. O caso é sempre do aluno. O app não guarda o texto do caso, só a transcrição. Exceção: no paciente pela IA, o caso é a ficha fictícia que o próprio app montou, e ela fica na sessão. Professor não tem conta: a assinatura dele fica no JSON (`validado_por`, `validado_em`, `versao`).
 6. A IA nunca afirma diagnóstico. Hipóteses aparecem como "sugestão, não gabarito", depois que o aluno escreve as dele.
 7. LLM com saída estruturada (JSON Schema) validada pelo Pydantic. JSON inválido: uma nova tentativa, depois erro claro ao aluno. Os modelos atuais da Claude não aceitam `temperature`: não passe esse parâmetro.
 
 ## Privacidade (LGPD)
 
-- Nenhuma gravação começa sem o consentimento do colega registrado em `consentimentos` (sessão, papel, nome informado, versão do termo, data e hora).
+- Só quem abriu a sessão aceita o termo de gravação, uma vez (vale até retirar no Perfil ou o termo mudar de versão). O termo traz o compromisso de avisar o colega antes de cada gravação; o colega não aceita no app (decisão do Rodrigo em 2026-10-02).
+- Nenhuma gravação começa sem os dois registros em `consentimentos` (sessão, papel, nome informado, versão do termo, data e hora, forma): o aceite do dono (`aceite`) e o aviso ao colega (`declarado_pelo_dono`), que só vale depois do aceite do dono.
 - O áudio é apagado logo após a transcrição, inclusive quando ela falha. Só texto e nota ficam salvos.
 - Nunca registrar áudio, transcrição ou dados pessoais em log. Segredos só em `.env`, fora do git.
 - O dono pode excluir uma sessão; isso apaga transcrição e avaliações.

@@ -38,6 +38,8 @@ class QueixaDetectada(BaseModel):
     """Quando 'outra': a queixa como o paciente disse, curta."""
     trecho: str
     """Fala do paciente que mostra a queixa principal, copiada literalmente."""
+    sexo_paciente: Literal["feminino", "masculino"] | None
+    """Sexo do paciente simulado, pelo que a conversa mostra. Null se não der para saber."""
 
 
 class AnamneseEstruturada(BaseModel):
@@ -60,8 +62,12 @@ class ItemCorrigido(BaseModel):
 
     item_id: str
     feito: bool
-    trecho: str | None
-    """Fala literal do entrevistador (ou da troca) que prova o item. Obrigatória se feito."""
+    falas: list[int]
+    """Números das falas que provam o item, como aparecem na transcrição enviada: a pergunta
+    do entrevistador e, se ajudar, a resposta logo depois. Vazia se não feito."""
+    citacao: str | None
+    """O pedaço curto dessas falas que mostra o item, copiado como está. Só para mostrar ao
+    aluno: se não estiver nas falas citadas, o app mostra as falas inteiras."""
 
 
 class CorrecaoLLM(BaseModel):
@@ -100,3 +106,42 @@ class SugestoesIA(BaseModel):
 
     hipoteses: list[HipoteseIA]
     perguntas_sugeridas: list[str]
+    sobre_hipoteses_aluno: list[HipoteseIA] = []
+    """As hipóteses do próprio aluno, na ordem dele, com o que a conversa apoia e o que falta checar.
+    Nunca diz se está certa ou errada. Vazia em sessões antigas."""
+
+
+class SugestoesGeradas(SugestoesIA):
+    """Saída pedida ao LLM: a análise das hipóteses do aluno é obrigatória."""
+
+    sobre_hipoteses_aluno: list[HipoteseIA]
+
+
+# ---------- paciente pela IA ----------
+
+
+class CasoPaciente(BaseModel):
+    """Ficha do paciente simulado que a IA interpreta. Caso fictício, montado a partir de um cartão."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    nome: str
+    idade: int
+    sexo: Literal["feminino", "masculino"]
+    profissao: str
+    queixa_nas_palavras_dele: str
+    historia_da_doenca: list[str]
+    """Fatos da doença atual, um por linha: início, local, tipo, intensidade, piora, melhora, sintomas juntos."""
+    antecedentes: list[str]
+    medicacoes: list[str]
+    alergias: list[str]
+    habitos: list[str]
+    familia: list[str]
+    vida_social: list[str]
+    jeito_de_falar: str
+
+
+class RespostaPaciente(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    resposta: str

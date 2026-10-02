@@ -11,14 +11,17 @@ import { usePerfil } from "../util/perfil";
 import { useQueixas } from "../util/sessao";
 import { useNavegar, vibrar } from "../util/movimento";
 
-const ORIGENS: { valor: OrigemCaso; rotulo: string; icone: ReactNode }[] = [
+/** Origens de uma sessão gravada em dupla; o paciente pela IA tem tela própria. */
+type OrigemGravada = Exclude<OrigemCaso, "paciente_ia">;
+
+const ORIGENS: { valor: OrigemGravada; rotulo: string; icone: ReactNode }[] = [
   { valor: "livro", rotulo: "Livro", icone: <IconeLivro /> },
   { valor: "internet", rotulo: "Internet", icone: <IconeGlobo /> },
   { valor: "inventado", rotulo: "Inventado", icone: <IconeLapis /> },
   { valor: "cartao", rotulo: "Sortear cartão", icone: <IconeDado /> },
 ];
 
-const AJUDA_ORIGEM: Record<OrigemCaso, string> = {
+const AJUDA_ORIGEM: Record<OrigemGravada, string> = {
   livro: "Um caso clínico de livro ou apostila. O app não guarda o texto do caso.",
   internet: "Um caso que vocês acharam on-line. O app não guarda o texto do caso.",
   inventado: "Quem faz o paciente cria o caso na hora.",
@@ -39,7 +42,7 @@ export function NovaSessao() {
     const n = lerNomes();
     return n.medico || n.paciente ? n : { ...n, medico: perfil.nome };
   });
-  const [origem, setOrigem] = useState<OrigemCaso | null>(null);
+  const [origem, setOrigem] = useState<OrigemGravada | null>(null);
   const [filtroQueixa, setFiltroQueixa] = useState("");
   const [cartao, setCartao] = useState<Cartao | null>(null);
   const [cartaoVisivel, setCartaoVisivel] = useState(false);
@@ -66,7 +69,7 @@ export function NovaSessao() {
     e.currentTarget.style.setProperty("--y", `${e.clientY - r.top}px`);
   };
 
-  const escolherOrigem = (valor: OrigemCaso) => {
+  const escolherOrigem = (valor: OrigemGravada) => {
     vibrar(6);
     setOrigem(valor);
     setErro(null);

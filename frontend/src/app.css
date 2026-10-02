@@ -184,6 +184,10 @@ legend {
   color: var(--tinta-suave);
   margin-top: var(--espaco-2);
 }
+h4.app-secao-titulo {
+  color: var(--tinta);
+  margin-top: var(--espaco-3);
+}
 
 .app-ajuda {
   color: var(--tinta-suave);
@@ -733,6 +737,10 @@ legend {
   border-radius: var(--raio-md);
 }
 
+.app-recolhivel > p {
+  margin: 0 0 var(--espaco-3);
+  padding: 0 var(--espaco-4);
+}
 .app-anamnese {
   padding: 0 var(--espaco-4) var(--espaco-4);
   display: flex;
@@ -855,6 +863,18 @@ a.app-lista-linha:active {
 }
 .app-lista-nota {
   font: 700 20px/24px var(--font-display);
+}
+/* Título da seção com uma ação de texto à direita (ex.: apagar sessões do histórico). */
+.app-secao-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+}
+.app-lista-apagar {
+  flex: none;
+  min-height: 44px;
+  gap: var(--espaco-1);
 }
 .app-lista-seta {
   width: 18px;
@@ -1603,6 +1623,56 @@ a.app-lista-linha:active {
   color: var(--tinta);
   font-weight: 600;
 }
+.app-hipoteses-aluno li {
+  font-weight: 600;
+}
+.app-hipoteses-aluno li + li {
+  margin-top: var(--espaco-2);
+}
+.app-hipoteses-aluno .app-hipotese-linha {
+  margin: var(--espaco-1) 0 0;
+}
+
+/* Faltou de peso menor: sem o vermelho do faltou, porque nem toda pergunta vale em todo caso. */
+.app-item.app-item-poderia .al-item-status {
+  background: var(--linha);
+  color: var(--tinta-suave);
+}
+.app-item.app-item-poderia .al-item-rotulo {
+  color: var(--tinta-suave);
+}
+
+/* Cobertura de cada parte do checklist. */
+.app-cobertura {
+  list-style: none;
+  margin: 0;
+  padding: var(--espaco-3) var(--espaco-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-cobertura li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px var(--espaco-3);
+  font-size: 16px;
+}
+.app-cobertura-barra {
+  grid-column: 1 / -1;
+  height: 6px;
+  border-radius: var(--raio-pilula);
+  background: var(--linha);
+  overflow: hidden;
+}
+.app-cobertura-barra span {
+  display: block;
+  height: 100%;
+  background: var(--petroleo);
+  border-radius: inherit;
+}
 
 .app-troca {
   display: flex;
@@ -1862,6 +1932,21 @@ a.app-lista-linha:active {
 .app-topo-canto a:active {
   transform: scale(0.9);
 }
+.app-topo-botao {
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--tinta);
+}
+.app-topo-botao:hover {
+  background: var(--petroleo-suave);
+  color: var(--petroleo);
+}
+.app-topo-botao .al-icone {
+  width: 24px;
+  height: 24px;
+}
 
 /* ---------- evolução ---------- */
 
@@ -2038,7 +2123,254 @@ a.app-lista-linha:active {
   outline-offset: 2px;
 }
 
+/* Avatares prontos para escolher no perfil e no cadastro. */
+.app-avatares {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: var(--espaco-2);
+  margin-top: var(--espaco-1);
+}
+.app-avatar-opcao {
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  border: 2px solid transparent;
+  border-radius: var(--raio-pilula);
+  cursor: pointer;
+  justify-self: center;
+  transition: transform 0.3s var(--mola-quique), border-color 0.2s;
+}
+.app-avatar-opcao:active {
+  transform: scale(0.9);
+}
+.app-avatar-opcao.is-marcada {
+  border-color: var(--petroleo);
+  animation: app-pulo 0.45s var(--mola-quique);
+}
+.app-avatar-opcao:has(input:focus-visible) {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+.app-avatar-desenho {
+  overflow: hidden;
+  background: none;
+}
+
+/* ---------- consulta com o paciente da IA ---------- */
+
+.app-chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+  padding-bottom: var(--espaco-3);
+}
+.app-bolha {
+  max-width: 82%;
+  margin: 0;
+  padding: var(--espaco-3) var(--espaco-4);
+  border-radius: var(--raio-lg);
+  font-size: 16px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  animation: app-surgir-escala 0.3s cubic-bezier(0.2, 0, 0, 1) both;
+}
+.app-bolha-medico {
+  align-self: flex-end;
+  border-bottom-right-radius: var(--raio-sm);
+  background: var(--petroleo);
+  color: var(--on-petroleo);
+}
+.app-bolha-medico.is-enviando {
+  opacity: 0.7;
+}
+.app-bolha-linha {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--espaco-2);
+}
+.app-bolha-paciente {
+  border-bottom-left-radius: var(--raio-sm);
+  background: var(--mostarda-suave);
+  color: var(--tinta);
+}
+.app-digitando {
+  display: inline-flex;
+  gap: 5px;
+  padding: var(--espaco-4);
+}
+.app-digitando span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tinta-suave);
+  animation: app-digitando 1.1s infinite ease-in-out;
+}
+.app-digitando span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.app-digitando span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes app-digitando {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+.app-perguntar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--espaco-2);
+}
+/* Só aparece perto do limite; em vermelho e com a palavra quando passa. */
+.app-perguntar-conta {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 16px;
+  color: var(--tinta-suave);
+  text-align: right;
+}
+.app-perguntar-conta.is-passou {
+  color: var(--faltou);
+  font-weight: 600;
+}
+.app-perguntar textarea {
+  flex: 1;
+  min-height: 48px;
+  max-height: 140px;
+  padding: var(--espaco-3) var(--espaco-4);
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-lg);
+  background: var(--papel-elevado);
+  color: var(--tinta);
+  font: 16px/1.4 var(--font-texto);
+  resize: none;
+  field-sizing: content;
+}
+.app-perguntar textarea:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 1px;
+}
+.app-perguntar .app-botao-icone {
+  flex: none;
+  height: 48px;
+  border-radius: var(--raio-pilula);
+}
+/* Microfone da pergunta: segurar para falar. Vermelho de gravar só enquanto grava. */
+.app-botao-falar {
+  background: var(--papel-elevado);
+  color: var(--petroleo);
+  border: 1px solid var(--linha-forte);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.app-botao-falar.is-gravando {
+  background: var(--gravar);
+  border-color: var(--gravar);
+  color: var(--on-gravar);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gravar) 25%, transparent);
+}
+.app-perguntar-gravando {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: 48px;
+  margin: 0;
+  padding: var(--espaco-3) var(--espaco-4);
+  border: 1px solid var(--gravar);
+  border-radius: var(--raio-lg);
+  background: var(--papel-elevado);
+  color: var(--tinta);
+}
+.app-perguntar-gravando .app-tabular {
+  margin-left: auto;
+  color: var(--tinta-suave);
+}
+.app-alternar-voz {
+  align-self: center;
+  gap: var(--espaco-2);
+  color: var(--tinta-suave);
+}
+.app-ouvir {
+  flex: none;
+  width: 40px;
+  min-height: 40px;
+  padding: 0;
+  justify-content: center;
+  color: var(--tinta-suave);
+}
+.app-bolha-paciente.is-falando {
+  box-shadow: 0 0 0 2px var(--mostarda);
+}
+.app-bolha.is-transcrevendo {
+  font-style: italic;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-bolha,
+  .app-digitando span {
+    animation: none;
+  }
+}
+html[data-movimento="reduzido"] .app-bolha,
+html[data-movimento="reduzido"] .app-digitando span {
+  animation: none;
+}
+
 /* ---------- boas-vindas, cadastro e entrar ---------- */
+
+/* Entrar ou criar conta: duas metades de uma pílula. */
+.app-alternar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: var(--raio-pilula);
+  background: var(--papel-elevado);
+  border: 1px solid var(--linha-forte);
+}
+.app-alternar button {
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--raio-pilula);
+  background: none;
+  font: 600 16px/1 var(--font-texto);
+  color: var(--tinta-suave);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.app-alternar button[aria-pressed="true"] {
+  background: var(--petroleo);
+  color: var(--on-petroleo);
+}
+.app-alternar button:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+.app-senha {
+  position: relative;
+  display: block;
+}
+.app-senha input {
+  width: 100%;
+  padding-right: 104px;
+}
+.app-senha button {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  min-height: 40px;
+}
 
 .app-boas-vindas > .app-topo-linha,
 .app-entrar > .app-topo-linha {
@@ -2565,6 +2897,7 @@ a.app-lista-linha:active {
   .app-perfil-topo .app-avatar-letra,
   .app-aba[aria-current="page"] .al-icone,
   .app-periodo.is-marcada,
+  .app-avatar-opcao.is-marcada,
   .app-origem.is-marcada .al-icone {
     animation: none;
   }
@@ -2612,8 +2945,312 @@ a.app-lista-linha:active {
   }
 }
 
+/* Mesmo movimento reduzido, escolhido nas configurações do app (data-movimento no <html>). */
+
+html[data-movimento="reduzido"] .app-tela {
+  animation: app-surgir 0.15s linear both;
+}
+html[data-movimento="reduzido"] .app-girando {
+  animation: none;
+}
+html[data-movimento="reduzido"] .app-barra-progresso span {
+  transition: none;
+}
+/* Deslocamento vira fade curto; anéis, onda, molas e contagens ficam parados. */
+html[data-movimento="reduzido"] .app-cascata > *,
+html[data-movimento="reduzido"] .app-surge,
+html[data-movimento="reduzido"] .app-ultima,
+html[data-movimento="reduzido"] .app-cartao,
+html[data-movimento="reduzido"] .app-chip-hipotese,
+html[data-movimento="reduzido"] .app-troca .app-avatar,
+html[data-movimento="reduzido"] .app-folha,
+html[data-movimento="reduzido"] .app-recado,
+html[data-movimento="reduzido"] .app-passo,
+html[data-movimento="reduzido"] .app-revela,
+html[data-movimento="reduzido"] .app-revela-tarde,
+html[data-movimento="reduzido"] .app-grafico,
+html[data-movimento="reduzido"] .app-grafico-etiqueta,
+html[data-movimento="reduzido"] .app-placar,
+html[data-movimento="reduzido"] .app-queixa,
+html[data-movimento="reduzido"] .app-virar-costas,
+html[data-movimento="reduzido"] .app-pronto .app-boas-titulo,
+html[data-movimento="reduzido"] .app-pronto .app-descritor {
+  animation: app-surgir 0.15s linear both;
+  animation-delay: 0s;
+}
+html[data-movimento="reduzido"] .app-recado {
+  --recado-desce: 0px;
+  transform: translateX(-50%);
+}
+/* Saídas mantêm o nome da animação: o fim dela é que remove o elemento. */
+html[data-movimento="reduzido"] .app-recado.is-saindo {
+  animation: app-recado-sai 0.15s linear forwards;
+}
+html[data-movimento="reduzido"] .app-chip-hipotese.is-saindo {
+  --desloca: 0px;
+  animation: app-chip-sai 0.15s linear forwards;
+}
+html[data-movimento="reduzido"] .app-gravar-bloco.is-gravando .app-gravar-aneis,
+html[data-movimento="reduzido"] .app-gravar-bloco.is-gravando .app-gravar-aneis::after,
+html[data-movimento="reduzido"] .app-tela-gravar:has(.app-gravar-bloco.is-gravando) .app-titulo::before,
+html[data-movimento="reduzido"] .app-etapa.is-atual .app-etapa-marca,
+html[data-movimento="reduzido"] .app-etapa.is-feita .app-etapa-marca,
+html[data-movimento="reduzido"] .app-onda.is-parada,
+html[data-movimento="reduzido"] .app-onda span,
+html[data-movimento="reduzido"] .app-brilho,
+html[data-movimento="reduzido"] .app-etapa.is-atual > span:nth-child(2),
+html[data-movimento="reduzido"] .al-botao.is-enviando::after,
+html[data-movimento="reduzido"] .app-tela-gravar .app-titulo,
+html[data-movimento="reduzido"] .app-marca-anima img,
+html[data-movimento="reduzido"] .app-boas-titulo > span,
+html[data-movimento="reduzido"] .app-boas-titulo > b,
+html[data-movimento="reduzido"] .app-pronto-circulo,
+html[data-movimento="reduzido"] .app-envelope,
+html[data-movimento="reduzido"] .app-virar-dado,
+html[data-movimento="reduzido"] .app-grafico-ponto,
+html[data-movimento="reduzido"] .app-item .al-item-status,
+html[data-movimento="reduzido"] .app-perfil-topo .app-avatar-letra,
+html[data-movimento="reduzido"] .app-aba[aria-current="page"] .al-icone,
+html[data-movimento="reduzido"] .app-periodo.is-marcada,
+html[data-movimento="reduzido"] .app-avatar-opcao.is-marcada,
+html[data-movimento="reduzido"] .app-origem.is-marcada .al-icone {
+  animation: none;
+}
+html[data-movimento="reduzido"] .app-brilho,
+html[data-movimento="reduzido"] .app-etapa.is-atual > span:nth-child(2) {
+  color: var(--tinta-suave);
+  background: none;
+}
+html[data-movimento="reduzido"] .app-linha-traco,
+html[data-movimento="reduzido"] .app-grafico-linha,
+html[data-movimento="reduzido"] .app-check-desenha path,
+html[data-movimento="reduzido"] .app-item .al-item-status path {
+  animation: none;
+  stroke-dashoffset: 0;
+}
+html[data-movimento="reduzido"] .app-tic-coluna,
+html[data-movimento="reduzido"] .app-abas-marca,
+html[data-movimento="reduzido"] .app-passos span,
+html[data-movimento="reduzido"] .app-virar-miolo,
+html[data-movimento="reduzido"] .app-gravar-icone,
+html[data-movimento="reduzido"] .app-origem::before,
+html[data-movimento="reduzido"] .app-folha {
+  transition: none;
+}
+html[data-movimento="reduzido"] .app-virar-face {
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+}
+html[data-movimento="reduzido"] .app-virar-miolo,
+html[data-movimento="reduzido"] .app-virar.is-virado .app-virar-miolo,
+html[data-movimento="reduzido"] .app-virar-frente {
+  transform: none;
+}
+html[data-movimento="reduzido"] .app-virar.is-virado .app-virar-costas,
+html[data-movimento="reduzido"] .app-virar:not(.is-virado) .app-virar-frente {
+  visibility: hidden;
+}
+html[data-movimento="reduzido"] .al-botao:not(:disabled):active,
+html[data-movimento="reduzido"] .app-origem:active,
+html[data-movimento="reduzido"] .app-gravar-bloco .al-gravar:active,
+html[data-movimento="reduzido"] .app-aba:active .al-icone,
+html[data-movimento="reduzido"] .app-periodo:active,
+html[data-movimento="reduzido"] .app-topo-canto a:active {
+  transform: none;
+}
+html[data-movimento="reduzido"] .al-gravar.is-gravando {
+  animation: none;
+}
+
+/* ---------- tamanho do texto (configurações) ---------- */
+
+html[data-texto="grande"] body {
+  zoom: 1.12;
+}
+html[data-texto="maior"] body {
+  zoom: 1.25;
+}
+
 @keyframes app-surgir {
   from {
     opacity: 0;
   }
+}
+
+/* ---------- consulta por voz ---------- */
+
+.app-tela-voz .app-conteudo {
+  display: flex;
+  flex-direction: column;
+}
+.app-voz {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaco-4);
+  min-height: 60vh;
+  text-align: center;
+}
+/* Duas gotas que giram devagar enquanto alguém fala: petróleo é o médico (aluno), mostarda é
+   o paciente. Quem fala cresce com o volume (--nivel, de 0 a 1). */
+.app-esfera {
+  --nivel: 0;
+  position: relative;
+  width: min(62vw, 240px);
+  aspect-ratio: 1;
+  animation: app-gotas-girar 9s linear infinite;
+  animation-play-state: paused;
+}
+.app-esfera.is-aluno,
+.app-esfera.is-paciente {
+  animation-play-state: running;
+}
+.app-gotas {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.app-gota {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 120ms linear,
+    opacity 300ms ease,
+    filter 300ms ease;
+}
+.app-gota-medico {
+  transform: scale(calc(1 + var(--nivel) * 0.18));
+}
+.app-esfera.is-paciente .app-gota-paciente {
+  animation: app-gota-fala 0.8s ease-in-out infinite;
+}
+.app-esfera.is-paciente .app-gota-medico,
+.app-esfera.is-aluno .app-gota-paciente {
+  opacity: 0.55;
+}
+.app-esfera.is-ouvindo .app-gota {
+  animation: app-gota-pensa 3.2s ease-in-out infinite;
+}
+.app-esfera.is-pensando .app-gota {
+  animation: app-gota-pensa 1.6s ease-in-out infinite;
+}
+.app-esfera.is-inicio .app-gota,
+.app-esfera.is-mudo .app-gota {
+  filter: grayscale(0.8);
+  opacity: 0.55;
+}
+@keyframes app-gotas-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes app-gota-fala {
+  50% {
+    transform: scale(1.12);
+  }
+}
+@keyframes app-gota-pensa {
+  50% {
+    opacity: 0.6;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-esfera,
+  .app-gota {
+    animation: none !important;
+  }
+}
+html[data-movimento="reduzido"] .app-esfera,
+html[data-movimento="reduzido"] .app-gota {
+  animation: none !important;
+}
+.app-voz-estado {
+  margin: 0;
+  font: 600 18px/1.3 var(--font-display);
+  color: var(--tinta);
+}
+.app-voz-comecar {
+  gap: var(--espaco-2);
+}
+.app-voz-legendas {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  text-align: left;
+}
+.app-voz-legendas p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+.app-voz-voce {
+  color: var(--tinta-suave);
+}
+.app-voz-paciente {
+  padding: var(--espaco-2) var(--espaco-3);
+  border-radius: var(--raio-lg);
+  background: var(--mostarda-suave);
+  color: var(--tinta);
+}
+.app-voz-controles {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+}
+.app-voz-escrever {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-1);
+  min-height: 52px;
+  padding: 0 var(--espaco-1) 0 var(--espaco-4);
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-pilula);
+  background: var(--papel-elevado);
+}
+.app-voz-escrever input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font: 16px/1.4 var(--font-texto);
+  outline: none;
+}
+.app-voz-escrever:focus-within {
+  outline: 2px solid var(--foco);
+  outline-offset: 1px;
+}
+.app-voz-escrever .app-botao-icone {
+  width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  color: var(--petroleo);
+}
+.app-voz-redondo {
+  flex: none;
+  width: 52px;
+  min-height: 52px;
+  height: 52px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--linha-forte);
+  background: var(--papel-elevado);
+  color: var(--tinta);
+}
+.app-voz-redondo.is-mudo {
+  background: var(--tinta);
+  color: var(--papel);
+  border-color: var(--tinta);
+}
+.app-voz-encerrar {
+  background: var(--tinta);
+  color: var(--papel);
+  border-color: var(--tinta);
 }

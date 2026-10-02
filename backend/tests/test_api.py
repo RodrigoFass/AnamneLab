@@ -1,4 +1,4 @@
-"""Fluxo completo pela API: LLM falso, transcrição falsa e banco em memória."""
+"""Fluxo completo pela API: LLM falso, transcrição falsa, banco em memória e em arquivo."""
 
 import time
 from pathlib import Path
@@ -11,14 +11,18 @@ from app.auth import Usuario, usuario_atual
 from app.llm.base import ErroLLM
 from app.llm.falso import ClienteFalso
 from app.main import criar_app
-from app.pipeline.transcrever import Transcritor, TranscritorFalso
+from app.pipeline.transcrever import PERGUNTAS_EXEMPLO, Transcritor, TranscritorFalso
+from app.pipeline.voz import VozPiper
+from app.repositorio.arquivo import RepositorioArquivo
 from app.repositorio.memoria import RepositorioMemoria
 
 AUDIO = ("gravacao.webm", b"\x1a\x45\xdf\xa3" + b"0" * 2048, "audio/webm;codecs=opus")
 
 
-@pytest.fixture
-def repositorio() -> RepositorioMemoria:
+@pytest.fixture(params=["memoria", "arquivo"])
+def repositorio(request, tmp_path) -> RepositorioMemoria:
+    if request.param == "arquivo":
+        return RepositorioArquivo(tmp_path / "dados" / "historico.json")
     return RepositorioMemoria()
 
 
@@ -76,7 +80,7 @@ def arquivos_de_audio(settings) -> list[Path]:
 
 
 def test_rotas_de_conteudo(cliente):
-    assert cliente.get("/api/saude").json() == {"ok": True, "modo_demonstracao": True}
+    assert cliente.get("/api/saude").json() == {"ok": True, "modo_demonstracao": True, "vozes_paciente": []}
     assert [q["id"] for q in cliente.get("/api/queixas").json()] == ["dor-toracica", "cefaleia"]
     assert cliente.get("/api/termo").json()["versao"] == "1"
     assert cliente.get("/api/cartoes/sortear").json()["id"] == "dor-toracica-teste-1"
@@ -143,7 +147,8 @@ def test_fluxo_completo(cliente, settings, repositorio):
     falas = sessao["falas"]
     falas.insert(2, {"papel": "entrevistador", "texto": "O senhor tem alguma alergia a remédio?"})
     falas.insert(3, {"papel": "paciente", "texto": "Não que eu saiba."})
-    # E o paciente conta que quase desmaiou, sem o entrevistador ter perguntado.
+    # E o paciente conta que quase desmaiou, sem o entrevistador ter perguntado do desmaio.
+    falas.append({"papel": "entrevistador", "texto": "Quer contar mais alguma coisa?"})
     falas.append({"papel": "paciente", "texto": "Ah, e na hora da dor eu achei que ia desmaiar."})
     resposta = cliente.put(f"/api/sessoes/{sessao_id}/transcricao", json={"falas": falas})
     assert resposta.status_code == 200
@@ -185,6 +190,7 @@ def test_fluxo_completo(cliente, settings, repositorio):
     assert avaliacoes["alergias"]["status"] == "feito"  # veio da transcrição editada
     assert avaliacoes["sincope"]["status"] == "faltou"
     assert avaliacoes["sincope"]["mensagem"] == "Faltou perguntar se desmaiou ou quase desmaiou."
+    assert sessao["sexo_paciente"] == "masculino"  # detectado ("o senhor") e mantido na confirmação
     assert sessao["notas"] == {"geral": 100, "queixa": 71, "provisoria": True}
     # Dor torácica tem checklist: sem perguntas sugeridas fora da nota.
     assert sessao["sugestoes"]["perguntas_sugeridas"] == []
@@ -209,12 +215,20 @@ def test_fluxo_completo(cliente, settings, repositorio):
     assert sincope["contestacao"]["resultado"] == "pendente_professor"
     assert resposta.json()["notas"]["queixa"] == 71
 
-    # Fala que existe e mostra o item: procedente, nota recalculada.
+    # Fala só do paciente: o LLM nem é chamado, continua pendente, nota igual.
     contestacao = {
         "item_id": "sincope",
         "motivo": "O paciente falou do desmaio.",
         "trecho": "Ah, e na hora da dor eu achei que ia desmaiar.",
     }
+    resposta = cliente.post(f"/api/sessoes/{sessao_id}/contestacoes", json=contestacao)
+    assert resposta.status_code == 200
+    sincope = next(a for a in resposta.json()["avaliacoes"] if a["item_id"] == "sincope")
+    assert sincope["contestacao"]["resultado"] == "pendente_professor"
+    assert resposta.json()["notas"]["queixa"] == 71
+
+    # Pergunta do entrevistador e resposta que mostram o item: procedente, nota recalculada.
+    contestacao["trecho"] = "Quer contar mais alguma coisa? Ah, e na hora da dor eu achei que ia desmaiar."
     resposta = cliente.post(f"/api/sessoes/{sessao_id}/contestacoes", json=contestacao)
     assert resposta.status_code == 200
     sincope = next(a for a in resposta.json()["avaliacoes"] if a["item_id"] == "sincope")
@@ -412,3 +426,196 @@ def test_audio_esquecido_e_apagado_no_proximo_envio(cliente, settings):
     gravada(cliente)
     assert not esquecido.exists()
     assert arquivos_de_audio(settings) == []
+
+
+@pytest.mark.parametrize("sexo", ["feminino", None])
+def test_aluno_corrige_o_sexo_do_paciente_na_confirmacao(cliente, sexo):
+    sessao_id = gravada(cliente)
+    assert cliente.get(f"/api/sessoes/{sessao_id}").json()["sexo_paciente"] == "masculino"  # detectado
+    resposta = cliente.post(
+        f"/api/sessoes/{sessao_id}/queixa", json={"queixas": ["dor-toracica"], "sexo_paciente": sexo}
+    )
+    assert resposta.status_code == 200
+    assert esperar(cliente, sessao_id, "aguardando_hipoteses")["sexo_paciente"] == sexo
+
+
+def test_sexo_invalido_e_recusado(cliente):
+    sessao_id = gravada(cliente)
+    resposta = cliente.post(
+        f"/api/sessoes/{sessao_id}/queixa", json={"queixas": ["dor-toracica"], "sexo_paciente": "x"}
+    )
+    assert resposta.status_code == 422
+
+
+def test_colega_avisado_pelo_dono_libera_a_gravacao(cliente):
+    sessao_id = nova_sessao(cliente)
+    declarado = {"papel": "paciente", "nome_informado": "Ana", "versao_termo": "1", "aceito": True, "forma": "declarado_pelo_dono"}
+
+    # Sem o aceite do dono, o aviso ao colega não vale.
+    resposta = cliente.post(f"/api/sessoes/{sessao_id}/consentimentos", json=declarado)
+    assert resposta.status_code == 409
+
+    assert consentir(cliente, sessao_id, "medico").status_code == 201
+    resposta = cliente.post(f"/api/sessoes/{sessao_id}/consentimentos", json=declarado)
+    assert resposta.status_code == 201
+    assert resposta.json()["forma"] == "declarado_pelo_dono"
+
+    assert cliente.post(f"/api/sessoes/{sessao_id}/audio", files={"audio": AUDIO}).status_code == 200
+    sessao = esperar(cliente, sessao_id, "aguardando_queixa")
+    assert sorted(c["forma"] for c in sessao["consentimentos"]) == ["aceite", "declarado_pelo_dono"]
+
+
+def test_aviso_do_dono_nao_vale_para_o_proprio_papel(cliente):
+    sessao_id = nova_sessao(cliente)
+    assert consentir(cliente, sessao_id, "medico").status_code == 201
+    resposta = cliente.post(
+        f"/api/sessoes/{sessao_id}/consentimentos",
+        json={"papel": "medico", "nome_informado": "Rodrigo", "versao_termo": "1", "aceito": True, "forma": "declarado_pelo_dono"},
+    )
+    assert resposta.status_code == 409
+
+
+# ---------- paciente pela IA ----------
+
+
+def paciente_ia(cliente: TestClient) -> dict[str, Any]:
+    resposta = cliente.post("/api/sessoes", json={"origem_caso": "paciente_ia"})
+    assert resposta.status_code == 201, resposta.text
+    return resposta.json()
+
+
+def perguntar(cliente: TestClient, sessao_id: str, texto: str):
+    return cliente.post(f"/api/sessoes/{sessao_id}/conversa", json={"texto": texto})
+
+
+def test_paciente_ia_conversa_e_segue_para_a_correcao(cliente):
+    sessao = paciente_ia(cliente)
+    assert sessao["status"] == "conversando"
+    assert sessao["cartao_id"] == "dor-toracica-teste-1"
+    assert sessao["sexo_paciente"] in ("feminino", "masculino")
+    assert sessao["caso_ia"] is None  # a ficha é o gabarito: escondida durante a conversa
+    sessao_id = sessao["id"]
+
+    # Não dá para encerrar sem perguntar nada.
+    assert cliente.post(f"/api/sessoes/{sessao_id}/encerrar").status_code == 409
+
+    resposta = perguntar(cliente, sessao_id, "O que te traz aqui hoje?")
+    assert resposta.status_code == 200
+    falas = resposta.json()["falas"]
+    assert [f["papel"] for f in falas] == ["entrevistador", "paciente"]
+    assert falas[1]["texto"]
+    assert resposta.json()["caso_ia"] is None
+    for pergunta in ["Quando começou?", "Toma algum remédio?", "Tem alergia?", "Alguém na família tem problema do coração?"]:
+        assert perguntar(cliente, sessao_id, pergunta).status_code == 200
+
+    encerrada = cliente.post(f"/api/sessoes/{sessao_id}/encerrar")
+    assert encerrada.status_code == 200
+    encerrada = encerrada.json()
+    assert encerrada["status"] == "aguardando_queixa"
+    assert encerrada["queixa_detectada"] == ["dor-toracica"]
+    assert encerrada["queixa_trecho"] == "Dor no peito há 2 horas"  # a fala que cita a queixa
+    assert encerrada["caso_ia"]["nome"]
+    assert len(encerrada["falas"]) == 10
+
+    # Encerrada, não aceita mais pergunta; a correção segue como na gravação.
+    assert perguntar(cliente, sessao_id, "Mais alguma coisa?").status_code == 409
+    assert cliente.post(f"/api/sessoes/{sessao_id}/queixa", json={"queixas": ["dor-toracica"]}).status_code == 200
+    esperar(cliente, sessao_id, "aguardando_hipoteses")
+
+
+def falar(cliente: TestClient, sessao_id: str):
+    return cliente.post(f"/api/sessoes/{sessao_id}/conversa/audio", files={"audio": AUDIO})
+
+
+def test_paciente_ia_nao_grava_a_consulta_inteira(cliente):
+    sessao_id = paciente_ia(cliente)["id"]
+    assert consentir(cliente, sessao_id, "medico").status_code == 201
+    assert cliente.post(f"/api/sessoes/{sessao_id}/audio", files={"audio": AUDIO}).status_code == 409
+
+
+def test_paciente_ia_pergunta_falada_pede_o_aceite_e_apaga_o_audio(cliente, settings):
+    sessao_id = paciente_ia(cliente)["id"]
+    assert falar(cliente, sessao_id).status_code == 409
+    # Sem colega: o aviso ao colega não vale na conversa com a IA.
+    resposta = cliente.post(
+        f"/api/sessoes/{sessao_id}/consentimentos",
+        json={
+            "papel": "paciente",
+            "nome_informado": "Colega",
+            "versao_termo": "1",
+            "aceito": True,
+            "forma": "declarado_pelo_dono",
+        },
+    )
+    assert resposta.status_code == 409
+    assert consentir(cliente, sessao_id, "medico").status_code == 201
+
+    resposta = falar(cliente, sessao_id)
+    assert resposta.status_code == 200, resposta.text
+    falas = resposta.json()["falas"]
+    assert [f["papel"] for f in falas] == ["entrevistador", "paciente"]
+    assert falas[0]["texto"] == PERGUNTAS_EXEMPLO[0]
+    assert falar(cliente, sessao_id).json()["falas"][2]["texto"] == PERGUNTAS_EXEMPLO[1]
+    assert not list(settings.pasta_audio_temp.glob("anamnelab-*"))
+
+
+def test_paciente_ia_pergunta_falada_que_falha_apaga_o_audio(settings, repositorio):
+    app = criar_app(settings, repositorio=repositorio, transcritor=TranscritorQueFalha())
+    with TestClient(app) as cliente:
+        sessao_id = paciente_ia(cliente)["id"]
+        consentir(cliente, sessao_id, "medico")
+        resposta = falar(cliente, sessao_id)
+        assert resposta.status_code == 422
+        assert "pergunta" in resposta.json()["detail"]
+        assert cliente.get(f"/api/sessoes/{sessao_id}").json()["falas"] == []
+    assert not list(settings.pasta_audio_temp.glob("anamnelab-*"))
+
+
+class VozDeTeste(VozPiper):
+    def __init__(self) -> None:
+        super().__init__({"masculino": Path("masculina.onnx")})
+
+    def falar(self, texto: str, sexo: str) -> bytes:
+        return b"RIFF" + texto.encode()
+
+
+def test_voz_do_paciente(settings, repositorio):
+    with TestClient(criar_app(settings, repositorio=repositorio)) as cliente:
+        sessao_id = paciente_ia(cliente)["id"]
+        perguntar(cliente, sessao_id, "O que te traz aqui?")
+        # Sem Piper, quem fala é o navegador.
+        assert cliente.get(f"/api/sessoes/{sessao_id}/voz/1").status_code == 404
+
+    with TestClient(criar_app(settings, repositorio=repositorio, voz=VozDeTeste())) as cliente:
+        assert cliente.get("/api/saude").json()["vozes_paciente"] == ["masculino"]
+        resposta = cliente.get(f"/api/sessoes/{sessao_id}/voz/1")
+        assert resposta.status_code == 200
+        assert resposta.headers["content-type"] == "audio/wav"
+        assert resposta.content.startswith(b"RIFF")
+        assert cliente.get(f"/api/sessoes/{sessao_id}/voz/0").status_code == 404  # fala do aluno
+        assert cliente.get(f"/api/sessoes/{sessao_id}/voz/9").status_code == 404
+
+
+def test_paciente_ia_valida_pergunta_e_cartao(cliente):
+    sessao_id = paciente_ia(cliente)["id"]
+    assert perguntar(cliente, sessao_id, "").status_code == 422
+    assert perguntar(cliente, sessao_id, "x" * 1001).status_code == 422
+    assert perguntar(cliente, sessao_id, "   ").status_code == 422
+    resposta = cliente.post("/api/sessoes", json={"origem_caso": "paciente_ia", "cartao_id": "nao-existe"})
+    assert resposta.status_code == 422
+
+
+def test_paciente_ia_fora_do_ar_explica(settings, repositorio):
+    app = criar_app(settings, repositorio=repositorio, llm=FalsoQueFalhaUmaVez("paciente_caso"))
+    with TestClient(app) as cliente:
+        resposta = cliente.post("/api/sessoes", json={"origem_caso": "paciente_ia"})
+        assert resposta.status_code == 503
+        assert "paciente" in resposta.json()["detail"]
+        sessao_id = paciente_ia(cliente)["id"]
+
+    app = criar_app(settings, repositorio=repositorio, llm=FalsoQueFalhaUmaVez("paciente_resposta"))
+    with TestClient(app) as cliente:
+        resposta = perguntar(cliente, sessao_id, "O que te traz aqui?")
+        assert resposta.status_code == 503
+        assert cliente.get(f"/api/sessoes/{sessao_id}").json()["falas"] == []  # pergunta sem resposta não fica
+        assert perguntar(cliente, sessao_id, "O que te traz aqui?").status_code == 200

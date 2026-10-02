@@ -10,6 +10,10 @@ from tests.apoio import LLMFixo, falas_exemplo
 RESPOSTA = {
     "hipoteses": [{"nome": "Síndrome coronariana aguda", "a_favor": ["Dor ao esforço."], "contra": []}],
     "perguntas_sugeridas": ["A dor piora quando respira fundo?", "  "],
+    "sobre_hipoteses_aluno": [
+        {"nome": "angina estável", "a_favor": ["Dor ao subir escada."], "contra": [" ", "Falta saber a duração."]},
+        {"nome": "Hipótese que o aluno não escreveu", "a_favor": [], "contra": []},
+    ],
 }
 
 
@@ -55,3 +59,18 @@ def test_queixas_sem_checklist(conteudo):
 def test_falso_segue_a_mesma_regra(conteudo):
     assert _gerar(conteudo, ["dor-toracica"], ClienteFalso()).perguntas_sugeridas == []
     assert _gerar(conteudo, ["cefaleia"], ClienteFalso()).perguntas_sugeridas
+
+
+def test_comenta_as_hipoteses_do_aluno_com_o_nome_que_ele_escreveu(conteudo):
+    llm = LLMFixo(RESPOSTA)
+    sugestoes = _gerar(conteudo, ["dor-toracica"], llm)
+    assert len(sugestoes.sobre_hipoteses_aluno) == 1  # uma por hipótese do aluno, no máximo
+    sobre = sugestoes.sobre_hipoteses_aluno[0]
+    assert sobre.nome == "Angina"
+    assert sobre.contra == ["Falta saber a duração."]
+
+
+def test_manda_os_itens_ja_investigados_para_nao_cobrar_de_novo(conteudo):
+    llm = LLMFixo(RESPOSTA)
+    _gerar(conteudo, ["dor-toracica"], llm)
+    assert "já investigados (não diga que faltam)" in llm.chamadas[0]["mensagem"]

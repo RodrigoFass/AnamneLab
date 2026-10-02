@@ -12,7 +12,13 @@ def _detectar(conteudo, resposta):
 
 def test_id_fora_da_lista_vira_outra(conteudo):
     detectada = _detectar(
-        conteudo, {"queixas": ["dor-no-dedao"], "descricao_outra": "Dor no dedão", "trecho": "Dói o dedão."}
+        conteudo,
+        {
+            "queixas": ["dor-no-dedao"],
+            "descricao_outra": "Dor no dedão",
+            "trecho": "Dói o dedão.",
+            "sexo_paciente": None,
+        },
     )
     assert detectada.queixas == ["outra"]
     assert detectada.descricao_outra == "Dor no dedão"
@@ -21,7 +27,12 @@ def test_id_fora_da_lista_vira_outra(conteudo):
 def test_mistura_mantem_os_validos_e_tira_repetidos(conteudo):
     detectada = _detectar(
         conteudo,
-        {"queixas": ["dor-toracica", "inventada", "dor-toracica", "outra"], "descricao_outra": "x", "trecho": "t"},
+        {
+            "queixas": ["dor-toracica", "inventada", "dor-toracica", "outra"],
+            "descricao_outra": "x",
+            "trecho": "t",
+            "sexo_paciente": None,
+        },
     )
     # 'outra' vale sozinha: com uma queixa da lista, fica só a da lista.
     assert detectada.queixas == ["dor-toracica"]
@@ -29,21 +40,27 @@ def test_mistura_mantem_os_validos_e_tira_repetidos(conteudo):
 
 
 def test_lista_vazia_vira_outra(conteudo):
-    detectada = _detectar(conteudo, {"queixas": [], "descricao_outra": None, "trecho": ""})
+    detectada = _detectar(conteudo, {"queixas": [], "descricao_outra": None, "trecho": "", "sexo_paciente": None})
     assert detectada.queixas == ["outra"]
     assert detectada.descricao_outra is None
 
 
 def test_queixa_da_lista_nao_leva_descricao_outra(conteudo):
     detectada = _detectar(
-        conteudo, {"queixas": ["cefaleia"], "descricao_outra": "algo inventado", "trecho": "Dor de cabeça."}
+        conteudo,
+        {
+            "queixas": ["cefaleia"],
+            "descricao_outra": "algo inventado",
+            "trecho": "Dor de cabeça.",
+            "sexo_paciente": None,
+        },
     )
     assert detectada.queixas == ["cefaleia"]
     assert detectada.descricao_outra is None
 
 
 def test_prompt_leva_a_lista_fechada(conteudo):
-    llm = LLMFixo({"queixas": ["dor-toracica"], "descricao_outra": None, "trecho": "t"})
+    llm = LLMFixo({"queixas": ["dor-toracica"], "descricao_outra": None, "trecho": "t", "sexo_paciente": None})
     detectar_queixa(falas_exemplo(), conteudo.queixas, llm)
     assert '"dor-toracica"' in llm.chamadas[0]["mensagem"]
     assert '"cefaleia"' in llm.chamadas[0]["mensagem"]
@@ -88,3 +105,19 @@ def test_falso_devolve_so_a_primeira_queixa_que_casar(conteudo):
     )
     detectada = detectar_queixa(falas, conteudo.queixas, ClienteFalso())
     assert detectada.queixas == ["cefaleia"]
+
+
+def test_sexo_detectado_passa_adiante(conteudo):
+    detectada = _detectar(
+        conteudo, {"queixas": ["dor-toracica"], "descricao_outra": None, "trecho": "t", "sexo_paciente": "masculino"}
+    )
+    assert detectada.sexo_paciente == "masculino"
+
+
+def test_llm_falso_reconhece_o_sexo_pelo_tratamento(conteudo):
+    detectada = detectar_queixa(falas_exemplo(), conteudo.queixas, ClienteFalso())
+    assert detectada.sexo_paciente == "masculino"  # "o senhor"
+    senhora = [Fala(papel="entrevistador", texto="A senhora fuma?"), Fala(papel="paciente", texto="Não.")]
+    assert detectar_queixa(senhora, conteudo.queixas, ClienteFalso()).sexo_paciente == "feminino"
+    neutro = [Fala(papel="entrevistador", texto="Você fuma?"), Fala(papel="paciente", texto="Não.")]
+    assert detectar_queixa(neutro, conteudo.queixas, ClienteFalso()).sexo_paciente is None

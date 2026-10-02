@@ -1,4 +1,4 @@
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState, type ReactNode } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type {
@@ -7,6 +7,7 @@ import type {
   ChecklistUsado,
   Contestacao,
   Fala,
+  HipoteseIA,
   Queixa,
   Sessao,
 } from "../api/tipos";
@@ -14,8 +15,8 @@ import { Aviso } from "../componentes/Aviso";
 import { Avatar } from "../componentes/Avatar";
 import { BarraProgresso } from "../componentes/BarraProgresso";
 import { Folha } from "../componentes/Folha";
-import { IconeArco, IconeAviso, IconeCasa, IconeCheck, IconeLampada, IconeTrocar } from "../componentes/Icones";
-import { ItemChecklist, ItemSugestao } from "../componentes/ItemChecklist";
+import { IconeArco, IconeAviso, IconeBalao, IconeCasa, IconeCheck, IconeLampada, IconeTrocar } from "../componentes/Icones";
+import { ItemChecklist, ItemSugestao, PESO_IMPORTANTE } from "../componentes/ItemChecklist";
 import { Recado } from "../componentes/Recado";
 import { Selo } from "../componentes/Selo";
 import { Contador } from "../componentes/Contador";
@@ -26,6 +27,19 @@ import { nomesDasQueixas, rotaDaSessao, useQueixas, useSessao } from "../util/se
 import { movimentoReduzido, useNavegar, vibrar } from "../util/movimento";
 
 const ID_GERAL = "geral";
+
+type ParteDoCaso = "historia_da_doenca" | "antecedentes" | "medicacoes" | "alergias" | "habitos" | "familia" | "vida_social";
+
+/** Partes da ficha do paciente pela IA, mostradas depois da correção. */
+const CAMPOS_CASO: { campo: ParteDoCaso; rotulo: string }[] = [
+  { campo: "historia_da_doenca", rotulo: "História da doença" },
+  { campo: "antecedentes", rotulo: "Antecedentes" },
+  { campo: "medicacoes", rotulo: "Medicações" },
+  { campo: "alergias", rotulo: "Alergias" },
+  { campo: "habitos", rotulo: "Hábitos" },
+  { campo: "familia", rotulo: "Família" },
+  { campo: "vida_social", rotulo: "Vida social" },
+];
 
 const CAMPOS_ANAMNESE: { campo: keyof AnamneseEstruturada; rotulo: string }[] = [
   { campo: "identificacao", rotulo: "Identificação" },
@@ -237,6 +251,74 @@ interface PropsChecklist {
 }
 
 const FEITOS_VISIVEIS = 3;
+const POUCOS_VISIVEIS = 3;
+
+/**
+ * O que faltou, pelo peso do item no checklist: o importante (peso 3, ou contestado) fica
+ * aberto; o que vale a pena perguntar (peso 2) mostra os primeiros; o que depende do caso
+ * (peso 1) fica recolhido. Assim uma pergunta pouco útil no caso não pesa como esquecimento.
+ */
+function separarFaltou(faltou: Avaliacao[]) {
+  return {
+    importantes: faltou.filter((a) => a.peso >= PESO_IMPORTANTE || Boolean(a.contestacao)),
+    poderia: faltou.filter((a) => a.peso === 2 && !a.contestacao),
+    depende: faltou.filter((a) => a.peso <= 1 && !a.contestacao),
+  };
+}
+
+/** Quanto de cada parte do checklist foi investigado, na ordem do checklist. */
+function coberturaPorParte(avaliacoes: Avaliacao[]): { secao: string; feitos: number; total: number }[] {
+  const partes = new Map<string, { feitos: number; total: number }>();
+  for (const a of avaliacoes) {
+    const parte = partes.get(a.secao) ?? { feitos: 0, total: 0 };
+    parte.total += 1;
+    if (a.status === "feito") parte.feitos += 1;
+    partes.set(a.secao, parte);
+  }
+  return [...partes].map(([secao, p]) => ({ secao, ...p }));
+}
+
+interface PropsGrupo {
+  titulo: string;
+  legenda?: string;
+  itens: Avaliacao[];
+  /** Quantos aparecem antes do "ver mais"; 0 deixa o grupo inteiro recolhido. */
+  visiveis: number;
+  rotuloVerMais: (n: number) => string;
+  item: (a: Avaliacao) => ReactNode;
+}
+
+/** Um grupo de itens que faltaram, com os primeiros à mostra e o resto atrás de um botão. */
+function GrupoFaltou({ titulo, legenda, itens, visiveis, rotuloVerMais, item }: PropsGrupo) {
+  const [aberto, setAberto] = useState(false);
+  const id = useId();
+  if (itens.length === 0) return null;
+  const primeiros = itens.slice(0, visiveis);
+  const resto = itens.slice(visiveis);
+  return (
+    <>
+      <h4 className="app-secao-titulo">{titulo}</h4>
+      {legenda && <p className="app-legenda">{legenda}</p>}
+      {primeiros.length > 0 && <ul className="app-itens app-cascata">{primeiros.map(item)}</ul>}
+      {resto.length > 0 && (
+        <>
+          <ul id={id} className="app-itens app-cascata" hidden={!aberto}>
+            {aberto && resto.map(item)}
+          </ul>
+          <button
+            className="al-botao al-botao-texto app-ver-mais"
+            type="button"
+            aria-expanded={aberto}
+            aria-controls={id}
+            onClick={() => setAberto((v) => !v)}
+          >
+            {aberto ? "Mostrar menos" : rotuloVerMais(resto.length)}
+          </button>
+        </>
+      )}
+    </>
+  );
+}
 
 /** Um checklist corrigido: primeiro o que você fez, depois o que faltou perguntar. */
 function ChecklistCorrigido({ grupo: g, sessao, queixas, onContestar }: PropsChecklist) {
@@ -257,6 +339,8 @@ function ChecklistCorrigido({ grupo: g, sessao, queixas, onContestar }: PropsChe
 
   const primeiros = g.feitos.slice(0, FEITOS_VISIVEIS);
   const resto = g.feitos.slice(FEITOS_VISIVEIS);
+  const { importantes, poderia, depende } = separarFaltou(g.faltou);
+  const partes = coberturaPorParte(sessao.avaliacoes.filter((a) => a.checklist_id === g.checklistId));
 
   return (
     <section className="app-secao" aria-labelledby={`chk-${g.checklistId}`}>
@@ -271,6 +355,22 @@ function ChecklistCorrigido({ grupo: g, sessao, queixas, onContestar }: PropsChe
         {g.checklistId === ID_GERAL ? "" : `${contagem([...g.feitos, ...g.faltou]) || "Nenhum item conta na nota."} `}
         {g.usado ? `Versão ${g.usado.versao} do checklist.` : ""}
       </p>
+
+      {partes.length > 1 && (
+        <ul className="app-cobertura" aria-label="Quanto você investigou de cada parte">
+          {partes.map((p) => (
+            <li key={p.secao}>
+              <span>{p.secao}</span>
+              <span className="app-tabular">
+                {p.feitos} de {p.total}
+              </span>
+              <span className="app-cobertura-barra" aria-hidden="true">
+                <span style={{ width: `${Math.round((100 * p.feitos) / p.total)}%` }} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {g.feitos.length > 0 && (
         <>
@@ -301,7 +401,38 @@ function ChecklistCorrigido({ grupo: g, sessao, queixas, onContestar }: PropsChe
 
       <h3 className="app-secao-titulo">O que faltou perguntar</h3>
       {g.faltou.length > 0 ? (
-        <ul className="app-itens app-cascata">{g.faltou.map(item)}</ul>
+        <>
+          {importantes.length > 0 ? (
+            <GrupoFaltou
+              titulo="Importante e não perguntado"
+              itens={importantes}
+              visiveis={importantes.length}
+              rotuloVerMais={() => ""}
+              item={item}
+            />
+          ) : (
+            <p className="app-status app-status-ok">
+              <IconeCheck />
+              Você fez todas as perguntas mais importantes deste checklist.
+            </p>
+          )}
+          <GrupoFaltou
+            titulo="Poderia ter perguntado"
+            legenda="Perguntas que valem a pena, mas não fazem a anamnese ficar ruim."
+            itens={poderia}
+            visiveis={POUCOS_VISIVEIS}
+            rotuloVerMais={(n) => (n === 1 ? "Ver mais 1 pergunta" : `Ver mais ${n} perguntas`)}
+            item={item}
+          />
+          <GrupoFaltou
+            titulo="Depende do caso"
+            legenda="Só valem quando o quadro pede. Pesam pouco na nota."
+            itens={depende}
+            visiveis={0}
+            rotuloVerMais={(n) => (n === 1 ? "Ver 1 pergunta" : `Ver ${n} perguntas`)}
+            item={item}
+          />
+        </>
       ) : (
         <p className="app-status app-status-ok">
           <IconeCheck />
@@ -373,6 +504,24 @@ function PerguntasSugeridas({ perguntas }: { perguntas: string[] }) {
         </>
       )}
     </section>
+  );
+}
+
+/** O que a conversa apoia e o que falta checar, para uma hipótese do aluno ou sugerida. */
+function LinhasDaHipotese({ h }: { h: HipoteseIA }) {
+  return (
+    <>
+      {h.a_favor.length > 0 && (
+        <p className="app-hipotese-linha">
+          <b>Apoia:</b> {frase(h.a_favor)}
+        </p>
+      )}
+      {h.contra.length > 0 && (
+        <p className="app-hipotese-linha">
+          <b>Falta checar ou afasta:</b> {frase(h.contra)}
+        </p>
+      )}
+    </>
   );
 }
 
@@ -503,9 +652,15 @@ export function Correcao() {
             <p className="app-legenda">Suas hipóteses</p>
             {sessao.hipoteses_aluno.length > 0 ? (
               <ol className="app-hipoteses-aluno">
-                {sessao.hipoteses_aluno.map((h, i) => (
-                  <li key={i}>{h}</li>
-                ))}
+                {sessao.hipoteses_aluno.map((h, i) => {
+                  const analise = sugestoes?.sobre_hipoteses_aluno?.[i];
+                  return (
+                    <li key={i}>
+                      {h}
+                      {analise && <LinhasDaHipotese h={analise} />}
+                    </li>
+                  );
+                })}
               </ol>
             ) : (
               <p className="app-vazio">Você não escreveu hipóteses.</p>
@@ -522,16 +677,7 @@ export function Correcao() {
             {sugestoes?.hipoteses.map((h) => (
               <article key={h.nome} className="app-hipotese">
                 <p className="app-hipotese-nome">{h.nome}</p>
-                {h.a_favor.length > 0 && (
-                  <p className="app-hipotese-linha">
-                    <b>Apoia:</b> {frase(h.a_favor)}
-                  </p>
-                )}
-                {h.contra.length > 0 && (
-                  <p className="app-hipotese-linha">
-                    <b>Falta checar ou afasta:</b> {frase(h.contra)}
-                  </p>
-                )}
+                <LinhasDaHipotese h={h} />
               </article>
             ))}
           </div>
@@ -553,7 +699,35 @@ export function Correcao() {
         </details>
       )}
 
+      {sessao.caso_ia && (
+        <details className="app-recolhivel">
+          <summary>O caso do paciente</summary>
+          <p className="app-ajuda">
+            {sessao.caso_ia.nome}, {sessao.caso_ia.idade} anos, {sessao.caso_ia.profissao}. É tudo o que a IA sabia; o
+            que você não perguntou ficou fora da conversa.
+          </p>
+          <dl className="app-anamnese">
+            {CAMPOS_CASO.map(({ campo, rotulo }) => (
+              <div key={campo}>
+                <dt>{rotulo}</dt>
+                <dd>{sessao.caso_ia?.[campo].join(" ")}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+      )}
+
       <section className="app-secao app-acoes-finais" aria-label="Próximos passos">
+        {sessao.origem_caso === "paciente_ia" && (
+          <button
+            className="al-botao al-botao-principal app-botao-largo"
+            type="button"
+            onClick={() => navegar("/paciente-ia")}
+          >
+            <IconeBalao />
+            Treinar com outro paciente
+          </button>
+        )}
         {nomes.medico && nomes.paciente && (
           <div className={`app-troca${trocando ? " is-trocando" : ""}`} ref={troca} aria-hidden="true">
             <span className="app-troca-pessoa">
@@ -567,15 +741,17 @@ export function Correcao() {
             </span>
           </div>
         )}
-        <button
-          className="al-botao al-botao-principal app-botao-largo"
-          type="button"
-          onClick={trocarPapel}
-          disabled={trocando}
-        >
-          <IconeTrocar />
-          Trocar de papel e gravar
-        </button>
+        {sessao.origem_caso !== "paciente_ia" && (
+          <button
+            className="al-botao al-botao-principal app-botao-largo"
+            type="button"
+            onClick={trocarPapel}
+            disabled={trocando}
+          >
+            <IconeTrocar />
+            Trocar de papel e gravar
+          </button>
+        )}
         <button
           className="al-botao al-botao-secundario app-botao-largo"
           type="button"

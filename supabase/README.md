@@ -1,19 +1,21 @@
 # Supabase
 
-Banco (Postgres) e login (Auth) do AnamneLab. O esquema está em
-`migrations/20261001000000_inicial.sql`.
+Banco (Postgres) e login com e-mail e senha (Auth) do AnamneLab. O esquema está em
+`migrations/`, um arquivo por mudança, em ordem de data.
 
 ## Criar o projeto
 
 1. No painel do Supabase, crie um projeto novo na região **South America (São Paulo)**,
    `sa-east-1`. Os dados dos alunos ficam no Brasil.
-2. Em Authentication, ligue o login por link mágico (e-mail) e cadastre a URL do
-   frontend em Redirect URLs.
-3. Em Project Settings > API, copie:
+2. Em Authentication > Sign In / Providers > Email, deixe o e-mail ligado e desligue
+   **Confirm email**: o envio de e-mail grátis do Supabase é muito limitado, e a conta
+   nova entra direto. Em Authentication > URL Configuration, ponha o endereço do
+   frontend em Site URL e em Redirect URLs (o link de "esqueci a senha" volta para ele).
+3. Em Project Settings > API Keys, copie:
    - a URL do projeto: `SUPABASE_URL` no backend e `VITE_SUPABASE_URL` no frontend;
-   - a chave `anon`: `VITE_SUPABASE_ANON_KEY` no frontend;
-   - a chave `service_role`: `SUPABASE_SERVICE_KEY` só no `backend/.env`. Ela ignora
-     RLS; nunca vai para o frontend nem para o git.
+   - a chave pública (`anon` ou `publishable`): `VITE_SUPABASE_ANON_KEY` no frontend;
+   - a chave secreta (`service_role` ou `secret`): `SUPABASE_SERVICE_KEY` só no
+     `backend/.env`. Ela ignora RLS; nunca vai para o frontend nem para o git.
 
 ## Aplicar a migração
 
@@ -25,8 +27,8 @@ supabase link --project-ref <ref-do-projeto>
 supabase db push
 ```
 
-Sem a CLI: abra o SQL Editor do painel, cole o conteúdo de
-`migrations/20261001000000_inicial.sql` e rode uma vez.
+Sem a CLI: abra o SQL Editor do painel, cole o conteúdo de cada arquivo de `migrations/`,
+em ordem de data, e rode uma vez cada.
 
 ## O que o esquema garante
 

@@ -3,7 +3,7 @@ import pytest
 from app.llm.falso import ClienteFalso
 from app.pipeline.corrigir import ErroContestacao, contestar, corrigir, item_do_checklist
 from app.schemas.sessao import ContestacaoCriar
-from tests.apoio import LLMFixo, falas_exemplo
+from tests.apoio import LLMFixo, LLMRepete, falas_exemplo
 
 CONFIRMA = {"cumpre": True}
 NEGA = {"cumpre": False}
@@ -11,13 +11,13 @@ NEGA = {"cumpre": False}
 
 @pytest.fixture
 def correcao(conteudo):
-    llm = LLMFixo(
+    llm = LLMRepete(
         {
             "itens": [
-                {"item_id": "nome", "feito": True, "trecho": "Qual é o seu nome?"},
-                {"item_id": "idade", "feito": False, "trecho": None},
-                {"item_id": "tabagismo", "feito": True, "trecho": "O senhor fuma?"},
-                {"item_id": "irradiacao", "feito": False, "trecho": None},
+                {"item_id": "nome", "feito": True, "falas": [1], "citacao": None},
+                {"item_id": "idade", "feito": False, "falas": [], "citacao": None},
+                {"item_id": "tabagismo", "feito": True, "falas": [7], "citacao": None},
+                {"item_id": "irradiacao", "feito": False, "falas": [], "citacao": None},
             ]
         }
     )
@@ -104,13 +104,27 @@ def test_contestacao_na_queixa_recalcula_a_nota_da_queixa(correcao, conteudo):
 
 @pytest.mark.parametrize(
     "trecho",
-    [None, "", "Perguntei se ele tinha alergia a remédio.", "sim", "Entrevistador:", "Paciente: Entrevistador:"],
+    [
+        None,
+        "",
+        "Perguntei se ele tinha alergia a remédio.",
+        "sim",
+        "Entrevistador:",
+        "Paciente: Entrevistador:",
+        "Cinquenta e oito.",  # existe, mas é só o paciente
+    ],
 )
 def test_sem_trecho_valido_fica_pendente_e_a_nota_nao_muda(correcao, conteudo, trecho):
     llm = LLMFixo(CONFIRMA)
     resultado = _contestar(correcao, conteudo, llm=llm, item_id="idade", trecho=trecho)
     _pendente_sem_mudar_a_nota(resultado, correcao)
     assert llm.chamadas == []
+
+
+def test_pergunta_com_a_resposta_vale(correcao, conteudo):
+    trecho = "Quantos anos o senhor tem? Cinquenta e oito."
+    resultado = _contestar(correcao, conteudo, item_id="idade", trecho=trecho)
+    assert resultado.contestacao.resultado == "procedente"
 
 
 def test_nao_contesta_item_feito(correcao, conteudo):

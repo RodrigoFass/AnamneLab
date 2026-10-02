@@ -14,10 +14,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Transcrição local com Whisper (TRANSCRICAO=local).
-local = ["faster-whisper"]
+# Transcrição local com Whisper (TRANSCRICAO=local). O av 17+ quebra o faster-whisper 1.2
+# ("unexpected keyword argument 'metadata_errors'").
+local = ["faster-whisper", "av<17"]
 # Transcrição pela API whisper-1 (TRANSCRICAO=api).
 api = ["openai"]
+# Voz do paciente pela IA: Edge (VOZ_PACIENTE=edge) ou Piper (VOZ_PACIENTE=piper).
+voz = ["edge-tts", "piper-tts"]
 # Banco e login no Supabase (BANCO=supabase, AUTH=supabase).
 supabase = ["supabase"]
 dev = ["pytest", "jsonschema"]

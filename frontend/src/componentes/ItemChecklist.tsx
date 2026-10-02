@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Avaliacao } from "../api/tipos";
-import { IconeBandeira, IconeCheck, IconeLampada, IconeX } from "./Icones";
+import { IconeBandeira, IconeCheck, IconeLampada, IconeMais, IconeX } from "./Icones";
 
 interface Props {
   avaliacao: Avaliacao;
@@ -11,16 +11,44 @@ interface Props {
   children?: ReactNode;
 }
 
+const LIMITE_TRECHO = 180;
+
+/** Trecho longo cortado num fim de palavra, para a lista não virar a conversa inteira. */
+function encurtar(texto: string): string {
+  if (texto.length <= LIMITE_TRECHO) return texto;
+  const corte = texto.lastIndexOf(" ", LIMITE_TRECHO);
+  return `${texto.slice(0, corte > LIMITE_TRECHO / 2 ? corte : LIMITE_TRECHO).trimEnd()}…`;
+}
+
+/** Peso 3: faltou de verdade. Pesos menores: perguntas que valem a pena, mas nem sempre. */
+export const PESO_IMPORTANTE = 3;
+
+/** Como o item que faltou aparece, pelo peso dele no checklist. */
+export function rotuloDoFaltou(peso: number): string {
+  if (peso >= PESO_IMPORTANTE) return "Faltou";
+  return peso === 2 ? "Poderia perguntar" : "Depende do caso";
+}
+
+/** A frase do checklist começa por "Faltou perguntar"; nos itens de peso menor, o tom muda. */
+function mensagemDoFaltou(mensagem: string, peso: number): string {
+  if (peso >= PESO_IMPORTANTE) return mensagem;
+  return mensagem.replace(/^Faltou perguntar/, "Vale perguntar");
+}
+
 /** Uma linha da correção: feito (com o trecho que prova) ou faltou (com a pergunta). */
 export function ItemChecklist({ avaliacao, quemFalou, onContestar, children }: Props) {
+  const [trechoInteiro, setTrechoInteiro] = useState(false);
   const feito = avaliacao.status === "feito";
+  const poderia = !feito && avaliacao.peso < PESO_IMPORTANTE;
+  const trecho = avaliacao.trecho ?? "";
+  const longo = encurtar(trecho) !== trecho;
   const podeContestar = onContestar && avaliacao.status === "faltou" && !avaliacao.contestacao;
   return (
-    <article className={`app-item ${feito ? "al-item-feito" : "al-item-faltou"}`}>
-      <span className="al-item-status">{feito ? <IconeCheck /> : <IconeX />}</span>
+    <article className={`app-item ${feito ? "al-item-feito" : "al-item-faltou"}${poderia ? " app-item-poderia" : ""}`}>
+      <span className="al-item-status">{feito ? <IconeCheck /> : poderia ? <IconeMais /> : <IconeX />}</span>
       <div className="app-item-corpo">
         <p className="app-item-titulo">
-          <span className="al-item-rotulo">{feito ? "Feito" : "Faltou"}</span>
+          <span className="al-item-rotulo">{feito ? "Feito" : rotuloDoFaltou(avaliacao.peso)}</span>
           <span aria-hidden="true"> · </span>
           {avaliacao.texto}
         </p>
@@ -30,14 +58,24 @@ export function ItemChecklist({ avaliacao, quemFalou, onContestar, children }: P
             {!avaliacao.trecho && avaliacao.mensagem && avaliacao.mensagem !== avaliacao.texto && (
               <p className="al-item-texto">{avaliacao.mensagem}</p>
             )}
-            {avaliacao.trecho && (
+            {trecho && (
               <blockquote className="al-fala app-fala">
-                <span className="al-fala-quem">{quemFalou}</span>“{avaliacao.trecho}”
+                <span className="al-fala-quem">{quemFalou}</span>“{trechoInteiro ? trecho : encurtar(trecho)}”
               </blockquote>
+            )}
+            {longo && (
+              <button
+                className="al-botao al-botao-texto app-ver-mais"
+                type="button"
+                aria-expanded={trechoInteiro}
+                onClick={() => setTrechoInteiro((v) => !v)}
+              >
+                {trechoInteiro ? "Ver menos" : "Ver a fala inteira"}
+              </button>
             )}
           </>
         ) : (
-          <p className="al-item-texto">{avaliacao.mensagem}</p>
+          <p className="al-item-texto">{mensagemDoFaltou(avaliacao.mensagem, avaliacao.peso)}</p>
         )}
         {!avaliacao.conta_na_nota && <p className="app-item-fora">Este item não conta na nota.</p>}
         {children}

@@ -1,4 +1,4 @@
-"""Persistência das sessões: memória (dev e testes) ou Supabase."""
+"""Persistência das sessões: memória (dev e testes), arquivo no computador ou Supabase."""
 
 from app.config import Settings
 from app.repositorio.base import Repositorio
@@ -14,4 +14,8 @@ def obter_repositorio(settings: Settings) -> Repositorio:
         from app.repositorio.supabase import RepositorioSupabase
 
         return RepositorioSupabase(settings.supabase_url, settings.supabase_service_key.get_secret_value())
+    if settings.banco == "arquivo":
+        from app.repositorio.arquivo import RepositorioArquivo
+
+        return RepositorioArquivo(settings.arquivo_historico)
     return RepositorioMemoria()

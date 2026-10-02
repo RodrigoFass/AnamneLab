@@ -83,11 +83,12 @@ class Processador:
                     "queixa_detectada": detectada.queixas,
                     "queixa_trecho": detectada.trecho or None,
                     "descricao_outra": detectada.descricao_outra,
+                    "sexo_paciente": detectada.sexo_paciente,
                 }
             except ErroLLM:
                 # Sem sugestão de queixa: o aluno escolhe na lista.
                 logger.warning("queixa sem sugestão (sessao=%s)", sessao_id)
-                campos = {"queixa_detectada": [], "queixa_trecho": None, "descricao_outra": None}
+                campos = {"queixa_detectada": [], "queixa_trecho": None, "descricao_outra": None, "sexo_paciente": None}
             self._repo.atualizar_sessao(
                 sessao_id, status="aguardando_queixa", progresso=100, mensagem_erro=None, **campos
             )
@@ -112,6 +113,8 @@ class Processador:
                 conteudo,
                 self._s.llm,
                 contar_rascunho=self._s.settings.contar_rascunho,
+                itens_por_pedido=self._s.settings.correcao_itens_por_pedido,
+                sexo_paciente=sessao.sexo_paciente,
             )
             # Id e versão dos checklists primeiro: cada avaliação salva aponta para eles (regra 4).
             self._repo.atualizar_sessao(sessao_id, checklists_usados=resultado.checklists_usados)

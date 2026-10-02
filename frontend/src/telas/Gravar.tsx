@@ -252,6 +252,7 @@ export function Gravar() {
   const estadoBotao = fase === "gravando" ? "gravando" : fase === "enviando" ? "processando" : "pronto";
   const titulo =
     fase === "gravando" ? "Gravando" : fase === "pronto" ? "Pronto para gravar" : "Gravação concluída";
+  const colega = sessao?.consentimentos.find((c) => c.forma === "declarado_pelo_dono")?.nome_informado;
   const tempo = fase === "parado" || fase === "enviando" ? (gravacao?.segundos ?? segundos) : segundos;
 
   return (
@@ -277,7 +278,9 @@ export function Gravar() {
             <IconeAviso />
             {fase === "parado"
               ? "O áudio é apagado logo depois da transcrição."
-              : "Celular entre os dois, num lugar calmo. Use só casos simulados."}
+              : fase === "pronto" && colega
+                ? `Avise ${colega} que a conversa vai ser gravada. Celular entre os dois, num lugar calmo.`
+                : "Celular entre os dois, num lugar calmo. Use só casos simulados."}
           </p>
           {fase === "pronto" && (
             <p className="app-legenda app-centro">A gravação vai até 20 minutos e para sozinha.</p>

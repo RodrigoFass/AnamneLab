@@ -34,6 +34,8 @@ export interface HipoteseIA {
 export interface SugestoesIA {
   hipoteses: HipoteseIA[];
   perguntas_sugeridas: string[];
+  /** As hipóteses do aluno, na ordem dele: o que a conversa apoia e o que falta checar. */
+  sobre_hipoteses_aluno?: HipoteseIA[];
 }
 
 // ---------- conteudo.py ----------
@@ -58,11 +60,12 @@ export interface Cartao {
 
 // ---------- sessao.py ----------
 
-export type OrigemCaso = "livro" | "internet" | "inventado" | "cartao";
+export type OrigemCaso = "livro" | "internet" | "inventado" | "cartao" | "paciente_ia";
 export type Papel = "medico" | "paciente";
 
 export type StatusSessao =
   | "criada"
+  | "conversando"
   | "processando_audio"
   | "aguardando_queixa"
   | "corrigindo"
@@ -80,11 +83,15 @@ export interface SessaoCriar {
   cartao_id?: string | null;
 }
 
+/** `aceite`: a pessoa aceitou o termo. `declarado_pelo_dono`: quem abriu a sessão avisou o colega. */
+export type FormaConsentimento = "aceite" | "declarado_pelo_dono";
+
 export interface ConsentimentoCriar {
   papel: Papel;
   nome_informado: string;
   versao_termo: string;
   aceito: true;
+  forma?: FormaConsentimento;
 }
 
 export interface TranscricaoEditar {
@@ -95,6 +102,8 @@ export interface QueixaConfirmar {
   /** Ids da biblioteca, ou ["outra"]. */
   queixas: string[];
   descricao_outra?: string | null;
+  /** Sem o campo, fica o detectado na conversa; null é "não sei". */
+  sexo_paciente?: Sexo | null;
 }
 
 export interface HipotesesAluno {
@@ -115,6 +124,8 @@ export interface Saude {
   ok: boolean;
   /** LLM ou transcrição falsos: a interface avisa em todas as telas. */
   modo_demonstracao: boolean;
+  /** Sexos com voz do Piper no backend. Vazio: o navegador lê as respostas do paciente pela IA. */
+  vozes_paciente: Sexo[];
 }
 
 export interface Termo {
@@ -130,6 +141,7 @@ export interface Consentimento {
   nome_informado: string;
   versao_termo: string;
   aceito_em: string;
+  forma: FormaConsentimento;
 }
 
 export interface ChecklistUsado {
@@ -190,6 +202,8 @@ export interface Sessao {
   queixa_trecho: string | null;
   queixas_confirmadas: string[];
   descricao_outra: string | null;
+  /** Detectado na conversa e confirmado com a queixa. */
+  sexo_paciente: Sexo | null;
   checklists_usados: ChecklistUsado[];
   anamnese: AnamneseEstruturada | null;
   hipoteses_aluno: string[];
@@ -197,6 +211,25 @@ export interface Sessao {
   avaliacoes: Avaliacao[];
   notas: Notas | null;
   sugestoes: SugestoesIA | null;
+  /** Ficha do paciente pela IA; só vem depois que a conversa termina. */
+  caso_ia?: CasoPaciente | null;
+}
+
+/** Paciente fictício que a IA interpreta. */
+export interface CasoPaciente {
+  nome: string;
+  idade: number;
+  sexo: Sexo;
+  profissao: string;
+  queixa_nas_palavras_dele: string;
+  historia_da_doenca: string[];
+  antecedentes: string[];
+  medicacoes: string[];
+  alergias: string[];
+  habitos: string[];
+  familia: string[];
+  vida_social: string[];
+  jeito_de_falar: string;
 }
 
 export interface SessaoResumo {

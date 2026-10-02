@@ -27,7 +27,7 @@ from app.schemas.llm import (
 )
 from tests.apoio import LLMFixo
 
-VALIDO = {"queixas": ["dor-toracica"], "descricao_outra": None, "trecho": "Dor no peito."}
+VALIDO = {"queixas": ["dor-toracica"], "descricao_outra": None, "trecho": "Dor no peito.", "sexo_paciente": None}
 
 
 def _gerar(cliente):

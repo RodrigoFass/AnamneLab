@@ -2,17 +2,20 @@ import { useSyncExternalStore } from "react";
 import { loginAtivo, supabase } from "../auth/supabase";
 
 /**
- * Perfil do aluno: nome, disciplina e período. Fica neste aparelho; com login ativo,
+ * Perfil do aluno: nome, faculdade, disciplina, período e avatar. Fica neste aparelho; com login ativo,
  * vai também para os metadados da conta, para aparecer em outro aparelho.
  */
 export interface Perfil {
   nome: string;
   disciplina: string;
   periodo: string;
+  faculdade: string;
+  /** Id de um avatar pronto (componentes/Avatares); vazio usa a inicial do nome. */
+  avatar: string;
 }
 
 const CHAVE = "anamnelab:perfil";
-const VAZIO: Perfil = { nome: "", disciplina: "", periodo: "" };
+const VAZIO: Perfil = { nome: "", disciplina: "", periodo: "", faculdade: "", avatar: "" };
 const ouvintes = new Set<() => void>();
 let atual: Perfil | null = null;
 
@@ -20,7 +23,7 @@ function ler(): Perfil {
   if (atual) return atual;
   try {
     const p = JSON.parse(localStorage.getItem(CHAVE) ?? "{}") as Partial<Perfil>;
-    atual = { nome: p.nome ?? "", disciplina: p.disciplina ?? "", periodo: p.periodo ?? "" };
+    atual = { ...VAZIO, ...p };
   } catch {
     atual = VAZIO;
   }
@@ -28,7 +31,7 @@ function ler(): Perfil {
 }
 
 export function salvarPerfil(perfil: Perfil, sincronizar = true): void {
-  atual = { nome: perfil.nome.trim(), disciplina: perfil.disciplina.trim(), periodo: perfil.periodo };
+  atual = { ...perfil, nome: perfil.nome.trim(), disciplina: perfil.disciplina.trim(), faculdade: perfil.faculdade.trim() };
   try {
     localStorage.setItem(CHAVE, JSON.stringify(atual));
   } catch {
@@ -46,7 +49,18 @@ export function salvarPerfil(perfil: Perfil, sincronizar = true): void {
 export function adotarPerfilDaConta(dados: unknown): void {
   const p = (dados as { perfil?: Partial<Perfil> } | null)?.perfil;
   if (!p?.nome || ler().nome) return;
-  salvarPerfil({ nome: p.nome, disciplina: p.disciplina ?? "", periodo: p.periodo ?? "" }, false);
+  salvarPerfil({ ...VAZIO, ...p, nome: p.nome }, false);
+}
+
+/** Ao sair da conta: o perfil some deste aparelho (continua na conta). */
+export function esquecerPerfilLocal(): void {
+  atual = VAZIO;
+  try {
+    localStorage.removeItem(CHAVE);
+  } catch {
+    // Sem armazenamento, não havia perfil guardado.
+  }
+  ouvintes.forEach((o) => o());
 }
 
 export function usePerfil(): Perfil {
@@ -60,9 +74,9 @@ export function usePerfil(): Perfil {
   );
 }
 
-/** "Semiologia · 5º período" */
+/** "UFES · Semiologia · 5º período" */
 export function linhaDoPerfil(p: Perfil): string {
-  return [p.disciplina, p.periodo ? `${p.periodo} período` : ""].filter(Boolean).join(" · ");
+  return [p.faculdade, p.disciplina, p.periodo ? `${p.periodo} período` : ""].filter(Boolean).join(" · ");
 }
 
 export function primeiroNome(nome: string): string {

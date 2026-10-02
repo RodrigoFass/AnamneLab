@@ -555,6 +555,7 @@
           "pergunta_exemplo": "A dor tem relação com a menstruação? Existe chance de você estar grávida?",
           "faltou": "Faltou perguntar sobre relação com a menstruação e possibilidade de gravidez, quando couber.",
           "peso": 1,
+          "sexo": "feminino",
           "palavras_chave": [
             "menstruação",
             "grávida",

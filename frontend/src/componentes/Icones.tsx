@@ -175,3 +175,51 @@ export const IconeEnvelope = ({ className }: P) => (
     <path d="M3.5 6.5L12 13l8.5-6.5" />
   </Svg>
 );
+
+export const IconeEngrenagem = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1" />
+    <circle cx="15" cy="6" r="2" />
+    <circle cx="9" cy="12" r="2" />
+    <circle cx="17" cy="18" r="2" />
+  </Svg>
+);
+
+/** Balão de conversa: consulta por escrito com o paciente da IA. */
+export const IconeBalao = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-8l-4 3.5V16H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" />
+    <path d="M8 9.5h8M8 12.5h5" />
+  </Svg>
+);
+
+/** Seta para cima: enviar a pergunta. */
+export const IconeEnviar = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M12 19V5M6 11l6-6 6 6" />
+  </Svg>
+);
+
+export const IconeSom = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M4 9v6h4l5 4V5L8 9H4z" />
+    <path d="M16.5 8.5a5 5 0 0 1 0 7" />
+    <path d="M19 6a8.5 8.5 0 0 1 0 12" />
+  </Svg>
+);
+
+export const IconeSemSom = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M4 9v6h4l5 4V5L8 9H4z" />
+    <path d="M17 10l4 4M21 10l-4 4" />
+  </Svg>
+);
+
+export const IconeMicrofoneMudo = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M9 9v2a3 3 0 0 0 5.1 2.1M15 10V6a3 3 0 0 0-5.7-1.3" />
+    <path d="M5 11a7 7 0 0 0 11.6 5.3M19 11a7 7 0 0 1-.6 2.8" />
+    <path d="M12 18v3" />
+    <path d="M4 4l16 16" />
+  </Svg>
+);

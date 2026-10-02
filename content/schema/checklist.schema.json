@@ -96,6 +96,10 @@
           "description": "Frase de preceptor mostrada quando o item não foi feito (ex.: 'Faltou perguntar se a dor irradia.')."
         },
         "peso": { "type": "integer", "minimum": 1, "maximum": 3 },
+        "sexo": {
+          "enum": ["feminino", "masculino"],
+          "description": "Opcional. O item só vale para pacientes deste sexo (ex.: data da última menstruação). Sem o campo, vale para todos."
+        },
         "palavras_chave": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 },

@@ -36,6 +36,7 @@ export const ROTULO_ORIGEM: Record<OrigemCaso, string> = {
   internet: "caso da internet",
   inventado: "caso inventado",
   cartao: "cartão sorteado",
+  paciente_ia: "paciente pela IA",
 };
 
 /** "Ana e Pedro · cartão sorteado" */

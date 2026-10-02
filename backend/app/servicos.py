@@ -6,6 +6,7 @@ from app.config import Settings
 from app.conteudo import Conteudo, obter_conteudo
 from app.llm import ClienteLLM, obter_cliente_llm
 from app.pipeline.transcrever import Transcritor, obter_transcritor
+from app.pipeline.voz import VozPaciente, obter_voz
 from app.repositorio import Repositorio, obter_repositorio
 
 
@@ -15,6 +16,8 @@ class Servicos:
     llm: ClienteLLM
     transcritor: Transcritor
     repositorio: Repositorio
+    voz: VozPaciente | None = None
+    """Voz do paciente no backend (Piper). None: quem fala é o navegador."""
 
     @property
     def conteudo(self) -> Conteudo:
@@ -27,10 +30,12 @@ def montar_servicos(
     llm: ClienteLLM | None = None,
     transcritor: Transcritor | None = None,
     repositorio: Repositorio | None = None,
+    voz: VozPaciente | None = None,
 ) -> Servicos:
     return Servicos(
         settings=settings,
         llm=llm or obter_cliente_llm(settings),
         transcritor=transcritor or obter_transcritor(settings),
         repositorio=repositorio or obter_repositorio(settings),
+        voz=voz or obter_voz(settings),
     )

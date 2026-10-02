@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { flushSync } from "react-dom";
+import { useAuth } from "../auth/Autenticacao";
 import { SeloDemonstracao } from "../componentes/AvisoDemonstracao";
 import { IconeCheck, IconeLampada, IconeMicrofone, IconeSelo } from "../componentes/Icones";
 import { useTema } from "../util/tema";
@@ -21,8 +22,9 @@ type Passo = "oi" | "cadastro" | "pronto";
  */
 export function BoasVindas() {
   const tema = useTema();
+  const { loginAtivo } = useAuth();
   const [passo, setPasso] = useState<Passo>("oi");
-  const [perfil, setPerfil] = useState<Perfil>({ nome: "", disciplina: "Semiologia", periodo: "" });
+  const [perfil, setPerfil] = useState<Perfil>({ nome: "", disciplina: "Semiologia", periodo: "", faculdade: "", avatar: "" });
 
   const concluir = () => {
     vibrar([10, 60, 10]);
@@ -89,7 +91,9 @@ export function BoasVindas() {
         >
           <h1 className="app-titulo">Crie o seu perfil</h1>
           <p className="app-subtitulo-tela">
-            Leva meio minuto. O perfil fica neste aparelho e aparece no início e na evolução.
+            {loginAtivo
+              ? "Leva meio minuto. O perfil fica na sua conta e aparece no início e na evolução."
+              : "Leva meio minuto. O perfil fica neste aparelho e aparece no início e na evolução."}
           </p>
           <CamposPerfil perfil={perfil} onMudar={setPerfil} />
           <div className="app-empurra" />

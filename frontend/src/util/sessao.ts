@@ -17,6 +17,8 @@ export function rotaDaSessao(
     case "erro":
       // Falha nas sugestões, depois das hipóteses: a correção já existe e continua visível.
       return s.hipoteses_aluno.length > 0 && s.avaliacoes.length > 0 ? `${base}/correcao` : `${base}/processando`;
+    case "conversando":
+      return `${base}/conversa`;
     case "processando_audio":
       return `${base}/processando`;
     case "aguardando_queixa":

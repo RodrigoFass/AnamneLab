@@ -24,6 +24,8 @@ o jeito como o paciente fala.
 queixa como o paciente disse, em poucas palavras. Nos outros casos, descricao_outra é null.
 - Nunca crie um id novo.
 - Em trecho, copie literalmente a fala do paciente que mostra a queixa principal.
+- Em sexo_paciente, diga "feminino" ou "masculino" se a conversa mostrar (nome, "o senhor", \
+"a senhora", menstruação, gravidez). Se não der para saber, null. Não adivinhe pela voz.
 """
 
 
@@ -57,4 +59,6 @@ def filtrar_queixa(resposta: QueixaDetectada, ids_validos: set[str]) -> QueixaDe
         queixas = [QUEIXA_OUTRA]
     descricao = resposta.descricao_outra if QUEIXA_OUTRA in queixas else None
     descricao = descricao.strip() if descricao and descricao.strip() else None
-    return QueixaDetectada(queixas=queixas, descricao_outra=descricao, trecho=resposta.trecho.strip())
+    return QueixaDetectada(
+        queixas=queixas, descricao_outra=descricao, trecho=resposta.trecho.strip(), sexo_paciente=resposta.sexo_paciente
+    )

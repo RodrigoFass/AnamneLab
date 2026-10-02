@@ -15,6 +15,8 @@ CAMPOS_SESSAO = frozenset(
         "queixa_trecho",
         "queixas_confirmadas",
         "descricao_outra",
+        "sexo_paciente",
+        "caso_ia",
         "checklists_usados",
         "anamnese",
         "hipoteses_aluno",

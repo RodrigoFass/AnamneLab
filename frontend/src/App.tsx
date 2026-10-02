@@ -6,14 +6,17 @@ import { Carregando } from "./componentes/Tela";
 import { BoasVindas } from "./telas/BoasVindas";
 import { Evolucao } from "./telas/Evolucao";
 import { Perfil } from "./telas/Perfil";
+import { Configuracoes } from "./telas/Configuracoes";
 import { ConfirmarQueixa } from "./telas/ConfirmarQueixa";
 import { Correcao } from "./telas/Correcao";
 import { Gravar } from "./telas/Gravar";
 import { Hipoteses } from "./telas/Hipoteses";
 import { Inicio } from "./telas/Inicio";
-import { Login } from "./telas/Login";
+import { Login, NovaSenha } from "./telas/Login";
 import { NaoEncontrada } from "./telas/NaoEncontrada";
 import { NovaSessao } from "./telas/NovaSessao";
+import { Conversa, NovoPacienteIA } from "./telas/PacienteIA";
+import { ConversaVoz } from "./telas/ConversaVoz";
 import { Processando } from "./telas/Processando";
 import { SessaoRedireciona } from "./telas/SessaoRedireciona";
 import { Termo } from "./telas/Termo";
@@ -37,10 +40,14 @@ export const rotas: RouteObject[] = [
           { path: "/perfil", element: <Perfil /> },
         ],
       },
+      { path: "/configuracoes", element: <Configuracoes /> },
       { path: "/sessao/nova", element: <NovaSessao /> },
+      { path: "/paciente-ia", element: <NovoPacienteIA /> },
       { path: "/sessao/:id", element: <SessaoRedireciona /> },
       { path: "/sessao/:id/termo", element: <Termo /> },
       { path: "/sessao/:id/gravar", element: <Gravar /> },
+      { path: "/sessao/:id/conversa", element: <Conversa /> },
+      { path: "/sessao/:id/voz", element: <ConversaVoz /> },
       { path: "/sessao/:id/processando", element: <Processando /> },
       { path: "/sessao/:id/queixa", element: <ConfirmarQueixa /> },
       { path: "/sessao/:id/transcricao", element: <Transcricao /> },
@@ -69,7 +76,7 @@ function ComAbas() {
 }
 
 function Telas() {
-  const { carregando, logado, loginAtivo } = useAuth();
+  const { carregando, logado, loginAtivo, recuperandoSenha } = useAuth();
   const perfil = usePerfil();
   const { pathname } = useLocation();
 
@@ -81,6 +88,7 @@ function Telas() {
     );
   }
   if (!logado) return <Login />;
+  if (recuperandoSenha) return <NovaSenha />;
   // Sem login (demonstração), /entrar mostra a tela de entrar só para ver o visual.
   if (!loginAtivo && pathname === "/entrar") return <Login />;
   if (!perfil.nome) return <BoasVindas />;

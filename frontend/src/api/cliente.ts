@@ -50,9 +50,9 @@ function mensagemDoDetail(detail: unknown, status: number): string {
   return "Algo não saiu como esperado. Tente de novo.";
 }
 
-async function requisitar<T>(caminho: string, init: RequestInit = {}): Promise<T> {
+async function requisitar<T>(caminho: string, init: RequestInit = {}, comoArquivo = false): Promise<T> {
   const cabecalhos = new Headers(init.headers);
-  cabecalhos.set("Accept", "application/json");
+  if (!comoArquivo) cabecalhos.set("Accept", "application/json");
   if (init.body && !(init.body instanceof FormData)) {
     cabecalhos.set("Content-Type", "application/json");
   }
@@ -77,6 +77,7 @@ async function requisitar<T>(caminho: string, init: RequestInit = {}): Promise<T
   }
 
   if (resposta.status === 204) return undefined as T;
+  if (comoArquivo) return (await resposta.blob()) as T;
   return (await resposta.json()) as T;
 }
 
@@ -118,6 +119,18 @@ export const api = {
       body: corpo,
     });
   },
+  perguntarAoPaciente: (id: string, texto: string) =>
+    requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/conversa`, json("POST", { texto })),
+  perguntarFalando: (id: string, audio: Blob, nomeArquivo: string) => {
+    const corpo = new FormData();
+    corpo.append("audio", audio, nomeArquivo);
+    return requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/conversa/audio`, { method: "POST", body: corpo });
+  },
+  /** WAV da fala `indice` do paciente pela IA, com a voz do Piper. */
+  vozDoPaciente: (id: string, indice: number) =>
+    requisitar<Blob>(`/sessoes/${encodeURIComponent(id)}/voz/${indice}`, {}, true),
+  encerrarConversa: (id: string) =>
+    requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/encerrar`, { method: "POST" }),
   editarTranscricao: (id: string, dados: TranscricaoEditar) =>
     requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/transcricao`, json("PUT", dados)),
   confirmarQueixa: (id: string, dados: QueixaConfirmar) =>

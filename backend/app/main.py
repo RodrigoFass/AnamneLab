@@ -18,9 +18,18 @@ from fastapi.responses import JSONResponse, Response
 from app.auth import Usuario, usuario_atual
 from app.config import Settings, obter_settings
 from app.conteudo import QUEIXA_OUTRA, ErroConteudo
-from app.llm import ClienteLLM
+from app.llm import ClienteLLM, ErroLLM
+from app.pipeline.comum import ErroPipeline
 from app.pipeline.corrigir import ErroContestacao, contestar, item_do_checklist
-from app.pipeline.transcrever import Transcritor, apagar_audio
+from app.pipeline.paciente_ia import montar_caso, responder
+from app.pipeline.transcrever import (
+    ErroTranscricao,
+    Transcritor,
+    apagar_audio,
+    montar_dica,
+    transcrever_pergunta_e_apagar,
+)
+from app.pipeline.voz import ErroVoz, VozPaciente
 from app.processamento import Processador
 from app.repositorio import Repositorio
 from app.schemas.conteudo import Cartao, Queixa
@@ -30,6 +39,7 @@ from app.schemas.sessao import (
     ConsentimentoCriar,
     ContestacaoCriar,
     HipotesesAluno,
+    PerguntaPaciente,
     QueixaConfirmar,
     Saude,
     Sessao,
@@ -39,12 +49,15 @@ from app.schemas.sessao import (
     TranscricaoEditar,
 )
 from app.servicos import Servicos, montar_servicos
+from app.texto import normalizar
 
 logger = logging.getLogger("app")
 
 PREFIXO_AUDIO = "anamnelab-"
 IDADE_MAXIMA_AUDIO_S = 2 * 60 * 60
 """Nenhum áudio leva mais que isso para ser transcrito; mais velho que isso é sobra."""
+TAMANHO_MAXIMO_PERGUNTA = 5 * 1024 * 1024
+"""Uma pergunta falada tem segundos; 5 MB passam de vários minutos no formato do app."""
 
 TIPOS_AUDIO = {
     "audio/webm": ".webm",
@@ -163,9 +176,11 @@ def correcao_liberada(sessao: Sessao) -> bool:
 
 
 def para_aluno(sessao: Sessao) -> Sessao:
+    # A ficha do paciente pela IA é o gabarito do caso: só aparece depois da conversa.
+    oculto = {"caso_ia": None} if sessao.status == "conversando" else {}
     if correcao_liberada(sessao):
-        return sessao
-    return sessao.model_copy(update={"avaliacoes": [], "notas": None, "sugestoes": None})
+        return sessao.model_copy(update=oculto) if oculto else sessao
+    return sessao.model_copy(update={"avaliacoes": [], "notas": None, "sugestoes": None, **oculto})
 
 
 def _recarregar(servicos: Servicos, sessao_id: str) -> Sessao:
@@ -211,7 +226,8 @@ rotas = APIRouter(prefix="/api")
 def saude(servicos: ServicosDep) -> Saude:
     settings = servicos.settings
     demonstracao = settings.llm_provedor == "falso" or settings.transcricao == "falso"
-    return Saude(ok=True, modo_demonstracao=demonstracao)
+    vozes = servicos.voz.sexos if servicos.voz else []
+    return Saude(ok=True, modo_demonstracao=demonstracao, vozes_paciente=vozes)
 
 
 @rotas.get("/queixas", response_model=list[Queixa])
@@ -248,6 +264,8 @@ def listar_sessoes(servicos: ServicosDep, usuario: UsuarioDep) -> list[SessaoRes
 
 @rotas.post("/sessoes", response_model=Sessao, status_code=201)
 def criar_sessao(corpo: SessaoCriar, servicos: ServicosDep, usuario: UsuarioDep) -> Sessao:
+    if corpo.origem_caso == "paciente_ia":
+        return _criar_sessao_paciente_ia(corpo, servicos, usuario)
     cartao_id = corpo.cartao_id
     if corpo.origem_caso == "cartao":
         if not cartao_id:
@@ -266,6 +284,158 @@ def criar_sessao(corpo: SessaoCriar, servicos: ServicosDep, usuario: UsuarioDep)
     )
     servicos.repositorio.criar_sessao(sessao)
     return sessao
+
+
+MENSAGEM_PACIENTE_FORA = "O paciente não respondeu agora. Tente de novo em alguns instantes."
+
+
+def _criar_sessao_paciente_ia(corpo: SessaoCriar, servicos: ServicosDep, usuario: Usuario) -> Sessao:
+    """Sorteia (ou usa) um cartão e monta a ficha do paciente que a IA vai interpretar."""
+    cartoes = servicos.conteudo.cartoes.cartoes
+    if corpo.cartao_id:
+        cartao = next((c for c in cartoes if c.id == corpo.cartao_id), None)
+        if cartao is None:
+            raise HTTPException(422, "Esse cartão não existe. Sorteie outro.")
+    else:
+        cartao = random.choice(cartoes)
+    try:
+        caso = montar_caso(cartao, servicos.llm)
+    except ErroLLM:
+        logger.warning("paciente pela IA: ficha não montada")
+        raise HTTPException(503, "Não deu para chamar o paciente agora. Tente de novo em alguns minutos.") from None
+    sessao = Sessao(
+        id=str(uuid.uuid4()),
+        dono_id=usuario.id,
+        criada_em=_agora(),
+        status="conversando",
+        origem_caso="paciente_ia",
+        cartao_id=cartao.id,
+        sexo_paciente=caso.sexo,
+        caso_ia=caso,
+    )
+    servicos.repositorio.criar_sessao(sessao)
+    return para_aluno(sessao)
+
+
+def _em_conversa(servicos: Servicos, sessao_id: str, usuario: Usuario) -> Sessao:
+    sessao = _sessao_do_dono(servicos, sessao_id, usuario)
+    if sessao.status != "conversando" or sessao.caso_ia is None:
+        raise HTTPException(409, "Esta consulta já foi encerrada.")
+    return sessao
+
+
+@rotas.post("/sessoes/{sessao_id}/conversa", response_model=Sessao)
+def perguntar_ao_paciente(
+    sessao_id: str, corpo: PerguntaPaciente, servicos: ServicosDep, usuario: UsuarioDep
+) -> Sessao:
+    sessao = _em_conversa(servicos, sessao_id, usuario)
+    return _perguntar(servicos, sessao, corpo.texto)
+
+
+def _perguntar(servicos: Servicos, sessao: Sessao, texto: str) -> Sessao:
+    """Manda a pergunta ao paciente pela IA e guarda a pergunta e a resposta nas falas."""
+    assert sessao.caso_ia is not None
+    try:
+        resposta = responder(sessao.caso_ia, sessao.falas, texto, servicos.llm)
+    except ErroPipeline as erro:
+        raise HTTPException(422, erro.mensagem) from None
+    except ErroLLM:
+        logger.warning("paciente pela IA: sem resposta (sessao=%s)", sessao.id)
+        raise HTTPException(503, MENSAGEM_PACIENTE_FORA) from None
+    falas = [*sessao.falas, Fala(papel="entrevistador", texto=texto.strip()), Fala(papel="paciente", texto=resposta)]
+    servicos.repositorio.salvar_transcricao(sessao.id, falas, editada=False)
+    return _recarregar(servicos, sessao.id)
+
+
+@rotas.post("/sessoes/{sessao_id}/conversa/audio", response_model=Sessao)
+def perguntar_falando(
+    sessao_id: str,
+    servicos: ServicosDep,
+    usuario: UsuarioDep,
+    audio: Annotated[UploadFile, File()],
+) -> Sessao:
+    """Pergunta falada: o Whisper transcreve, o áudio é apagado e a pergunta segue como a escrita."""
+    sessao = _em_conversa(servicos, sessao_id, usuario)
+    versao_termo = servicos.conteudo.termo.versao
+    if not any(c.forma == "aceite" and c.versao_termo == versao_termo for c in sessao.consentimentos):
+        raise HTTPException(409, "Antes de falar com o paciente, aceite o termo de gravação.")
+    extensao = _extensao_audio(audio)
+    if extensao is None:
+        raise HTTPException(415, "Formato de áudio não aceito. Use webm, ogg, m4a, mp3 ou wav.")
+
+    pasta = servicos.settings.pasta_audio_temp
+    pasta.mkdir(parents=True, exist_ok=True, mode=0o700)
+    caminho = pasta / f"{PREFIXO_AUDIO}{secrets.token_hex(16)}{extensao}"
+    try:
+        total = 0
+        with caminho.open("wb") as destino:
+            while bloco := audio.file.read(1024 * 1024):
+                total += len(bloco)
+                if total > TAMANHO_MAXIMO_PERGUNTA:
+                    raise HTTPException(413, "A pergunta ficou longa demais. Fale uma pergunta de cada vez.")
+                destino.write(bloco)
+        if total == 0:
+            raise HTTPException(422, "Não deu para ouvir a pergunta. Segure o botão enquanto fala.")
+        numero = sum(1 for f in sessao.falas if f.papel == "entrevistador")
+        texto = transcrever_pergunta_e_apagar(
+            caminho, servicos.transcritor, numero=numero, dica=montar_dica(servicos.conteudo.queixas)
+        )
+    except ErroTranscricao:
+        raise HTTPException(422, "Não deu para entender a pergunta. Fale de novo, perto do microfone.") from None
+    finally:
+        apagar_audio(caminho)
+    return _perguntar(servicos, sessao, texto)
+
+
+@rotas.get("/sessoes/{sessao_id}/voz/{indice}")
+def voz_do_paciente(sessao_id: str, indice: int, servicos: ServicosDep, usuario: UsuarioDep) -> Response:
+    """A fala de número `indice` do paciente pela IA, com a voz do backend (Edge ou Piper)."""
+    sessao = _sessao_do_dono(servicos, sessao_id, usuario)
+    if servicos.voz is None:
+        raise HTTPException(404, "A voz do paciente fica com o navegador neste app.")
+    if sessao.origem_caso != "paciente_ia" or not 0 <= indice < len(sessao.falas):
+        raise HTTPException(404, "Fala não encontrada.")
+    fala = sessao.falas[indice]
+    if fala.papel != "paciente":
+        raise HTTPException(404, "Fala não encontrada.")
+    sexo = sessao.caso_ia.sexo if sessao.caso_ia else (sessao.sexo_paciente or "feminino")
+    try:
+        wav = servicos.voz.falar(fala.texto, sexo)
+    except ErroVoz:
+        raise HTTPException(503, "A voz do paciente não saiu agora. A resposta está escrita na tela.") from None
+    return Response(
+        content=wav, media_type=servicos.voz.tipo_audio, headers={"Cache-Control": "private, max-age=3600"}
+    )
+
+
+@rotas.post("/sessoes/{sessao_id}/encerrar", response_model=Sessao)
+def encerrar_conversa(sessao_id: str, servicos: ServicosDep, usuario: UsuarioDep) -> Sessao:
+    """Fim da entrevista: a queixa do cartão vem sugerida e o aluno confirma, como na gravação."""
+    sessao = _em_conversa(servicos, sessao_id, usuario)
+    if not any(f.papel == "entrevistador" for f in sessao.falas):
+        raise HTTPException(409, "Faça pelo menos uma pergunta antes de encerrar.")
+    cartao = next((c for c in servicos.conteudo.cartoes.cartoes if c.id == sessao.cartao_id), None)
+    da_biblioteca = next((q for q in servicos.conteudo.queixas.queixas if cartao and q.id == cartao.queixa), None)
+    queixa = [da_biblioteca.id] if da_biblioteca else []
+    # Trecho: a primeira fala do paciente que fala da queixa (nome ou sinônimo); sem ela, nenhum.
+    termos = [normalizar(t) for t in ([da_biblioteca.nome, *da_biblioteca.sinonimos] if da_biblioteca else [])]
+    trecho = next(
+        (
+            f.texto
+            for f in sessao.falas
+            if f.papel == "paciente" and any(t and t in normalizar(f.texto) for t in termos)
+        ),
+        None,
+    )
+    servicos.repositorio.atualizar_sessao(
+        sessao_id,
+        status="aguardando_queixa",
+        progresso=100,
+        mensagem_erro=None,
+        queixa_detectada=queixa,
+        queixa_trecho=trecho,
+    )
+    return _recarregar(servicos, sessao_id)
 
 
 @rotas.get("/sessoes/{sessao_id}", response_model=Sessao)
@@ -290,13 +460,20 @@ def registrar_consentimento(
     sessao_id: str, corpo: ConsentimentoCriar, servicos: ServicosDep, usuario: UsuarioDep
 ) -> Consentimento:
     sessao = _sessao_do_dono(servicos, sessao_id, usuario)
-    if not _antes_da_gravacao(sessao):
+    # No paciente pela IA, o aceite vem antes da primeira pergunta falada; não há colega.
+    falando = sessao.status == "conversando" and corpo.forma == "aceite"
+    if not _antes_da_gravacao(sessao) and not falando:
         raise HTTPException(409, "O aceite é registrado antes da gravação, e esta sessão já foi gravada.")
     if corpo.versao_termo != servicos.conteudo.termo.versao:
         raise HTTPException(409, "O termo de gravação mudou. Leia a versão atual e aceite de novo.")
     nome = corpo.nome_informado.strip()
     if not nome:
         raise HTTPException(422, "Escreva o nome de quem está aceitando o termo.")
+    if corpo.forma == "declarado_pelo_dono" and not any(
+        c.forma == "aceite" and c.papel != corpo.papel and c.versao_termo == corpo.versao_termo
+        for c in sessao.consentimentos
+    ):
+        raise HTTPException(409, "Primeiro, quem abriu a sessão aceita o termo de gravação.")
     consentimento = Consentimento(
         id=str(uuid.uuid4()),
         sessao_id=sessao_id,
@@ -304,6 +481,7 @@ def registrar_consentimento(
         nome_informado=nome,
         versao_termo=corpo.versao_termo,
         aceito_em=_agora(),
+        forma=corpo.forma,
     )
     servicos.repositorio.adicionar_consentimento(consentimento)
     return consentimento
@@ -398,10 +576,13 @@ def confirmar_queixa(
             # Entra na fila uma vez por sessão, inclusive quando a confirmação vem numa nova tentativa.
             servicos.repositorio.registrar_queixa_outra(descricao)
 
+    # Sem o campo no pedido, fica o sexo detectado na conversa; null é "não sei".
+    sexo = corpo.sexo_paciente if "sexo_paciente" in corpo.model_fields_set else sessao.sexo_paciente
     servicos.repositorio.atualizar_sessao(
         sessao_id,
         queixas_confirmadas=queixas,
         descricao_outra=descricao,
+        sexo_paciente=sexo,
         status="corrigindo",
         progresso=5,
         mensagem_erro=None,
@@ -482,9 +663,10 @@ def criar_app(
     llm: ClienteLLM | None = None,
     transcritor: Transcritor | None = None,
     repositorio: Repositorio | None = None,
+    voz: VozPaciente | None = None,
 ) -> FastAPI:
     settings = settings or obter_settings()
-    servicos = montar_servicos(settings, llm=llm, transcritor=transcritor, repositorio=repositorio)
+    servicos = montar_servicos(settings, llm=llm, transcritor=transcritor, repositorio=repositorio, voz=voz)
 
     @asynccontextmanager
     async def ciclo(_: FastAPI):
