@@ -143,7 +143,8 @@ def test_fluxo_completo(cliente, settings, repositorio):
     falas = sessao["falas"]
     falas.insert(2, {"papel": "entrevistador", "texto": "O senhor tem alguma alergia a remédio?"})
     falas.insert(3, {"papel": "paciente", "texto": "Não que eu saiba."})
-    # E o paciente conta que quase desmaiou, sem o entrevistador ter perguntado.
+    # E o paciente conta que quase desmaiou, sem o entrevistador ter perguntado do desmaio.
+    falas.append({"papel": "entrevistador", "texto": "Quer contar mais alguma coisa?"})
     falas.append({"papel": "paciente", "texto": "Ah, e na hora da dor eu achei que ia desmaiar."})
     resposta = cliente.put(f"/api/sessoes/{sessao_id}/transcricao", json={"falas": falas})
     assert resposta.status_code == 200
@@ -209,12 +210,20 @@ def test_fluxo_completo(cliente, settings, repositorio):
     assert sincope["contestacao"]["resultado"] == "pendente_professor"
     assert resposta.json()["notas"]["queixa"] == 71
 
-    # Fala que existe e mostra o item: procedente, nota recalculada.
+    # Fala só do paciente: o LLM nem é chamado, continua pendente, nota igual.
     contestacao = {
         "item_id": "sincope",
         "motivo": "O paciente falou do desmaio.",
         "trecho": "Ah, e na hora da dor eu achei que ia desmaiar.",
     }
+    resposta = cliente.post(f"/api/sessoes/{sessao_id}/contestacoes", json=contestacao)
+    assert resposta.status_code == 200
+    sincope = next(a for a in resposta.json()["avaliacoes"] if a["item_id"] == "sincope")
+    assert sincope["contestacao"]["resultado"] == "pendente_professor"
+    assert resposta.json()["notas"]["queixa"] == 71
+
+    # Pergunta do entrevistador e resposta que mostram o item: procedente, nota recalculada.
+    contestacao["trecho"] = "Quer contar mais alguma coisa? Ah, e na hora da dor eu achei que ia desmaiar."
     resposta = cliente.post(f"/api/sessoes/{sessao_id}/contestacoes", json=contestacao)
     assert resposta.status_code == 200
     sincope = next(a for a in resposta.json()["avaliacoes"] if a["item_id"] == "sincope")

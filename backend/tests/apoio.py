@@ -45,7 +45,9 @@ class LLMRepete(LLMFixo):
     def _gerar_json(self, **kwargs: Any) -> str:
         if len(self.respostas) > 1:
             return super()._gerar_json(**kwargs)
-        self.chamadas.append({"tarefa": kwargs["tarefa"], "mensagem": kwargs["mensagem"], "contexto": kwargs["contexto"]})
+        self.chamadas.append(
+            {"tarefa": kwargs["tarefa"], "mensagem": kwargs["mensagem"], "contexto": kwargs["contexto"]}
+        )
         return self.respostas[0]
 
 

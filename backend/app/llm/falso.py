@@ -148,16 +148,16 @@ def _anamnese(contexto: dict[str, Any]) -> dict[str, Any]:
 
 
 def _corrigir(contexto: dict[str, Any]) -> dict[str, Any]:
-    falas = [f for f in contexto.get("falas", []) if f["papel"] == "entrevistador"]
-    normalizadas = [(f["texto"], normalizar(f["texto"])) for f in falas]
+    """Cita a primeira fala do entrevistador com uma palavra-chave do item, pelo número (a partir de 1)."""
+    falas = contexto.get("falas", [])
+    do_entrevistador = [
+        (numero, normalizar(f["texto"])) for numero, f in enumerate(falas, 1) if f["papel"] == "entrevistador"
+    ]
     itens = []
     for item in contexto.get("itens", []):
         chaves = [normalizar(p) for p in item.get("palavras_chave", []) if normalizar(p)]
-        trecho = next(
-            (original for original, texto in normalizadas if any(chave in texto for chave in chaves)),
-            None,
-        )
-        itens.append({"item_id": item["id"], "feito": trecho is not None, "trecho": trecho})
+        numero = next((n for n, texto in do_entrevistador if any(chave in texto for chave in chaves)), None)
+        itens.append({"item_id": item["id"], "feito": numero is not None, "falas": [numero] if numero else []})
     return {"itens": itens}
 
 

@@ -1,11 +1,15 @@
 """Correção item a item: o coração do AnamneLab.
 
-O LLM diz, para cada item dos checklists aplicáveis, se foi feito e qual fala prova.
+O LLM diz, para cada item dos checklists aplicáveis, se foi feito e quais falas provam.
 Cada checklist vai num pedido separado: com o geral e o da queixa na mesma lista, o
-modelo tende a dar cada fala a um item só, e o da queixa ficava sem nada. O backend
-não confia: confere cada trecho na transcrição (regra 1), calcula as notas só com os
-checklists que contam (regra 3) e registra id, versão e status de cada checklist
-usado (regra 4).
+modelo tende a dar cada fala a um item só, e o da queixa ficava sem nada.
+
+As falas vão numeradas e o LLM cita os números, não o texto. O backend monta o trecho
+com as falas citadas, então ele é sempre literal (regra 1), e só aceita o item se uma
+delas for do entrevistador: o que o paciente contou sozinho não mostra que o aluno
+investigou. Copiar o texto falhava à toa (o modelo corrigia palavras da transcrição)
+e não dizia quem falou. O backend também calcula as notas só com os checklists que
+contam (regra 3) e registra id, versão e status de cada checklist usado (regra 4).
 """
 
 import json
@@ -15,7 +19,7 @@ from datetime import UTC, datetime
 
 from app.conteudo import QUEIXA_OUTRA, Conteudo
 from app.llm import ClienteLLM, ErroLLM
-from app.pipeline.comum import falas_para_contexto, formatar_falas
+from app.pipeline.comum import ROTULOS, falas_para_contexto
 from app.schemas.conteudo import Checklist, Item, Secao
 from app.schemas.llm import CorrecaoLLM, Fala, ItemCorrigido, TrechoCumpreItem
 from app.schemas.sessao import (
@@ -25,7 +29,7 @@ from app.schemas.sessao import (
     ContestacaoCriar,
     Notas,
 )
-from app.texto import contem, normalizar
+from app.texto import normalizar
 
 MINIMO_CARACTERES_TRECHO = 4
 """Trecho normalizado mais curto que isso ('sim', 'é') não prova nada."""
@@ -34,7 +38,8 @@ SISTEMA = """\
 Você é um preceptor que corrige a técnica de anamnese de um estudante de Medicina. \
 A conversa é uma simulação entre dois estudantes: o entrevistador faz o médico.
 
-Para cada item do checklist enviado, diga se o entrevistador investigou aquilo na conversa.
+Para cada item do checklist enviado, diga se o entrevistador investigou aquilo na conversa. \
+As falas da transcrição vêm numeradas, como [12].
 
 Regras:
 - Avalie cada item sozinho, sem pensar nos outros. A mesma fala pode provar vários itens, \
@@ -42,16 +47,17 @@ deste checklist ou de outro. Uma pergunta que junta assuntos ("tem falta de ar o
 batedeira?") vale para cada um deles.
 - O entrevistador não precisa usar as palavras do item nem da pergunta de exemplo. Vale \
 a pergunta feita com outras palavras, desde que trate do mesmo assunto.
-- Um item só é feito se houver na transcrição uma fala que mostre isso. Em trecho, copie \
-essa fala literalmente, como está na transcrição, sem corrigir, resumir ou juntar pedaços \
-distantes. Pode ser a pergunta do entrevistador ou a pergunta seguida da resposta.
-- Avalie o que o entrevistador perguntou ou explorou. Informação que o paciente deu sem \
-ser perguntado só conta se o entrevistador voltou ao assunto.
-- Se nenhuma fala trata do assunto do item, feito é false e trecho é null. Não marque \
-por suposição.
+- Procure na conversa inteira, do começo ao fim. A pergunta pode estar em qualquer parte, \
+inclusive no meio de uma fala longa ou junto com outras perguntas.
+- Um item é feito quando o entrevistador perguntou ou explorou o assunto. Em falas, ponha o \
+número da fala do entrevistador que mostra isso e, se ajudar, o da resposta do paciente \
+logo depois: [12, 13].
+- O que o paciente contou sem ser perguntado não basta. Só conta se o entrevistador voltou \
+ao assunto, e aí cite essa fala do entrevistador.
+- Se nenhuma fala do entrevistador trata do assunto do item, feito é false e falas é []. \
+Não marque por suposição.
 - Responda exatamente um registro por item, com o item_id igual ao enviado. Não crie itens.
-- A transcrição vem de reconhecimento de voz e pode ter palavras erradas; julgue pelo \
-sentido, mas copie o trecho como está escrito.
+- A transcrição vem de reconhecimento de voz e pode ter palavras erradas; julgue pelo sentido.
 - Não avalie diagnóstico nem conduta; só a técnica da entrevista.
 """
 
@@ -66,6 +72,8 @@ trecho mostra que o entrevistador investigou o item.
 Regras:
 - Avalie só a técnica da entrevista, não o diagnóstico nem a conduta.
 - O trecho precisa tratar do item. Uma fala sobre outro assunto não cumpre o item.
+- O que o paciente contou sem ser perguntado não cumpre: o trecho precisa mostrar o \
+entrevistador perguntando ou explorando o assunto.
 - Na dúvida, cumpre é false: a contestação vai para o professor.
 """
 
@@ -148,22 +156,76 @@ _ROTULO_PAPEL = re.compile(r"\b(?:entrevistador|paciente)\s*:", re.IGNORECASE)
 
 @dataclass(frozen=True)
 class TranscricaoNormalizada:
+    """A transcrição normalizada, para conferir um trecho escrito (o da contestação)."""
+
     corrida: str
     """Falas juntas, sem os papéis."""
+    do_entrevistador: tuple[tuple[int, int], ...] = ()
+    """Início e fim de cada fala do entrevistador em `corrida`."""
 
     @classmethod
     def de(cls, falas: list[Fala]) -> "TranscricaoNormalizada":
-        return cls(corrida=normalizar(" ".join(f.texto for f in falas)))
+        partes: list[str] = []
+        faixas: list[tuple[int, int]] = []
+        inicio = 0
+        for fala in falas:
+            texto = normalizar(fala.texto)
+            if not texto:
+                continue
+            if fala.papel == "entrevistador":
+                faixas.append((inicio, inicio + len(texto)))
+            partes.append(texto)
+            inicio += len(texto) + 1  # o espaço entre as falas
+        return cls(corrida=" ".join(partes), do_entrevistador=tuple(faixas))
 
-    def tem(self, trecho: str | None) -> bool:
-        """O trecho está na transcrição. Rótulos de papel são tirados antes de conferir:
+    def _posicoes(self, trecho: str | None) -> list[tuple[int, int]]:
+        """Onde o trecho aparece, em palavras inteiras. Rótulos de papel são tirados antes:
         um trecho que é só 'Entrevistador:' não prova nada."""
         if not trecho:
-            return False
+            return []
         alvo = normalizar(_ROTULO_PAPEL.sub(" ", trecho))
         if len(alvo) < MINIMO_CARACTERES_TRECHO:
-            return False
-        return contem(alvo, self.corrida)
+            return []
+        texto, procura = f" {self.corrida} ", f" {alvo} "
+        posicoes = []
+        achou = texto.find(procura)
+        while achou != -1:
+            # O espaço extra no começo de `texto` compensa o de `procura`: achou já é o índice em corrida.
+            posicoes.append((achou, achou + len(alvo)))
+            achou = texto.find(procura, achou + 1)
+        return posicoes
+
+    def tem(self, trecho: str | None) -> bool:
+        """O trecho está na transcrição."""
+        return bool(self._posicoes(trecho))
+
+    def mostra_entrevistador(self, trecho: str | None) -> bool:
+        """O trecho está na transcrição e pega parte de uma fala do entrevistador."""
+        return any(
+            min(fim, b) - max(inicio, a) >= MINIMO_CARACTERES_TRECHO
+            for inicio, fim in self._posicoes(trecho)
+            for a, b in self.do_entrevistador
+        )
+
+
+def numerar_falas(falas: list[Fala]) -> str:
+    """Transcrição para o prompt da correção, com o número de cada fala, a partir de 1."""
+    return "\n".join(f"[{numero}] {ROTULOS[f.papel]}: {f.texto}" for numero, f in enumerate(falas, 1))
+
+
+def trecho_das_falas(numeros: list[int], falas: list[Fala]) -> str | None:
+    """O trecho que prova o item, montado com as falas que o LLM citou (números a partir de 1).
+
+    Vale a primeira fala citada do entrevistador, mais a fala seguinte se ela também foi
+    citada (a resposta). Sem fala do entrevistador entre as citadas, não há trecho.
+    Número fora da transcrição é ignorado."""
+    citadas = sorted({n - 1 for n in numeros if 1 <= n <= len(falas)})
+    pergunta = next((i for i in citadas if falas[i].papel == "entrevistador"), None)
+    if pergunta is None:
+        return None
+    usadas = [pergunta, pergunta + 1] if pergunta + 1 in citadas else [pergunta]
+    trecho = " ".join(falas[i].texto.strip() for i in usadas)
+    return trecho if len(normalizar(trecho)) >= MINIMO_CARACTERES_TRECHO else None
 
 
 def mensagem_feito(texto: str) -> str:
@@ -178,8 +240,7 @@ def mensagem_feito(texto: str) -> str:
 
 
 def montar_avaliacoes(itens: list[ItemAplicavel], resposta: CorrecaoLLM, falas: list[Fala]) -> list[Avaliacao]:
-    """Uma avaliação por item. Sem registro, sem trecho ou trecho inexistente: faltou."""
-    transcricao = TranscricaoNormalizada.de(falas)
+    """Uma avaliação por item. Sem registro ou sem fala do entrevistador citada: faltou."""
     registros = {}
     for registro in resposta.itens:
         registros.setdefault(registro.item_id, registro)
@@ -188,7 +249,8 @@ def montar_avaliacoes(itens: list[ItemAplicavel], resposta: CorrecaoLLM, falas: 
     for aplicavel in itens:
         item = aplicavel.item
         registro = registros.get(item.id)
-        feito = bool(registro and registro.feito and transcricao.tem(registro.trecho))
+        trecho = trecho_das_falas(registro.falas, falas) if registro and registro.feito else None
+        feito = trecho is not None
         avaliacoes.append(
             Avaliacao(
                 item_id=item.id,
@@ -196,7 +258,7 @@ def montar_avaliacoes(itens: list[ItemAplicavel], resposta: CorrecaoLLM, falas: 
                 secao=aplicavel.secao.titulo,
                 texto=item.texto,
                 status="feito" if feito else "faltou",
-                trecho=registro.trecho.strip() if feito and registro and registro.trecho else None,
+                trecho=trecho,
                 mensagem=mensagem_feito(item.texto) if feito else item.faltou,
                 peso=item.peso,
                 conta_na_nota=aplicavel.conta_na_nota,
@@ -234,7 +296,7 @@ def _corrigir_checklist(
     mensagem = (
         f"Checklist {tipo}: {checklist.nome} ({len(lista)} itens):\n"
         f"{json.dumps(lista, ensure_ascii=False, indent=1)}\n\n"
-        f"Transcrição:\n<transcricao>\n{formatar_falas(falas)}\n</transcricao>"
+        f"Transcrição:\n<transcricao>\n{numerar_falas(falas)}\n</transcricao>"
     )
     resposta = llm.gerar(
         tarefa="corrigir",
@@ -319,9 +381,10 @@ def contestar(
     item: Item | None,
     llm: ClienteLLM,
 ) -> ResultadoContestacao:
-    """Procedente só se o trecho existe na transcrição e o LLM confirma que ele mostra o item:
-    o item vira feito e a nota é recalculada. Nos outros casos (sem trecho, trecho que não
-    existe, LLM que nega ou falha), fica pendente para o professor e a nota não muda.
+    """Procedente só se o trecho existe na transcrição, pega uma fala do entrevistador e o LLM
+    confirma que ele mostra o item: o item vira feito e a nota é recalculada. Nos outros casos
+    (sem trecho, trecho que não existe ou só do paciente, LLM que nega ou falha), fica pendente
+    para o professor e a nota não muda.
 
     `item` é o item como está no conteúdo (texto, pergunta de exemplo, palavras-chave)."""
     indice = next((i for i, a in enumerate(avaliacoes) if a.item_id == pedido.item_id), None)
@@ -333,7 +396,9 @@ def contestar(
 
     trecho = pedido.trecho.strip() if pedido.trecho else None
     procedente = bool(
-        trecho and TranscricaoNormalizada.de(falas).tem(trecho) and trecho_cumpre_item(trecho, atual.texto, item, llm)
+        trecho
+        and TranscricaoNormalizada.de(falas).mostra_entrevistador(trecho)
+        and trecho_cumpre_item(trecho, atual.texto, item, llm)
     )
     contestacao = Contestacao(
         item_id=pedido.item_id,

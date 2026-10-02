@@ -60,8 +60,9 @@ class ItemCorrigido(BaseModel):
 
     item_id: str
     feito: bool
-    trecho: str | None
-    """Fala literal do entrevistador (ou da troca) que prova o item. Obrigatória se feito."""
+    falas: list[int]
+    """Números das falas que provam o item, como aparecem na transcrição enviada: a pergunta
+    do entrevistador e, se ajudar, a resposta logo depois. Vazia se não feito."""
 
 
 class CorrecaoLLM(BaseModel):

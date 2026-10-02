@@ -232,9 +232,7 @@ class ClienteGemini(ClienteLLM):
         conteudo = candidato.get("content")
         partes = conteudo.get("parts") if isinstance(conteudo, dict) else None
         # Partes de raciocínio ("thought") não fazem parte da resposta.
-        texto = "".join(
-            str(p.get("text", "")) for p in partes or [] if isinstance(p, dict) and not p.get("thought")
-        )
+        texto = "".join(str(p.get("text", "")) for p in partes or [] if isinstance(p, dict) and not p.get("thought"))
         if not texto.strip():
             logger.warning("Gemini respondeu sem texto (tarefa=%s, modelo=%s, parada=%s)", tarefa, modelo, parada)
             raise self._falhou(modelo, f"SEM_TEXTO/{parada}", "resposta sem texto", MENSAGEM_PADRAO)

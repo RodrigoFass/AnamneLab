@@ -34,9 +34,7 @@ def _resposta_ok(texto, *, parada="STOP", partes=None) -> httpx.Response:
     if not isinstance(texto, str):
         texto = json.dumps(texto, ensure_ascii=False)
     corpo = {
-        "candidates": [
-            {"content": {"role": "model", "parts": partes or [{"text": texto}]}, "finishReason": parada}
-        ]
+        "candidates": [{"content": {"role": "model", "parts": partes or [{"text": texto}]}, "finishReason": parada}]
     }
     return httpx.Response(200, json=corpo)
 
@@ -250,7 +248,9 @@ def test_sem_conexao_nao_percorre_a_cadeia(excecao):
 
 
 def test_resposta_comprimida_quebrada_vira_erro_llm():
-    servidor = Servidor(httpx.Response(200, headers={"content-encoding": "gzip"}, stream=httpx.ByteStream(b"nao e gzip")))
+    servidor = Servidor(
+        httpx.Response(200, headers={"content-encoding": "gzip"}, stream=httpx.ByteStream(b"nao e gzip"))
+    )
     with pytest.raises(ErroLLM):
         _gerar(_cliente(servidor))
 

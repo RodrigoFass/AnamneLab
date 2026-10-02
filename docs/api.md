@@ -30,7 +30,7 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 | PUT | `/api/sessoes/{id}/transcricao` | `TranscricaoEditar` | `Sessao` | Corrige quem disse o quê ou um erro de transcrição; marca `transcricao_editada` |
 | POST | `/api/sessoes/{id}/queixa` | `QueixaConfirmar` | `Sessao` | Aluno confirma a queixa. `outra` vale sozinha (não se mistura com queixa da lista) e entra na `fila_queixas`. Dispara anamnese e correção em segundo plano |
 | POST | `/api/sessoes/{id}/hipoteses` | `HipotesesAluno` | `Sessao` | Aluno escreve as hipóteses. Libera a correção e dispara as sugestões da IA |
-| POST | `/api/sessoes/{id}/contestacoes` | `ContestacaoCriar` | `Sessao` | Contesta um item. O trecho precisa existir na transcrição e o LLM confere se ele mostra que o entrevistador investigou o item (tarefa `verificar_contestacao`, saída `TrechoCumpreItem`). Confirmado: `procedente`, o item vira feito com esse trecho e a nota é recalculada. Sem trecho, trecho que não existe, LLM que nega ou que falha: `pendente_professor` e a nota não muda |
+| POST | `/api/sessoes/{id}/contestacoes` | `ContestacaoCriar` | `Sessao` | Contesta um item. O trecho precisa existir na transcrição e pegar uma fala do entrevistador (fala só do paciente não basta), e o LLM confere se ele mostra que o entrevistador investigou o item (tarefa `verificar_contestacao`, saída `TrechoCumpreItem`). Confirmado: `procedente`, o item vira feito com esse trecho e a nota é recalculada. Sem trecho, trecho que não existe ou só do paciente, LLM que nega ou que falha: `pendente_professor` e a nota não muda |
 
 ## Ciclo da sessão
 

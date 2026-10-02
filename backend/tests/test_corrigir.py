@@ -24,16 +24,20 @@ def aprovar(conteudo: Conteudo, checklist_id: str) -> Conteudo:
     return Conteudo(queixas=conteudo.queixas, checklists=checklists, cartoes=conteudo.cartoes, termo=conteudo.termo)
 
 
-def resposta(*itens: tuple[str, bool, str | None]) -> dict:
-    return {"itens": [{"item_id": i, "feito": f, "trecho": t} for i, f, t in itens]}
+def resposta(*itens: tuple[str, bool, list[int]]) -> dict:
+    """Registros do LLM: item, feito e os números das falas citadas (a partir de 1).
+
+    Falas de exemplo: [1] E nome, [2] P, [3] E idade, [4] P, [5] E irradiação, [6] P,
+    [7] E fuma, [8] P, [9] E suor, [10] P."""
+    return {"itens": [{"item_id": i, "feito": f, "falas": n} for i, f, n in itens]}
 
 
 def por_id(resultado) -> dict:
     return {a.item_id: a for a in resultado.avaliacoes}
 
 
-def test_trecho_inexistente_vira_faltou(conteudo):
-    llm = LLMRepete(resposta(("idade", True, "Qual a sua data de nascimento?")))
+def test_fala_fora_da_transcricao_vira_faltou(conteudo):
+    llm = LLMRepete(resposta(("idade", True, [99])))
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
     idade = por_id(resultado)["idade"]
     assert idade.status == "faltou"
@@ -41,35 +45,60 @@ def test_trecho_inexistente_vira_faltou(conteudo):
     assert idade.mensagem == "Faltou perguntar a idade."
 
 
-def test_feito_sem_trecho_vira_faltou(conteudo):
-    llm = LLMRepete(resposta(("idade", True, None), ("nome", True, "")))
+def test_feito_sem_fala_vira_faltou(conteudo):
+    llm = LLMRepete(resposta(("idade", True, []), ("nome", True, [0, -1])))
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
     assert por_id(resultado)["idade"].status == "faltou"
     assert por_id(resultado)["nome"].status == "faltou"
 
 
 def test_item_ausente_na_resposta_vira_faltou_e_item_inventado_e_ignorado(conteudo):
-    llm = LLMRepete(resposta(("item-que-nao-existe", True, "Quantos anos o senhor tem?")))
+    llm = LLMRepete(resposta(("item-que-nao-existe", True, [3])))
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
     ids = [a.item_id for a in resultado.avaliacoes]
     assert "item-que-nao-existe" not in ids
     assert all(a.status == "faltou" for a in resultado.avaliacoes)
 
 
-def test_trecho_confere_com_normalizacao(conteudo):
+def test_trecho_e_montado_com_as_falas_citadas(conteudo):
     llm = LLMRepete(
         resposta(
-            ("idade", True, "  QUANTOS anos o senhor tem  "),  # caixa, espaços e sem '?'
-            ("nome", True, "bom dia qual é o seu nome"),  # sem pontuação
-            ("tabagismo", True, "Entrevistador: O senhor fuma?"),  # com o papel, como o LLM viu
+            ("nome", True, [1]),  # só a pergunta
+            ("idade", True, [3, 4]),  # pergunta e resposta
+            ("tabagismo", True, [8, 7]),  # fora de ordem e repetida
         )
     )
-    resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
-    avaliacoes = por_id(resultado)
-    assert avaliacoes["idade"].status == "feito"
-    assert avaliacoes["idade"].trecho == "QUANTOS anos o senhor tem"
-    assert avaliacoes["nome"].status == "feito"
-    assert avaliacoes["tabagismo"].status == "feito"
+    avaliacoes = por_id(corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True))
+    assert avaliacoes["nome"].trecho == "Bom dia! Qual é o seu nome?"
+    assert avaliacoes["idade"].trecho == "Quantos anos o senhor tem? Cinquenta e oito."
+    assert avaliacoes["tabagismo"].trecho == "O senhor fuma? Fumo um maço por dia, sim."
+    assert all(avaliacoes[i].status == "feito" for i in ("nome", "idade", "tabagismo"))
+
+
+def test_fala_so_do_paciente_nao_prova_o_item(conteudo):
+    """O que o paciente contou sozinho não mostra que o aluno investigou."""
+    llm = LLMRepete(resposta(("idade", True, [4]), ("nome", True, [2, 4]), ("sincope", True, [10])))
+    avaliacoes = por_id(corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True))
+    assert avaliacoes["idade"].status == "faltou"
+    assert avaliacoes["nome"].status == "faltou"
+    assert avaliacoes["sincope"].status == "faltou"
+    assert avaliacoes["idade"].trecho is None
+
+
+def test_vale_a_primeira_pergunta_citada_sem_juntar_falas_distantes(conteudo):
+    llm = LLMRepete(resposta(("idade", True, [3, 9, 10]), ("tabagismo", True, [6, 7])))
+    avaliacoes = por_id(corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True))
+    assert avaliacoes["idade"].trecho == "Quantos anos o senhor tem?"
+    # A fala do paciente antes da pergunta fica de fora.
+    assert avaliacoes["tabagismo"].trecho == "O senhor fuma?"
+
+
+def test_falas_vao_numeradas_para_o_llm(conteudo):
+    llm = LLMRepete(resposta())
+    corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
+    mensagem = llm.chamadas[0]["mensagem"]
+    assert "[1] Entrevistador: Bom dia! Qual é o seu nome?\n[2] Paciente: Carlos Alberto." in mensagem
+    assert "[10] Paciente: Não, suor não." in mensagem
 
 
 def test_normalizacao_mantem_acentos_e_palavras_inteiras():
@@ -81,8 +110,18 @@ def test_normalizacao_mantem_acentos_e_palavras_inteiras():
     assert transcricao.tem("Quantos anos o senhor tem? Cinquenta e oito.")  # pergunta e resposta
 
 
+def test_trecho_escrito_precisa_pegar_fala_do_entrevistador():
+    transcricao = TranscricaoNormalizada.de(falas_exemplo())
+    assert transcricao.mostra_entrevistador("Quantos anos o senhor tem? Cinquenta e oito.")
+    assert transcricao.mostra_entrevistador("o senhor fuma")
+    assert transcricao.tem("Cinquenta e oito.")
+    assert not transcricao.mostra_entrevistador("Cinquenta e oito.")  # só o paciente
+    assert not transcricao.mostra_entrevistador("tem? Cinquenta e oito")  # pedaço curto demais da pergunta
+    assert not transcricao.mostra_entrevistador("Qual é a sua idade?")  # não existe
+
+
 def test_item_repetido_entre_checklists_conta_uma_vez(conteudo):
-    llm = LLMRepete(resposta(("tabagismo", True, "O senhor fuma?")))
+    llm = LLMRepete(resposta(("tabagismo", True, [7])))
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
     tabagismo = [a for a in resultado.avaliacoes if a.item_id == "tabagismo"]
     assert len(tabagismo) == 1
@@ -96,13 +135,13 @@ def test_item_repetido_entre_checklists_conta_uma_vez(conteudo):
 def test_notas_com_rascunho_contando_sao_provisorias(conteudo):
     llm = LLMRepete(
         resposta(
-            ("nome", True, "Qual é o seu nome?"),  # geral, peso 2
-            ("idade", True, "Quantos anos o senhor tem?"),  # geral, peso 3
-            ("tabagismo", True, "O senhor fuma?"),  # geral, peso 3
-            ("alergias", False, None),  # geral, peso 2
-            ("irradiacao", True, "Essa dor vai para algum outro lugar?"),  # queixa, peso 3
-            ("sudorese", False, None),  # queixa, peso 2
-            ("sincope", False, None),  # queixa, peso 2
+            ("nome", True, [1]),  # geral, peso 2
+            ("idade", True, [3]),  # geral, peso 3
+            ("tabagismo", True, [7]),  # geral, peso 3
+            ("alergias", False, []),  # geral, peso 2
+            ("irradiacao", True, [5]),  # queixa, peso 3
+            ("sudorese", False, []),  # queixa, peso 2
+            ("sincope", False, []),  # queixa, peso 2
         )
     )
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
@@ -116,9 +155,9 @@ def test_arredondamento(conteudo):
     # geral: nome (2) + idade (3) feitos de 10 = 50; queixa: sudorese (2) de 7 = 28,57 -> 29
     llm = LLMRepete(
         resposta(
-            ("nome", True, "Qual é o seu nome?"),
-            ("idade", True, "Quantos anos o senhor tem?"),
-            ("sudorese", True, "Suou frio junto com a dor?"),
+            ("nome", True, [1]),
+            ("idade", True, [3]),
+            ("sudorese", True, [9]),
         )
     )
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
@@ -149,7 +188,7 @@ def test_arredondamento_meio_sobe():
 
 
 def test_rascunho_nao_conta_sem_contar_rascunho(conteudo):
-    llm = LLMRepete(resposta(("idade", True, "Quantos anos o senhor tem?")))
+    llm = LLMRepete(resposta(("idade", True, [3])))
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=False)
     assert resultado.notas.geral is None
     assert resultado.notas.queixa is None
@@ -162,7 +201,7 @@ def test_rascunho_nao_conta_sem_contar_rascunho(conteudo):
 
 def test_so_aprovado_conta_sem_contar_rascunho(conteudo):
     conteudo = aprovar(conteudo, "geral")
-    llm = LLMRepete(resposta(("idade", True, "Quantos anos o senhor tem?")))
+    llm = LLMRepete(resposta(("idade", True, [3])))
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=False)
     assert resultado.notas.geral == 30  # 3 de 10
     assert resultado.notas.queixa is None  # dor torácica ainda é rascunho
@@ -171,7 +210,7 @@ def test_so_aprovado_conta_sem_contar_rascunho(conteudo):
 
 def test_aprovado_com_rascunho_contando(conteudo):
     conteudo = aprovar(conteudo, "geral")
-    llm = LLMRepete(resposta(("idade", True, "Quantos anos o senhor tem?")))
+    llm = LLMRepete(resposta(("idade", True, [3])))
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
     assert resultado.notas.queixa == 0
     assert resultado.notas.provisoria is True  # a nota da queixa veio de rascunho
@@ -195,7 +234,7 @@ def test_outra_e_queixa_sem_checklist_usam_so_o_geral(conteudo):
 
 
 def test_mensagens(conteudo):
-    llm = LLMRepete(resposta(("idade", True, "Quantos anos o senhor tem?")))
+    llm = LLMRepete(resposta(("idade", True, [3])))
     avaliacoes = por_id(corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True))
     assert avaliacoes["idade"].mensagem == "Você investigou: idade."
     assert avaliacoes["alergias"].mensagem == "Faltou perguntar sobre alergias."
@@ -213,36 +252,24 @@ def test_correcao_pede_ao_llm_sem_palavras_chave_no_prompt(conteudo):
 
 
 @pytest.mark.parametrize("contar", [True, False])
-def test_toda_avaliacao_feita_tem_trecho_que_existe(conteudo, contar):
+def test_toda_avaliacao_feita_tem_trecho_que_existe_e_mostra_o_entrevistador(conteudo, contar):
     llm = LLMRepete(
         resposta(
-            ("nome", True, "Qual é o seu nome?"),
-            ("idade", True, "inventado pelo modelo"),
-            ("sincope", True, None),
+            ("nome", True, [1, 2]),
+            ("idade", True, [4]),
+            ("tabagismo", True, [70]),
+            ("sincope", True, []),
+            ("irradiacao", False, [5]),  # não feito: as falas citadas não importam
         )
     )
     resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=contar)
     transcricao = TranscricaoNormalizada.de(falas_exemplo())
     for avaliacao in resultado.avaliacoes:
         if avaliacao.status == "feito":
-            assert transcricao.tem(avaliacao.trecho)
+            assert transcricao.mostra_entrevistador(avaliacao.trecho)
         else:
             assert avaliacao.trecho is None
-
-
-def test_trecho_so_com_o_papel_nao_prova_nada(conteudo):
-    llm = LLMRepete(
-        resposta(
-            ("idade", True, "Entrevistador"),
-            ("nome", True, "Entrevistador:"),
-            ("tabagismo", True, "Paciente: Entrevistador:"),
-        )
-    )
-    resultado = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True)
-    avaliacoes = por_id(resultado)
-    assert avaliacoes["idade"].status == "faltou"
-    assert avaliacoes["nome"].status == "faltou"
-    assert avaliacoes["tabagismo"].status == "faltou"
+    assert [a.item_id for a in resultado.avaliacoes if a.status == "feito"] == ["nome"]
 
 
 # ---------- um pedido por checklist ----------
@@ -274,7 +301,7 @@ def test_outra_faz_um_pedido_so(conteudo):
 def test_a_mesma_fala_vale_no_geral_e_na_queixa(conteudo):
     """O que dava nota 0 na queixa: um trecho que já provou um item do geral vale também no da queixa."""
     fala = "Essa dor vai para algum outro lugar?"
-    llm = LLMFixo(resposta(("idade", True, fala)), resposta(("irradiacao", True, fala)))
+    llm = LLMFixo(resposta(("idade", True, [5])), resposta(("irradiacao", True, [5])))
     avaliacoes = por_id(corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True))
     assert avaliacoes["idade"].status == "feito"
     assert avaliacoes["irradiacao"].status == "feito"
@@ -284,8 +311,8 @@ def test_a_mesma_fala_vale_no_geral_e_na_queixa(conteudo):
 def test_registro_de_item_que_nao_foi_pedido_e_ignorado(conteudo):
     # O pedido do geral responde por um item da queixa; só vale o que o pedido da queixa disse.
     llm = LLMFixo(
-        resposta(("irradiacao", True, "Essa dor vai para algum outro lugar?")),
-        resposta(("irradiacao", False, None)),
+        resposta(("irradiacao", True, [5])),
+        resposta(("irradiacao", False, [])),
     )
     avaliacoes = por_id(corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True))
     assert avaliacoes["irradiacao"].status == "faltou"
