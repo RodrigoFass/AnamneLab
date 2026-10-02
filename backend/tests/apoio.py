@@ -34,6 +34,21 @@ class LLMFixo(ClienteLLM):
         return self.respostas.pop(0)
 
 
+class LLMRepete(LLMFixo):
+    """Como o LLMFixo, mas repete a última resposta quando elas acabam.
+
+    A correção faz um pedido por checklist; nos testes, a mesma resposta serve para todos
+    (cada pedido só aproveita os itens que pediu)."""
+
+    nome = "repete"
+
+    def _gerar_json(self, **kwargs: Any) -> str:
+        if len(self.respostas) > 1:
+            return super()._gerar_json(**kwargs)
+        self.chamadas.append({"tarefa": kwargs["tarefa"], "mensagem": kwargs["mensagem"], "contexto": kwargs["contexto"]})
+        return self.respostas[0]
+
+
 def falas_exemplo() -> list[Fala]:
     return [
         Fala(papel="entrevistador", texto="Bom dia! Qual é o seu nome?"),

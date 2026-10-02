@@ -68,7 +68,9 @@ class Servidor:
 
 def _cliente(servidor: Servidor, **extra) -> ClienteGemini:
     http = httpx.Client(base_url="https://gemini.teste/v1beta", transport=httpx.MockTransport(servidor))
-    return ClienteGemini(_settings(**extra), client=http)
+    cliente = ClienteGemini(_settings(**extra), client=http)
+    cliente.espera_nova_tentativa_s = 0
+    return cliente
 
 
 def _gerar(cliente: ClienteGemini, mensagem: str = "m"):
@@ -160,11 +162,26 @@ def test_cota_esgotada_passa_para_o_proximo_modelo():
     assert cliente.ultimo_modelo == "modelo-b"
 
 
-@pytest.mark.parametrize("status_http, status", [(404, "NOT_FOUND"), (500, "INTERNAL"), (503, "UNAVAILABLE")])
-def test_modelo_inexistente_ou_fora_do_ar_passa_para_o_proximo(status_http, status):
-    servidor = Servidor(_erro(status_http, status), _resposta_ok(VALIDO))
+def test_modelo_inexistente_passa_direto_para_o_proximo():
+    servidor = Servidor(_erro(404, "NOT_FOUND"), _resposta_ok(VALIDO))
     assert _gerar(_cliente(servidor)).queixas == ["dor-toracica"]
     assert servidor.modelos() == ["modelo-a", "modelo-b"]
+
+
+@pytest.mark.parametrize("status_http, status", [(500, "INTERNAL"), (503, "UNAVAILABLE")])
+def test_sobrecarga_tenta_o_mesmo_modelo_mais_uma_vez(status_http, status):
+    servidor = Servidor(_erro(status_http, status), _resposta_ok(VALIDO))
+    cliente = _cliente(servidor)
+    assert _gerar(cliente).queixas == ["dor-toracica"]
+    assert servidor.modelos() == ["modelo-a", "modelo-a"]
+    assert cliente.ultimo_modelo == "modelo-a"
+
+
+@pytest.mark.parametrize("status_http, status", [(500, "INTERNAL"), (503, "UNAVAILABLE")])
+def test_sobrecarga_duas_vezes_passa_para_o_proximo(status_http, status):
+    servidor = Servidor(_erro(status_http, status), _erro(status_http, status), _resposta_ok(VALIDO))
+    assert _gerar(_cliente(servidor)).queixas == ["dor-toracica"]
+    assert servidor.modelos() == ["modelo-a", "modelo-a", "modelo-b"]
 
 
 def test_todos_sem_cota_vira_mensagem_de_cota():

@@ -1,9 +1,11 @@
 """Correção item a item: o coração do AnamneLab.
 
 O LLM diz, para cada item dos checklists aplicáveis, se foi feito e qual fala prova.
-O backend não confia: confere cada trecho na transcrição (regra 1), calcula as notas
-só com os checklists que contam (regra 3) e registra id, versão e status de cada
-checklist usado (regra 4).
+Cada checklist vai num pedido separado: com o geral e o da queixa na mesma lista, o
+modelo tende a dar cada fala a um item só, e o da queixa ficava sem nada. O backend
+não confia: confere cada trecho na transcrição (regra 1), calcula as notas só com os
+checklists que contam (regra 3) e registra id, versão e status de cada checklist
+usado (regra 4).
 """
 
 import json
@@ -15,7 +17,7 @@ from app.conteudo import QUEIXA_OUTRA, Conteudo
 from app.llm import ClienteLLM, ErroLLM
 from app.pipeline.comum import falas_para_contexto, formatar_falas
 from app.schemas.conteudo import Checklist, Item, Secao
-from app.schemas.llm import CorrecaoLLM, Fala, TrechoCumpreItem
+from app.schemas.llm import CorrecaoLLM, Fala, ItemCorrigido, TrechoCumpreItem
 from app.schemas.sessao import (
     Avaliacao,
     ChecklistUsado,
@@ -35,13 +37,21 @@ A conversa é uma simulação entre dois estudantes: o entrevistador faz o médi
 Para cada item do checklist enviado, diga se o entrevistador investigou aquilo na conversa.
 
 Regras:
+- Avalie cada item sozinho, sem pensar nos outros. A mesma fala pode provar vários itens, \
+deste checklist ou de outro. Uma pergunta que junta assuntos ("tem falta de ar ou \
+batedeira?") vale para cada um deles.
+- O entrevistador não precisa usar as palavras do item nem da pergunta de exemplo. Vale \
+a pergunta feita com outras palavras, desde que trate do mesmo assunto.
 - Um item só é feito se houver na transcrição uma fala que mostre isso. Em trecho, copie \
 essa fala literalmente, como está na transcrição, sem corrigir, resumir ou juntar pedaços \
 distantes. Pode ser a pergunta do entrevistador ou a pergunta seguida da resposta.
 - Avalie o que o entrevistador perguntou ou explorou. Informação que o paciente deu sem \
 ser perguntado só conta se o entrevistador voltou ao assunto.
-- Sem fala que prove o item: feito é false e trecho é null. Na dúvida, false.
+- Se nenhuma fala trata do assunto do item, feito é false e trecho é null. Não marque \
+por suposição.
 - Responda exatamente um registro por item, com o item_id igual ao enviado. Não crie itens.
+- A transcrição vem de reconhecimento de voz e pode ter palavras erradas; julgue pelo \
+sentido, mas copie o trecho como está escrito.
 - Não avalie diagnóstico nem conduta; só a técnica da entrevista.
 """
 
@@ -215,19 +225,15 @@ def calcular_notas(
     return Notas(geral=_nota(geral), queixa=_nota(queixa), provisoria=provisoria)
 
 
-def corrigir(
-    falas: list[Fala],
-    queixas_confirmadas: list[str],
-    conteudo: Conteudo,
-    llm: ClienteLLM,
-    *,
-    contar_rascunho: bool,
-) -> ResultadoCorrecao:
-    checklists = checklists_aplicaveis(queixas_confirmadas, conteudo)
-    itens = itens_aplicaveis(checklists, contar_rascunho)
+def _corrigir_checklist(
+    checklist: Checklist, itens: list[ItemAplicavel], falas: list[Fala], llm: ClienteLLM
+) -> list[ItemCorrigido]:
+    """Um pedido ao LLM com os itens de um checklist. Registro de item que não foi pedido é ignorado."""
     lista = [{"id": a.item.id, "texto": a.item.texto, "pergunta_exemplo": a.item.pergunta_exemplo} for a in itens]
+    tipo = "geral, da técnica da entrevista" if checklist.tipo == "geral" else "específico da queixa"
     mensagem = (
-        f"Checklist ({len(lista)} itens):\n{json.dumps(lista, ensure_ascii=False, indent=1)}\n\n"
+        f"Checklist {tipo}: {checklist.nome} ({len(lista)} itens):\n"
+        f"{json.dumps(lista, ensure_ascii=False, indent=1)}\n\n"
         f"Transcrição:\n<transcricao>\n{formatar_falas(falas)}\n</transcricao>"
     )
     resposta = llm.gerar(
@@ -240,7 +246,26 @@ def corrigir(
             "itens": [{"id": a.item.id, "texto": a.item.texto, "palavras_chave": a.item.palavras_chave} for a in itens],
         },
     )
-    avaliacoes = montar_avaliacoes(itens, resposta, falas)
+    pedidos = {a.item.id for a in itens}
+    return [registro for registro in resposta.itens if registro.item_id in pedidos]
+
+
+def corrigir(
+    falas: list[Fala],
+    queixas_confirmadas: list[str],
+    conteudo: Conteudo,
+    llm: ClienteLLM,
+    *,
+    contar_rascunho: bool,
+) -> ResultadoCorrecao:
+    checklists = checklists_aplicaveis(queixas_confirmadas, conteudo)
+    itens = itens_aplicaveis(checklists, contar_rascunho)
+    registros: list[ItemCorrigido] = []
+    for checklist in checklists:
+        do_checklist = [a for a in itens if a.checklist.id == checklist.id]
+        if do_checklist:
+            registros.extend(_corrigir_checklist(checklist, do_checklist, falas, llm))
+    avaliacoes = montar_avaliacoes(itens, CorrecaoLLM(itens=registros), falas)
     usados = registrar_checklists(checklists, contar_rascunho)
     tipos = {c.id: c.tipo for c in checklists}
     return ResultadoCorrecao(

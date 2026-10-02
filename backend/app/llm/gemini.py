@@ -12,6 +12,7 @@ próximo. Nada do conteúdo (transcrição, falas) vai para o log, só códigos 
 
 import copy
 import logging
+import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -41,6 +42,10 @@ MENSAGEM_LONGA = "A conversa ficou longa demais para corrigir de uma vez. Tente 
 
 PASSAR_AO_PROXIMO = {404, 429, 500, 502, 503, 504}
 """Erros em que outro modelo da lista pode dar certo (cota, nome, sobrecarga)."""
+TENTAR_DE_NOVO = {500, 502, 503, 504}
+"""Sobrecarga passageira: o mesmo modelo ganha mais uma chance antes do próximo da lista,
+que costuma ser mais fraco (o flash-lite corrige pior)."""
+ESPERA_NOVA_TENTATIVA_S = 2.0
 
 PARADA_RECUSA = {
     "SAFETY",
@@ -105,6 +110,7 @@ class ClienteGemini(ClienteLLM):
         self._client = client or httpx.Client(base_url=URL_BASE, timeout=TEMPOS)
         self.ultimo_erro: ErroGemini | None = None
         self.ultimo_modelo: str | None = None
+        self.espera_nova_tentativa_s = ESPERA_NOVA_TENTATIVA_S
 
     def _gerar_json(
         self,
@@ -137,7 +143,14 @@ class ClienteGemini(ClienteLLM):
         # A cota esgotada vale mais que o erro do último modelo: é o que o aluno precisa saber.
         cotas: list[ErroGemini] = []
         mensagem_final = MENSAGEM_PADRAO
-        for modelo in self._modelos:
+        tentativas = [(modelo, vez) for modelo in self._modelos for vez in (1, 2)]
+        for modelo, vez in tentativas:
+            if vez == 2:
+                # Segunda chance só depois de sobrecarga (5xx) no mesmo modelo.
+                anterior = self.ultimo_erro
+                if not (anterior and anterior.modelo == modelo and anterior.status_http in TENTAR_DE_NOVO):
+                    continue
+                time.sleep(self.espera_nova_tentativa_s)
             try:
                 resposta = self._client.post(
                     f"/models/{modelo}:generateContent",

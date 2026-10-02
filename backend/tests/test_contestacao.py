@@ -3,7 +3,7 @@ import pytest
 from app.llm.falso import ClienteFalso
 from app.pipeline.corrigir import ErroContestacao, contestar, corrigir, item_do_checklist
 from app.schemas.sessao import ContestacaoCriar
-from tests.apoio import LLMFixo, falas_exemplo
+from tests.apoio import LLMFixo, LLMRepete, falas_exemplo
 
 CONFIRMA = {"cumpre": True}
 NEGA = {"cumpre": False}
@@ -11,7 +11,7 @@ NEGA = {"cumpre": False}
 
 @pytest.fixture
 def correcao(conteudo):
-    llm = LLMFixo(
+    llm = LLMRepete(
         {
             "itens": [
                 {"item_id": "nome", "feito": True, "trecho": "Qual é o seu nome?"},
