@@ -11,6 +11,16 @@ confirmada pelo aluno, os checklists são fixos e versionados, e a IA nunca afir
 diagnóstico: as hipóteses dela aparecem como sugestão, não gabarito, depois que você
 escreveu as suas.
 
+Dá também para treinar sozinho, com a IA no papel do paciente. O caso parte de um cartão da
+biblioteca; a IA monta uma ficha fictícia, escondida até o fim, e responde só por ela. São
+dois modos, e dá para trocar no meio da conversa:
+
+- **Chat:** você escreve a pergunta ou manda em áudio; o paciente responde por escrito.
+- **Voz:** conversa contínua, sem botão de gravar. O app percebe a pausa no fim da sua
+  pergunta e o paciente responde falando.
+
+No fim, a conversa vira a transcrição da sessão e passa pela mesma correção.
+
 > **Aviso: checklists provisórios.** Os checklists atuais (o geral e um para cada uma das 10
 > queixas da biblioteca: dor torácica, dispneia, dor abdominal, cefaleia, febre, tosse, dor
 > lombar, síncope, edema e diarreia) são um rascunho montado a partir de fontes públicas da
@@ -24,11 +34,13 @@ escreveu as suas.
 ```
 backend/            API em Python 3.12 + FastAPI
   app/main.py       rotas (contrato em docs/api.md)
-  app/pipeline/     transcrever, rotular falas, queixa, anamnese, corrigir, sugestões
+  app/pipeline/     transcrever, rotular falas, queixa, anamnese, corrigir, sugestões,
+                    paciente pela IA e voz do paciente
   app/llm/          um cliente por provedor, mesma interface (anthropic, gemini, falso)
   app/schemas/      modelos Pydantic (saída do LLM, sessão, avaliação)
-  app/repositorio/  armazenamento (memória ou Supabase)
+  app/repositorio/  armazenamento (memória, arquivo ou Supabase)
   tests/
+  scripts/          teste_real.py (teste de ponta a ponta, ver docs/teste-real.md)
 frontend/           PWA em React + Vite
 content/            conteúdo versionado
   schema/           JSON Schema dos checklists, cartões e queixas
@@ -36,7 +48,7 @@ content/            conteúdo versionado
   checklists/       geral.json + um por queixa (dor-toracica.json, cefaleia.json, ...)
   cartoes/          cartões de caso
   termo-gravacao.json
-scripts/            validar_conteudo.py e testes
+scripts/            validar_conteudo.py e os testes dele
 supabase/           migrações do Postgres e instruções de implantação
 docs/api.md         contrato entre backend e frontend
 ```
@@ -103,10 +115,22 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
 - **Histórico no computador, sem Supabase:** `BANCO=arquivo` guarda as sessões em
   `backend/dados/historico.json` (fora do git) e o histórico continua depois de fechar o app.
   Bom para o protótipo e para uma demonstração. Excluir uma sessão no app tira ela do arquivo.
-- **Supabase:** crie o projeto e aplique a migração seguindo `supabase/README.md`. Depois
+- **Supabase:** crie o projeto e aplique as migrações seguindo
+  [supabase/README.md](supabase/README.md). Depois
   `uv pip install -e ".[supabase]"`, `BANCO=supabase`, `AUTH=supabase`, `SUPABASE_URL` e
   `SUPABASE_SERVICE_KEY` no backend, e `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no
   frontend.
+
+### Abrir no celular
+
+O microfone do navegador só funciona em `https` ou em `localhost`. Para abrir o app do
+computador no celular, use um túnel grátis da Cloudflare: baixe o `cloudflared` em
+https://github.com/cloudflare/cloudflared/releases e, com o app rodando, rode
+`cloudflared tunnel --url http://localhost:5173`. Ele mostra um link
+`https://....trycloudflare.com` (o Vite já aceita esse domínio). Com o Supabase ligado, ponha
+o link em Site URL e em Redirect URLs (Authentication > URL Configuration). O link muda a cada
+vez que o túnel abre, e o computador precisa ficar ligado. Quem tiver o link vê a tela de
+entrada e pode criar conta: mande só para quem você quiser.
 
 ## Variáveis de ambiente
 
@@ -135,7 +159,10 @@ Backend (`backend/.env`, modelo em `backend/.env.example`):
 | `SUPABASE_SERVICE_KEY` | chave service_role (só no backend) | |
 | `CONTAR_RASCUNHO` | `true`, `false` | `true` |
 | `CORRECAO_ITENS_POR_PEDIDO` | máximo de itens por pedido de correção ao LLM, `0` para o checklist inteiro | `0` |
+| `PASTA_CONTEUDO` | pasta do conteúdo | `../content` |
 | `CORS_ORIGENS` | origens separadas por vírgula | `http://localhost:5173` |
+| `DURACAO_MAXIMA_MIN` | duração máxima de uma gravação, em minutos | `20` |
+| `TAMANHO_MAXIMO_MB` | tamanho máximo do áudio, em MB | `25` |
 
 Frontend (`frontend/.env.local`, modelo em `frontend/.env.example`):
 
@@ -148,8 +175,8 @@ Frontend (`frontend/.env.local`, modelo em `frontend/.env.example`):
 ## Comandos
 
 ```
-cd backend && uvicorn app.main:app --reload
-cd backend && pytest
+cd backend && uv run uvicorn app.main:app --reload
+cd backend && uv run pytest
 cd frontend && npm run dev
 python scripts/validar_conteudo.py
 ```
@@ -171,7 +198,8 @@ build do frontend em todo push e pull request.
 ## Privacidade (LGPD)
 
 - Só quem abriu a sessão aceita o termo, uma vez; o termo traz o compromisso de avisar o colega antes de cada gravação. Nenhuma gravação começa sem o aceite do dono e o registro desse aviso na sessão, com papel, nome, versão do termo e data e hora.
-- O áudio é apagado logo após a transcrição, inclusive quando ela falha; só texto e nota ficam salvos.
+- No paciente pela IA não há colega: a pergunta falada só é aceita depois do aceite do dono. A ficha fictícia que a IA montou fica na sessão.
+- O áudio é apagado logo após a transcrição, inclusive quando ela falha (vale também para cada pergunta falada ao paciente pela IA); só texto e nota ficam salvos.
 - Áudio, transcrição e dados pessoais nunca vão para log; segredos ficam só em `.env`, fora do git.
 - O aluno pode excluir uma sessão, e isso apaga transcrição, avaliações e consentimentos.
 
