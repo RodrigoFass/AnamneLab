@@ -7,18 +7,20 @@ function quem(c: Cartao): string {
 
 interface Props {
   cartao: Cartao;
+  /** Nome de quem faz o paciente, para a linha final. */
+  nomePaciente?: string;
   onSortearOutro?: () => void;
   sorteando?: boolean;
 }
 
 /** Cartão sorteado: ponto de partida para quem faz o paciente. Sem gabarito. */
-export function CartaoPaciente({ cartao, onSortearOutro, sorteando }: Props) {
+export function CartaoPaciente({ cartao, nomePaciente, onSortearOutro, sorteando }: Props) {
   return (
     <section className="al-cartao app-cartao" aria-label="Cartão do paciente">
       <div className="al-cartao-topo">
         <span className="al-cartao-tag">
           <IconeDado />
-          Cartão sorteado
+          Cartão de paciente
         </span>
         {onSortearOutro && (
           <button
@@ -34,13 +36,15 @@ export function CartaoPaciente({ cartao, onSortearOutro, sorteando }: Props) {
       <p className="al-cartao-quem">{quem(cartao)}</p>
       <p className="al-cartao-queixa">{cartao.resumo}</p>
       {cartao.detalhes.length > 0 && (
-        <ul className="al-cartao-detalhes">
+        <ul className="app-cartao-detalhes">
           {cartao.detalhes.map((d) => (
             <li key={d}>{d}</li>
           ))}
         </ul>
       )}
-      <p className="al-cartao-nota">O resto você improvisa. Responda só o que perguntarem.</p>
+      <p className="al-cartao-nota">
+        Sem gabarito. O resto, {nomePaciente || "você"} improvisa. Responda só o que perguntarem.
+      </p>
     </section>
   );
 }

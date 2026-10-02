@@ -40,3 +40,19 @@ export function humanizar(texto: string): string {
   const limpo = /\s/.test(texto) ? texto : texto.replace(/[-_]+/g, " ");
   return limpo.charAt(0).toUpperCase() + limpo.slice(1);
 }
+
+/** "hoje", "ontem", "há 3 dias", "há 2 semanas"; mais de um mês, a data curta. */
+export function formatarRelativo(iso: string, agora = new Date()): string {
+  const data = new Date(iso);
+  if (Number.isNaN(data.getTime())) return "";
+  const meiaNoite = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const dias = Math.round((meiaNoite(agora) - meiaNoite(data)) / 86_400_000);
+  if (dias <= 0) return "hoje";
+  if (dias === 1) return "ontem";
+  if (dias < 7) return `há ${dias} dias`;
+  if (dias < 30) {
+    const semanas = Math.floor(dias / 7);
+    return semanas === 1 ? "há 1 semana" : `há ${semanas} semanas`;
+  }
+  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" }).format(data);
+}

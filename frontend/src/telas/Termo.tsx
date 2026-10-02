@@ -1,44 +1,59 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type { Consentimento, Papel, Termo as TipoTermo } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
-import { IconeCheck } from "../componentes/Icones";
+import { Avatar } from "../componentes/Avatar";
+import { Folha } from "../componentes/Folha";
+import {
+  IconeAviso,
+  IconeCheck,
+  IconeGlobo,
+  IconeLixeira,
+  IconeMicrofone,
+  IconeSelo,
+} from "../componentes/Icones";
 import { Carregando, Tela } from "../componentes/Tela";
+import { lerNomes, ROTULO_ORIGEM } from "../util/nomes";
 import { rotaDaSessao, useSessao } from "../util/sessao";
 
-const PAPEIS: { papel: Papel; titulo: string; ajuda: string }[] = [
-  { papel: "medico", titulo: "Quem faz o médico", ajuda: "Você vai entrevistar e receber a correção." },
-  { papel: "paciente", titulo: "Quem faz o paciente", ajuda: "Você responde como o paciente do caso." },
+const PAPEIS: { papel: Papel; rotulo: string; frase: string }[] = [
+  { papel: "medico", rotulo: "Faz o médico", frase: "Você vai fazer o médico nesta sessão." },
+  { papel: "paciente", rotulo: "Faz o paciente", frase: "Você vai fazer o paciente nesta sessão." },
 ];
+
+/** Ícone de cada parágrafo do termo, pelo assunto. O texto continua o do termo versionado. */
+function iconeDoParagrafo(p: string): ReactNode {
+  const t = p.toLowerCase();
+  if (t.includes("apagad") || t.includes("exclus")) return <IconeLixeira />;
+  if (t.includes("estados unidos")) return <IconeGlobo />;
+  if (t.includes("simulado")) return <IconeAviso />;
+  if (t.includes("gravad") || t.includes("para quê")) return <IconeMicrofone />;
+  return <IconeSelo />;
+}
 
 interface PropsAceite {
   papel: Papel;
-  titulo: string;
-  ajuda: string;
+  frase: string;
+  nomeInicial: string;
   termo: TipoTermo;
   sessaoId: string;
-  registrado: Consentimento | undefined;
+  ultimo: boolean;
   onRegistrado: (c: Consentimento) => void;
+  onFechar: () => void;
 }
 
-function Aceite({ papel, titulo, ajuda, termo, sessaoId, registrado, onRegistrado }: PropsAceite) {
-  const [nome, setNome] = useState("");
+/** Folha de aceite de uma pessoa: o termo inteiro em tópicos, nome e a marca de aceite. */
+function FolhaAceite({ papel, frase, nomeInicial, termo, sessaoId, ultimo, onRegistrado, onFechar }: PropsAceite) {
+  const [nome, setNome] = useState(nomeInicial);
   const [aceito, setAceito] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
-  if (registrado) {
-    return (
-      <section className="app-aceite is-feito" aria-label={titulo}>
-        <p className="app-aceite-titulo">{titulo}</p>
-        <p className="app-status app-status-ok">
-          <IconeCheck />
-          Aceite registrado: {registrado.nome_informado}
-        </p>
-      </section>
-    );
-  }
+  const paragrafos = termo.texto.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  // O primeiro ("leia com atenção") e o último ("ao aceitar…") emolduram os tópicos.
+  const topicos = paragrafos.length > 2 ? paragrafos.slice(1, -1) : paragrafos;
+  const fecho = paragrafos.length > 2 ? paragrafos[paragrafos.length - 1] : null;
 
   const registrar = async () => {
     setEnviando(true);
@@ -57,43 +72,58 @@ function Aceite({ papel, titulo, ajuda, termo, sessaoId, registrado, onRegistrad
     }
   };
 
+  const titulo = nome.trim() ? `${nome.trim()}, antes de gravar` : "Antes de gravar";
   const idNome = `nome-${papel}`;
+
   return (
-    <form
-      className="app-aceite"
-      aria-label={titulo}
-      onSubmit={(e) => {
-        e.preventDefault();
-        void registrar();
-      }}
-    >
-      <p className="app-aceite-titulo">{titulo}</p>
-      <p className="app-ajuda">{ajuda}</p>
-      <label className="app-campo" htmlFor={idNome}>
-        <span className="app-campo-rotulo">Seu nome</span>
-        <input
-          id={idNome}
-          type="text"
-          autoComplete="off"
-          maxLength={120}
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          required
-        />
-      </label>
-      <label className="app-marcar">
-        <input type="checkbox" checked={aceito} onChange={(e) => setAceito(e.target.checked)} />
-        <span>Li o termo e aceito que a minha voz seja gravada nessas condições.</span>
-      </label>
-      {erro && <Aviso tipo="erro">{erro}</Aviso>}
-      <button
-        className="al-botao al-botao-secundario"
-        type="submit"
-        disabled={!aceito || !nome.trim() || enviando}
+    <Folha titulo={titulo} subtitulo={frase} onFechar={onFechar}>
+      <form
+        className="app-grupo"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void registrar();
+        }}
       >
-        {enviando ? "Registrando…" : "Registrar meu aceite"}
-      </button>
-    </form>
+        <ul className="app-topicos">
+          {topicos.map((p) => (
+            <li key={p}>
+              {iconeDoParagrafo(p)}
+              <span>{p}</span>
+            </li>
+          ))}
+        </ul>
+        {fecho && <p className="app-legenda">{fecho}</p>}
+
+        {!nomeInicial && (
+          <label className="app-campo" htmlFor={idNome}>
+            <span className="app-campo-rotulo">Seu nome</span>
+            <input
+              id={idNome}
+              type="text"
+              autoComplete="off"
+              maxLength={120}
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+          </label>
+        )}
+
+        <label className="app-marcar">
+          <input type="checkbox" checked={aceito} onChange={(e) => setAceito(e.target.checked)} />
+          <span>Li e aceito a gravação desta sessão.</span>
+        </label>
+        {erro && <Aviso tipo="erro">{erro}</Aviso>}
+        <button
+          className="al-botao al-botao-principal app-botao-largo"
+          type="submit"
+          disabled={!aceito || !nome.trim() || enviando}
+        >
+          {enviando ? "Registrando…" : ultimo ? "Aceitar e gravar" : "Aceitar"}
+        </button>
+        <p className="app-legenda app-centro">Termo v{termo.versao} · não precisa criar conta</p>
+      </form>
+    </Folha>
   );
 }
 
@@ -103,6 +133,8 @@ export function Termo() {
   const { sessao, erro: erroSessao, definir } = useSessao(id);
   const [termo, setTermo] = useState<TipoTermo | null>(null);
   const [erroTermo, setErroTermo] = useState<string | null>(null);
+  const [nomes] = useState(lerNomes);
+  const [aberta, setAberta] = useState(true);
 
   useEffect(() => {
     let ativo = true;
@@ -122,20 +154,24 @@ export function Termo() {
   const doPapel = (p: Papel) =>
     sessao?.consentimentos.find((c) => c.papel === p && (!termo || c.versao_termo === termo.versao));
   const ambos = Boolean(doPapel("medico") && doPapel("paciente"));
+  const vez = PAPEIS.find((p) => !doPapel(p.papel));
+  const nomeDe = (p: Papel) => doPapel(p)?.nome_informado ?? nomes[p];
 
   return (
     <Tela
-      titulo={termo?.titulo ?? "Termo de gravação"}
+      titulo="Antes de gravar"
+      sobretitulo={sessao ? ROTULO_ORIGEM[sessao.origem_caso] : undefined}
+      subtitulo="Cada um lê e aceita no mesmo celular. A gravação só começa depois dos dois aceites."
       voltar="/"
       rotuloVoltar="Voltar ao início"
       rodape={
         <button
           className="al-botao al-botao-principal app-botao-largo"
           type="button"
-          disabled={!ambos}
-          onClick={() => navegar(`/sessao/${id}/gravar`)}
+          onClick={() => (ambos ? navegar(`/sessao/${id}/gravar`) : setAberta(true))}
+          disabled={!termo || !sessao}
         >
-          {ambos ? "Ir para a gravação" : "Faltam os dois aceites"}
+          {ambos ? "Ir para a gravação" : `Ler e aceitar${vez && nomeDe(vez.papel) ? `: ${nomeDe(vez.papel)}` : ""}`}
         </button>
       }
     >
@@ -144,32 +180,47 @@ export function Termo() {
       {(!termo || !sessao) && !erro && <Carregando texto="Carregando o termo…" />}
 
       {termo && sessao && (
-        <>
-          <section className="app-termo" aria-label="Texto do termo">
-            {termo.texto.split(/\n{2,}/).map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-            <p className="app-legenda">Versão {termo.versao} do termo.</p>
-          </section>
+        <ul className="app-lista">
+          {PAPEIS.map(({ papel, rotulo }) => {
+            const feito = doPapel(papel);
+            return (
+              <li key={papel} className="app-lista-linha">
+                <Avatar nome={nomeDe(papel)} papel={papel} />
+                <span className="app-lista-texto">
+                  <span className="app-lista-titulo">{nomeDe(papel) || rotulo}</span>
+                  <span className="app-lista-meta">{rotulo}</span>
+                </span>
+                {feito ? (
+                  <span className="app-status app-status-ok">
+                    <IconeCheck />
+                    Aceitou
+                  </span>
+                ) : (
+                  <span className="app-status">Falta aceitar</span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
-          <p className="app-ajuda">
-            Cada um lê e aceita no mesmo celular. A gravação só fica liberada depois dos dois
-            aceites.
-          </p>
-
-          {PAPEIS.map((p) => (
-            <Aceite
-              key={p.papel}
-              {...p}
-              termo={termo}
-              sessaoId={sessao.id}
-              registrado={doPapel(p.papel)}
-              onRegistrado={(c) =>
-                definir((s) => s && { ...s, consentimentos: [...s.consentimentos, c] })
-              }
-            />
-          ))}
-        </>
+      {termo && sessao && aberta && vez && (
+        <FolhaAceite
+          key={vez.papel}
+          papel={vez.papel}
+          frase={vez.frase}
+          nomeInicial={nomes[vez.papel]}
+          termo={termo}
+          sessaoId={sessao.id}
+          ultimo={PAPEIS.filter((p) => !doPapel(p.papel)).length === 1}
+          onFechar={() => setAberta(false)}
+          onRegistrado={(c) => {
+            definir((s) => s && { ...s, consentimentos: [...s.consentimentos, c] });
+            if (PAPEIS.filter((p) => !doPapel(p.papel)).length === 1) {
+              navegar(`/sessao/${id}/gravar`);
+            }
+          }}
+        />
       )}
     </Tela>
   );

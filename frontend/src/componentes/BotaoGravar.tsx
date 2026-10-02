@@ -1,11 +1,11 @@
 import type { MouseEvent, PointerEvent } from "react";
-import { formatarTempo } from "../util/formato";
 import { IconeArco, IconeMicrofone, IconeQuadrado } from "./Icones";
 
 export type EstadoBotaoGravar = "pronto" | "gravando" | "processando";
 
 interface Props {
   estado: EstadoBotaoGravar;
+  /** Tempo gravado; a tela mostra o cronômetro grande. */
   segundos: number;
   legendaProcessando?: string;
   onAlternar: () => void;
@@ -16,7 +16,7 @@ interface Props {
  * Botão redondo de gravar. Responde no pointerdown, não no soltar: o aluno vê na hora
  * que a gravação começou. Teclado e leitor de tela chegam pelo clique sem ponteiro.
  */
-export function BotaoGravar({ estado, segundos, legendaProcessando, onAlternar, desativado }: Props) {
+export function BotaoGravar({ estado, legendaProcessando, onAlternar, desativado }: Props) {
   const gravando = estado === "gravando";
   const processando = estado === "processando";
 
@@ -38,7 +38,8 @@ export function BotaoGravar({ estado, segundos, legendaProcessando, onAlternar, 
       : "Começar a gravação";
 
   return (
-    <div className="al-gravar-bloco">
+    <div className={`al-gravar-bloco app-gravar-bloco${gravando ? " is-gravando" : ""}`}>
+      <span className="app-gravar-aneis" aria-hidden="true" />
       <button
         className={`al-gravar${gravando ? " is-gravando" : ""}${processando ? " is-processando" : ""}`}
         type="button"
@@ -54,16 +55,7 @@ export function BotaoGravar({ estado, segundos, legendaProcessando, onAlternar, 
         {gravando ? "Gravando" : processando ? (legendaProcessando ?? "Processando") : ""}
       </span>
       <span className="al-gravar-tempo app-gravar-tempo">
-        {gravando ? (
-          <>
-            <span className="al-ponto" aria-hidden="true" />
-            Gravando · <span className="app-tabular">{formatarTempo(segundos)}</span>
-          </>
-        ) : processando ? (
-          (legendaProcessando ?? "Processando…")
-        ) : (
-          "Toque para gravar"
-        )}
+        {processando ? (legendaProcessando ?? "Processando…") : gravando ? "Toque para parar" : "Toque para gravar"}
       </span>
     </div>
   );

@@ -1,23 +1,38 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
-import type { Cartao, OrigemCaso } from "../api/tipos";
+import type { Cartao, OrigemCaso, Papel } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
+import { Avatar } from "../componentes/Avatar";
 import { CartaoPaciente } from "../componentes/CartaoPaciente";
-import { IconeDado } from "../componentes/Icones";
+import { IconeDado, IconeGlobo, IconeLapis, IconeLivro } from "../componentes/Icones";
 import { Tela } from "../componentes/Tela";
+import { guardarNomes, lerNomes, type Nomes } from "../util/nomes";
 import { useQueixas } from "../util/sessao";
 
-const ORIGENS: { valor: OrigemCaso; rotulo: string; ajuda: string }[] = [
-  { valor: "livro", rotulo: "De um livro", ajuda: "Um caso clínico de livro ou apostila." },
-  { valor: "internet", rotulo: "Da internet", ajuda: "Um caso que vocês acharam on-line." },
-  { valor: "inventado", rotulo: "Inventado", ajuda: "Quem faz o paciente cria o caso na hora." },
-  { valor: "cartao", rotulo: "Cartão sorteado", ajuda: "O app sorteia um ponto de partida para o paciente." },
+const ORIGENS: { valor: OrigemCaso; rotulo: string; icone: ReactNode }[] = [
+  { valor: "livro", rotulo: "Livro", icone: <IconeLivro /> },
+  { valor: "internet", rotulo: "Internet", icone: <IconeGlobo /> },
+  { valor: "inventado", rotulo: "Inventado", icone: <IconeLapis /> },
+  { valor: "cartao", rotulo: "Sortear cartão", icone: <IconeDado /> },
+];
+
+const AJUDA_ORIGEM: Record<OrigemCaso, string> = {
+  livro: "Um caso clínico de livro ou apostila. O app não guarda o texto do caso.",
+  internet: "Um caso que vocês acharam on-line. O app não guarda o texto do caso.",
+  inventado: "Quem faz o paciente cria o caso na hora.",
+  cartao: "O app sorteia um ponto de partida. Só quem faz o paciente olha o cartão.",
+};
+
+const PAPEIS: { papel: Papel; rotulo: string }[] = [
+  { papel: "medico", rotulo: "Faz o médico" },
+  { papel: "paciente", rotulo: "Faz o paciente" },
 ];
 
 export function NovaSessao() {
   const navegar = useNavigate();
   const { queixas } = useQueixas();
+  const [nomes, setNomes] = useState<Nomes>(lerNomes);
   const [origem, setOrigem] = useState<OrigemCaso | null>(null);
   const [filtroQueixa, setFiltroQueixa] = useState("");
   const [cartao, setCartao] = useState<Cartao | null>(null);
@@ -51,6 +66,7 @@ export function NovaSessao() {
     if (!origem) return;
     setCriando(true);
     setErro(null);
+    guardarNomes({ medico: nomes.medico.trim(), paciente: nomes.paciente.trim() });
     try {
       const sessao = await api.criarSessao({
         origem_caso: origem,
@@ -76,70 +92,89 @@ export function NovaSessao() {
           onClick={() => void continuar()}
           disabled={!podeContinuar || criando}
         >
-          {criando ? "Abrindo a sessão…" : "Continuar para o termo"}
+          {criando ? "Abrindo a sessão…" : "Continuar"}
         </button>
       }
     >
-      <Aviso titulo="Antes de tudo">Use só casos simulados. Não grave pacientes reais.</Aviso>
-
       <fieldset className="app-grupo">
-        <legend className="app-subtitulo">De onde vem o caso?</legend>
-        <p className="app-ajuda">
-          O app não guarda o texto do caso, só a conversa de vocês.
-        </p>
-        <div className="app-opcoes">
-          {ORIGENS.map((o) => (
-            <label key={o.valor} className={`app-opcao${origem === o.valor ? " is-marcada" : ""}`}>
-              <input
-                type="radio"
-                name="origem"
-                value={o.valor}
-                checked={origem === o.valor}
-                onChange={() => escolherOrigem(o.valor)}
-              />
-              <span>
-                <span className="app-opcao-rotulo">{o.rotulo}</span>
-                <span className="app-opcao-ajuda">{o.ajuda}</span>
+        <legend className="app-subtitulo">Quem faz o quê</legend>
+        <div className="app-dupla">
+          {PAPEIS.map(({ papel, rotulo }) => (
+            <label key={papel} className="app-pessoa">
+              <Avatar nome={nomes[papel]} papel={papel} />
+              <span className="app-pessoa-texto">
+                <input
+                  className="app-pessoa-nome"
+                  type="text"
+                  autoComplete="off"
+                  maxLength={120}
+                  placeholder="Nome"
+                  aria-label={`Nome de quem ${rotulo.toLowerCase()}`}
+                  value={nomes[papel]}
+                  onChange={(e) => setNomes((n) => ({ ...n, [papel]: e.target.value }))}
+                />
+                <span className="app-pessoa-papel">{rotulo}</span>
               </span>
             </label>
           ))}
         </div>
       </fieldset>
 
-      {origem === "cartao" && (
-        <section className="app-secao" aria-labelledby="titulo-cartao">
-          <h2 className="app-subtitulo" id="titulo-cartao">
-            Cartão do paciente
-          </h2>
-          <label className="app-campo">
-            <span className="app-campo-rotulo">Queixa do cartão (opcional)</span>
-            <select value={filtroQueixa} onChange={(e) => setFiltroQueixa(e.target.value)}>
-              <option value="">Qualquer queixa</option>
-              {queixas.map((q) => (
-                <option key={q.id} value={q.id}>
-                  {q.nome}
-                </option>
-              ))}
-            </select>
-          </label>
+      <fieldset className="app-grupo">
+        <legend className="app-subtitulo">De onde vem o caso</legend>
+        <div className="app-grade-origem">
+          {ORIGENS.map((o) => (
+            <label key={o.valor} className={`app-origem${origem === o.valor ? " is-marcada" : ""}`}>
+              <input
+                className="app-so-leitor"
+                type="radio"
+                name="origem"
+                value={o.valor}
+                checked={origem === o.valor}
+                onChange={() => escolherOrigem(o.valor)}
+              />
+              {o.icone}
+              {o.rotulo}
+            </label>
+          ))}
+        </div>
+        <p className="app-legenda" aria-live="polite">
+          {origem ? AJUDA_ORIGEM[origem] : "Use só casos simulados. Não grave pacientes reais."}
+        </p>
+      </fieldset>
 
+      {origem === "cartao" && (
+        <section className="app-secao app-surge" aria-label="Cartão do paciente">
           {!cartao && (
-            <button
-              className="al-botao al-botao-secundario app-botao-largo"
-              type="button"
-              onClick={() => void sortear()}
-              disabled={sorteando}
-            >
-              <IconeDado />
-              {sorteando ? "Sorteando…" : "Sortear cartão"}
-            </button>
+            <>
+              <label className="app-campo">
+                <span className="app-campo-rotulo">Queixa do cartão (opcional)</span>
+                <select value={filtroQueixa} onChange={(e) => setFiltroQueixa(e.target.value)}>
+                  <option value="">Qualquer queixa</option>
+                  {queixas.map((q) => (
+                    <option key={q.id} value={q.id}>
+                      {q.nome}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                className="al-botao al-botao-secundario app-botao-largo"
+                type="button"
+                onClick={() => void sortear()}
+                disabled={sorteando}
+              >
+                <IconeDado />
+                {sorteando ? "Sorteando…" : "Sortear cartão"}
+              </button>
+            </>
           )}
 
           {cartao && !cartaoVisivel && (
             <div className="app-cartao-oculto">
               <p>
-                Cartão sorteado. Só quem faz o paciente pode ver: passe o celular para o seu
-                colega.
+                Cartão sorteado. Só quem faz o paciente pode ver: passe o celular para{" "}
+                {nomes.paciente.trim() || "o seu colega"}.
               </p>
               <button
                 className="al-botao al-botao-secundario"
@@ -153,9 +188,14 @@ export function NovaSessao() {
 
           {cartao && cartaoVisivel && (
             <>
-              <CartaoPaciente cartao={cartao} onSortearOutro={() => void sortear()} sorteando={sorteando} />
+              <CartaoPaciente
+                cartao={cartao}
+                nomePaciente={nomes.paciente.trim()}
+                onSortearOutro={() => void sortear()}
+                sorteando={sorteando}
+              />
               <button
-                className="al-botao al-botao-texto"
+                className="al-botao al-botao-texto app-link"
                 type="button"
                 onClick={() => setCartaoVisivel(false)}
               >

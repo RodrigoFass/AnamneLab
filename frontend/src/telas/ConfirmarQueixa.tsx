@@ -3,9 +3,13 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type { QueixaConfirmar } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
+import { Avatar } from "../componentes/Avatar";
+import { Etapas } from "../componentes/Etapas";
 import { QueixaDetectada } from "../componentes/QueixaDetectada";
 import { Carregando, Tela } from "../componentes/Tela";
+import { nomesDaSessao } from "../util/nomes";
 import { nomesDasQueixas, rotaDaSessao, useQueixas, useSessao } from "../util/sessao";
+import { etapasDoAudio } from "./Processando";
 
 export function ConfirmarQueixa() {
   const { id } = useParams();
@@ -65,16 +69,36 @@ export function ConfirmarQueixa() {
   const trocaValida = outra ? descricao.trim().length > 0 : marcadas.length > 0;
 
   return (
-    <Tela titulo="Confirmar a queixa" voltar="/" rotuloVoltar="Voltar ao início">
+    <Tela
+      titulo="Preparando sua correção"
+      subtitulo="Confira a queixa: com a queixa errada, o checklist também fica errado."
+      voltar="/"
+      rotuloVoltar="Voltar ao início"
+    >
       {(erroSessao ?? erroQueixas) && <Aviso tipo="erro">{erroSessao ?? erroQueixas}</Aviso>}
       {!sessao && !erroSessao && <Carregando />}
 
       {sessao && (
         <>
-          <p className="app-ajuda">
-            A correção usa o checklist da queixa. Confira antes de seguir: com a queixa errada, o
-            checklist também fica errado.
-          </p>
+          <Etapas etapas={etapasDoAudio(sessao)} />
+
+          {sessao.falas.length > 0 && (
+            <section className="app-trecho" aria-label="Trecho da transcrição">
+              <p className="app-legenda">Trecho da transcrição, falas separadas</p>
+              <ul className="app-falas-curtas app-cascata">
+                {sessao.falas.slice(0, 2).map((f, i) => {
+                  const nomes = nomesDaSessao(sessao.consentimentos);
+                  const papel = f.papel === "entrevistador" ? "medico" : "paciente";
+                  return (
+                    <li key={i}>
+                      <Avatar nome={nomes[papel]} papel={papel} tamanho={22} />
+                      <span>{f.texto}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )}
 
           {!semDeteccao && !trocando && (
             <QueixaDetectada

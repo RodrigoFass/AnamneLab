@@ -104,3 +104,47 @@ export const IconeMais = ({ className }: P) => (
     <path d="M12 5v14M5 12h14" />
   </Svg>
 );
+
+export const IconeLivro = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z" />
+    <path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3" />
+  </Svg>
+);
+
+export const IconeGlobo = ({ className }: P) => (
+  <Svg className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18" />
+    <path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z" />
+  </Svg>
+);
+
+export const IconeLapis = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z" />
+    <path d="M14.5 6.5l3 3" />
+  </Svg>
+);
+
+export const IconeLixeira = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M4 7h16" />
+    <path d="M9 7V4h6v3" />
+    <path d="M6 7l1 13h10l1-13" />
+  </Svg>
+);
+
+export const IconeSeta = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M9 5l7 7-7 7" />
+  </Svg>
+);
+
+/** Duas setas opostas: trocar de papel. */
+export const IconeTrocar = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M4 8h14l-3-3" />
+    <path d="M20 16H6l3 3" />
+  </Svg>
+);

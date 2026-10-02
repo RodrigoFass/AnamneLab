@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { api } from "../api/cliente";
-import { Aviso } from "./Aviso";
+
+const ContextoDemonstracao = createContext(false);
 
 /** Pergunta ao backend, uma vez, se o app roda com transcrição e correção de exemplo. */
-function useModoDemonstracao(): boolean {
+export function ProvedorDemonstracao({ children }: { children: ReactNode }) {
   const [demonstracao, setDemonstracao] = useState(false);
   useEffect(() => {
     let ativo = true;
@@ -19,16 +20,17 @@ function useModoDemonstracao(): boolean {
       ativo = false;
     };
   }, []);
-  return demonstracao;
+  return <ContextoDemonstracao.Provider value={demonstracao}>{children}</ContextoDemonstracao.Provider>;
 }
 
-/** Aviso discreto e permanente no topo de todas as telas, no modo de demonstração. */
-export function AvisoDemonstracao() {
-  const demonstracao = useModoDemonstracao();
+/** Selo discreto no topo de todas as telas, no modo de demonstração. */
+export function SeloDemonstracao() {
+  const demonstracao = useContext(ContextoDemonstracao);
   if (!demonstracao) return null;
   return (
-    <div className="app-demonstracao">
-      <Aviso>Modo de demonstração: a transcrição e a correção são de exemplo.</Aviso>
-    </div>
+    <span className="app-demo" title="Modo de demonstração: a transcrição e a correção são de exemplo.">
+      Demonstração
+      <span className="app-so-leitor">: a transcrição e a correção são de exemplo.</span>
+    </span>
   );
 }

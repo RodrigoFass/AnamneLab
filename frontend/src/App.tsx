@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth/Autenticacao";
-import { AvisoDemonstracao } from "./componentes/AvisoDemonstracao";
+import { ProvedorDemonstracao } from "./componentes/AvisoDemonstracao";
 import { Carregando } from "./componentes/Tela";
 import { ConfirmarQueixa } from "./telas/ConfirmarQueixa";
 import { Correcao } from "./telas/Correcao";
@@ -17,10 +17,9 @@ import { Transcricao } from "./telas/Transcricao";
 
 export function App() {
   return (
-    <>
-      <AvisoDemonstracao />
+    <ProvedorDemonstracao>
       <Telas />
-    </>
+    </ProvedorDemonstracao>
   );
 }
 

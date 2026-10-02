@@ -14,11 +14,12 @@ interface Props {
 /** Pede a confirmação da queixa antes de aplicar o checklist. */
 export function QueixaDetectada({ nome, trecho, onConfirmar, onTrocar, confirmando, children }: Props) {
   return (
-    <section className="al-queixa app-queixa" aria-labelledby="queixa-nome">
-      <p className="al-queixa-pergunta">Queixa detectada na conversa. Está certo?</p>
+    <section className="al-queixa app-queixa app-surge" aria-labelledby="queixa-nome">
+      <p className="al-queixa-pergunta">Queixa detectada na conversa</p>
       <p className="al-queixa-nome" id="queixa-nome">
         {nome}
       </p>
+      <p className="app-legenda">Está certo?</p>
       {trecho && (
         <blockquote className="al-fala app-fala-queixa">
           <span className="al-fala-quem">O paciente disse</span>“{trecho}”
@@ -32,10 +33,10 @@ export function QueixaDetectada({ nome, trecho, onConfirmar, onTrocar, confirman
           onClick={onConfirmar}
           disabled={confirmando}
         >
-          {confirmando ? "Confirmando…" : "Está certo"}
+          {confirmando ? "Confirmando…" : "Sim, está certo"}
         </button>
         <button className="al-botao al-botao-secundario" type="button" onClick={onTrocar} disabled={confirmando}>
-          Trocar queixa
+          Trocar
         </button>
       </div>
     </section>
