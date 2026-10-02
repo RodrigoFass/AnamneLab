@@ -16,7 +16,7 @@ from app.schemas.llm import CasoPaciente, Fala, RespostaPaciente
 MAXIMO_FALAS = 160
 """Uma anamnese completa cabe com folga; acima disso a conversa encerra."""
 
-MAXIMO_PERGUNTA = 500
+MAXIMO_PERGUNTA = 1000
 
 SISTEMA_CASO = """\
 Você monta a ficha de um paciente fictício para estudantes de Medicina treinarem anamnese.

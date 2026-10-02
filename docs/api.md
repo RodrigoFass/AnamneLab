@@ -26,7 +26,7 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 | GET | `/api/sessoes/{id}` | | `Sessao` | Estado atual; o frontend consulta a cada 2 s enquanto processa |
 | DELETE | `/api/sessoes/{id}` | | 204 | Apaga sessão, transcrição, avaliações e consentimentos |
 | POST | `/api/sessoes/{id}/consentimentos` | `ConsentimentoCriar` | `Consentimento` | Registra o aceite de quem abriu a sessão (`forma: "aceite"`, o padrão) ou o aviso ao colega (`forma: "declarado_pelo_dono"`, que exige antes o aceite do dono no outro papel; senão 409) |
-| POST | `/api/sessoes/{id}/conversa` | `PerguntaPaciente` (`texto`, até 500 caracteres) | `Sessao` | Paciente pela IA: manda uma pergunta e recebe a sessão com a pergunta e a resposta nas falas. Só com status `conversando`; 422 para pergunta vazia ou longa, 503 se a IA não responder (a pergunta não fica) |
+| POST | `/api/sessoes/{id}/conversa` | `PerguntaPaciente` (`texto`, até 1000 caracteres) | `Sessao` | Paciente pela IA: manda uma pergunta e recebe a sessão com a pergunta e a resposta nas falas. Só com status `conversando`; 422 para pergunta vazia ou longa, 503 se a IA não responder (a pergunta não fica) |
 | POST | `/api/sessoes/{id}/encerrar` | | `Sessao` | Paciente pela IA: fim da entrevista. Status vai para `aguardando_queixa` com a queixa do cartão sugerida; a ficha `caso_ia` passa a vir na sessão |
 | POST | `/api/sessoes/{id}/audio` | multipart `audio` | `Sessao` | Exige um registro por papel (médico e paciente) na versão vigente do termo. Status vai para `processando_audio` e o processamento roda em segundo plano |
 | PUT | `/api/sessoes/{id}/transcricao` | `TranscricaoEditar` | `Sessao` | Corrige quem disse o quê ou um erro de transcrição; marca `transcricao_editada` |

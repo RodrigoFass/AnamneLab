@@ -59,6 +59,10 @@ citacao é null.
 - Vale o que o paciente contou na resposta a uma pergunta do entrevistador, mesmo aberta \
 ("como é essa dor?", "me conte mais"): cite a pergunta e a resposta logo depois. A pergunta \
 aberta vale só para o que está nessa resposta.
+- Confira a resposta à primeira pergunta sobre o motivo da consulta ("o que te traz aqui?") \
+contra todos os itens. Ela costuma trazer vários fatos de uma vez: se o paciente disse \
+"estou com diarreia há três dias, umas seis vezes por dia", os itens de duração e de \
+frequência foram investigados. Cite a pergunta e essa resposta em cada item que ela cumpre.
 - Também é feito o item que a resposta a outra pergunta já esclareceu: o entrevistador \
 perguntou se quem comeu junto também passou mal e o paciente disse que comeu sozinho; \
 nesse caso, o item sobre outras pessoas com o mesmo quadro foi investigado. Cite a \

@@ -531,7 +531,7 @@ def test_paciente_ia_nao_grava_audio(cliente):
 def test_paciente_ia_valida_pergunta_e_cartao(cliente):
     sessao_id = paciente_ia(cliente)["id"]
     assert perguntar(cliente, sessao_id, "").status_code == 422
-    assert perguntar(cliente, sessao_id, "x" * 501).status_code == 422
+    assert perguntar(cliente, sessao_id, "x" * 1001).status_code == 422
     assert perguntar(cliente, sessao_id, "   ").status_code == 422
     resposta = cliente.post("/api/sessoes", json={"origem_caso": "paciente_ia", "cartao_id": "nao-existe"})
     assert resposta.status_code == 422

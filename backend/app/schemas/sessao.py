@@ -57,7 +57,7 @@ class ConsentimentoCriar(BaseModel):
 class PerguntaPaciente(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    texto: str = Field(min_length=1, max_length=500)
+    texto: str = Field(min_length=1, max_length=1000)
 
 
 class TranscricaoEditar(BaseModel):

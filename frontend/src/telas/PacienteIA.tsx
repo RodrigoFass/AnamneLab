@@ -9,6 +9,9 @@ import { Carregando, Tela } from "../componentes/Tela";
 import { rotaDaSessao, useQueixas, useSessao } from "../util/sessao";
 import { useNavegar, vibrar } from "../util/movimento";
 
+/** Igual a MAXIMO_PERGUNTA no backend. */
+const LIMITE_PERGUNTA = 1000;
+
 const PONTOS = [
   { icone: <IconeBalao />, texto: "Você faz o médico e escreve as perguntas. A IA responde como o paciente." },
   { icone: <IconeLampada />, texto: "Ela só conta o que você perguntar, do jeito de quem não é da saúde." },
@@ -95,6 +98,8 @@ export function Conversa() {
 
   const falas = sessao?.falas ?? [];
   const perguntas = falas.filter((f) => f.papel === "entrevistador").length;
+  const tamanho = texto.trim().length;
+  const passou = tamanho > LIMITE_PERGUNTA;
 
   useEffect(() => {
     fim.current?.scrollIntoView({ block: "end", behavior: "smooth" });
@@ -105,7 +110,7 @@ export function Conversa() {
 
   const enviar = async () => {
     const pergunta = texto.trim();
-    if (!pergunta || esperando) return;
+    if (!pergunta || esperando || pergunta.length > LIMITE_PERGUNTA) return;
     setEsperando(pergunta);
     setTexto("");
     setErro(null);
@@ -161,12 +166,20 @@ export function Conversa() {
             void enviar();
           }}
         >
+          {tamanho > LIMITE_PERGUNTA * 0.8 && (
+            <p id="tamanho-pergunta" className={`app-perguntar-conta${passou ? " is-passou" : ""}`} aria-live="polite">
+              {passou
+                ? `Pergunta longa demais: ${tamanho} de ${LIMITE_PERGUNTA} caracteres. Divida em duas.`
+                : `${tamanho} de ${LIMITE_PERGUNTA} caracteres`}
+            </p>
+          )}
           <textarea
             ref={campo}
             rows={1}
-            maxLength={500}
             placeholder="Escreva a sua pergunta"
             aria-label="Pergunta ao paciente"
+            aria-invalid={passou || undefined}
+            aria-describedby={tamanho > LIMITE_PERGUNTA * 0.8 ? "tamanho-pergunta" : undefined}
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
             onKeyDown={(e) => {
@@ -181,7 +194,7 @@ export function Conversa() {
             className="al-botao al-botao-principal app-botao-icone"
             type="submit"
             aria-label="Enviar pergunta"
-            disabled={!texto.trim() || Boolean(esperando) || !sessao}
+            disabled={!tamanho || passou || Boolean(esperando) || !sessao}
           >
             <IconeEnviar />
           </button>

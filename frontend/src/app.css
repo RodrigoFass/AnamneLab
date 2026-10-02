@@ -2214,8 +2214,21 @@ a.app-lista-linha:active {
 }
 .app-perguntar {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   gap: var(--espaco-2);
+}
+/* Só aparece perto do limite; em vermelho e com a palavra quando passa. */
+.app-perguntar-conta {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 16px;
+  color: var(--tinta-suave);
+  text-align: right;
+}
+.app-perguntar-conta.is-passou {
+  color: var(--faltou);
+  font-weight: 600;
 }
 .app-perguntar textarea {
   flex: 1;

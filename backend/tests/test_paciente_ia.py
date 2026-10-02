@@ -39,7 +39,7 @@ def test_recusa_pergunta_vazia_longa_ou_conversa_cheia():
     with pytest.raises(ErroPipeline):
         responder(caso, [], "  ", ClienteFalso())
     with pytest.raises(ErroPipeline):
-        responder(caso, [], "x" * 501, ClienteFalso())
+        responder(caso, [], "x" * 1001, ClienteFalso())
     cheia = [Fala(papel="entrevistador", texto="Oi?")] * MAXIMO_FALAS
     with pytest.raises(ErroPipeline, match="Encerre"):
         responder(caso, cheia, "E agora?", ClienteFalso())
