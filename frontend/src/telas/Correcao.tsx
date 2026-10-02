@@ -237,11 +237,26 @@ interface PropsChecklist {
 }
 
 const FEITOS_VISIVEIS = 3;
+const PESO_IMPORTANTE = 3;
+const FALTOU_MINIMO = 3;
+
+/**
+ * O que faltou em duas partes: os mais importantes ficam abertos (peso 3, ou os de maior peso
+ * se nenhum tem 3) e o resto fica recolhido, para o aluno saber por onde começar.
+ */
+function separarFaltou(faltou: Avaliacao[]): { importantes: Avaliacao[]; completar: Avaliacao[] } {
+  const ordem = [...faltou].sort((a, b) => b.peso - a.peso);
+  let importantes = ordem.filter((a) => a.peso >= PESO_IMPORTANTE || Boolean(a.contestacao));
+  if (importantes.length === 0) importantes = ordem.slice(0, FALTOU_MINIMO);
+  return { importantes, completar: ordem.filter((a) => !importantes.includes(a)) };
+}
 
 /** Um checklist corrigido: primeiro o que você fez, depois o que faltou perguntar. */
 function ChecklistCorrigido({ grupo: g, sessao, queixas, onContestar }: PropsChecklist) {
   const [verFeitos, setVerFeitos] = useState(false);
+  const [verCompletar, setVerCompletar] = useState(false);
   const idFeitos = useId();
+  const idCompletar = useId();
 
   const item = (a: Avaliacao) => (
     <li key={`${a.checklist_id}:${a.item_id}`}>
@@ -257,6 +272,7 @@ function ChecklistCorrigido({ grupo: g, sessao, queixas, onContestar }: PropsChe
 
   const primeiros = g.feitos.slice(0, FEITOS_VISIVEIS);
   const resto = g.feitos.slice(FEITOS_VISIVEIS);
+  const { importantes, completar } = separarFaltou(g.faltou);
 
   return (
     <section className="app-secao" aria-labelledby={`chk-${g.checklistId}`}>
@@ -301,7 +317,30 @@ function ChecklistCorrigido({ grupo: g, sessao, queixas, onContestar }: PropsChe
 
       <h3 className="app-secao-titulo">O que faltou perguntar</h3>
       {g.faltou.length > 0 ? (
-        <ul className="app-itens app-cascata">{g.faltou.map(item)}</ul>
+        <>
+          {completar.length > 0 && <p className="app-legenda">Primeiro, o que mais faz diferença.</p>}
+          <ul className="app-itens app-cascata">{importantes.map(item)}</ul>
+          {completar.length > 0 && (
+            <>
+              <ul id={idCompletar} className="app-itens app-cascata" hidden={!verCompletar}>
+                {verCompletar && completar.map(item)}
+              </ul>
+              <button
+                className="al-botao al-botao-texto app-ver-mais"
+                type="button"
+                aria-expanded={verCompletar}
+                aria-controls={idCompletar}
+                onClick={() => setVerCompletar((v) => !v)}
+              >
+                {verCompletar
+                  ? "Mostrar menos"
+                  : completar.length === 1
+                    ? "Ver mais 1 item para completar"
+                    : `Ver mais ${completar.length} itens para completar`}
+              </button>
+            </>
+          )}
+        </>
       ) : (
         <p className="app-status app-status-ok">
           <IconeCheck />

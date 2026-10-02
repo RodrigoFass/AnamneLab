@@ -157,7 +157,9 @@ def _corrigir(contexto: dict[str, Any]) -> dict[str, Any]:
     for item in contexto.get("itens", []):
         chaves = [normalizar(p) for p in item.get("palavras_chave", []) if normalizar(p)]
         numero = next((n for n, texto in do_entrevistador if any(chave in texto for chave in chaves)), None)
-        itens.append({"item_id": item["id"], "feito": numero is not None, "falas": [numero] if numero else []})
+        itens.append(
+            {"item_id": item["id"], "feito": numero is not None, "falas": [numero] if numero else [], "citacao": None}
+        )
     return {"itens": itens}
 
 

@@ -63,6 +63,9 @@ class ItemCorrigido(BaseModel):
     falas: list[int]
     """Números das falas que provam o item, como aparecem na transcrição enviada: a pergunta
     do entrevistador e, se ajudar, a resposta logo depois. Vazia se não feito."""
+    citacao: str | None
+    """O pedaço curto dessas falas que mostra o item, copiado como está. Só para mostrar ao
+    aluno: se não estiver nas falas citadas, o app mostra as falas inteiras."""
 
 
 class CorrecaoLLM(BaseModel):

@@ -14,10 +14,10 @@ def correcao(conteudo):
     llm = LLMRepete(
         {
             "itens": [
-                {"item_id": "nome", "feito": True, "falas": [1]},
-                {"item_id": "idade", "feito": False, "falas": []},
-                {"item_id": "tabagismo", "feito": True, "falas": [7]},
-                {"item_id": "irradiacao", "feito": False, "falas": []},
+                {"item_id": "nome", "feito": True, "falas": [1], "citacao": None},
+                {"item_id": "idade", "feito": False, "falas": [], "citacao": None},
+                {"item_id": "tabagismo", "feito": True, "falas": [7], "citacao": None},
+                {"item_id": "irradiacao", "feito": False, "falas": [], "citacao": None},
             ]
         }
     )

@@ -53,12 +53,15 @@ inclusive no meio de uma fala longa ou junto com outras perguntas.
 - Um item é feito quando o entrevistador perguntou ou explorou o assunto. Em falas, ponha o \
 número da fala do entrevistador que mostra isso e, se ajudar, o da resposta do paciente \
 logo depois: [12, 13].
+- Em citacao, copie dessas falas só o pedaço curto que mostra o item, como está escrito: a \
+pergunta, ou a pergunta e o começo da resposta, com no máximo 25 palavras. Item não feito: \
+citacao é null.
 - Vale o que o paciente contou na resposta a uma pergunta do entrevistador, mesmo aberta \
 ("como é essa dor?", "me conte mais"): cite a pergunta e a resposta logo depois. A pergunta \
 aberta vale só para o que está nessa resposta.
 - O que o paciente contou em outro momento, fora da resposta à pergunta, não basta. Só conta \
 se o entrevistador voltou ao assunto, e aí cite essa fala do entrevistador.
-- Se nenhuma fala do entrevistador trata do assunto do item, feito é false e falas é []. \
+- Se nenhuma fala do entrevistador trata do assunto do item, feito é false, falas é [] e citacao é null. \
 Não marque por suposição.
 - Responda exatamente um registro por item, com o item_id igual ao enviado. Não crie itens.
 - A transcrição vem de reconhecimento de voz e pode ter palavras erradas; julgue pelo sentido.
@@ -217,19 +220,32 @@ def numerar_falas(falas: list[Fala]) -> str:
     return "\n".join(f"[{numero}] {ROTULOS[f.papel]}: {f.texto}" for numero, f in enumerate(falas, 1))
 
 
-def trecho_das_falas(numeros: list[int], falas: list[Fala]) -> str | None:
-    """O trecho que prova o item, montado com as falas que o LLM citou (números a partir de 1).
+def falas_que_provam(numeros: list[int], falas: list[Fala]) -> list[Fala]:
+    """As falas que provam o item, entre as que o LLM citou (números a partir de 1).
 
     Vale a primeira fala citada do entrevistador, mais a fala seguinte se ela também foi
-    citada (a resposta). Sem fala do entrevistador entre as citadas, não há trecho.
+    citada (a resposta). Sem fala do entrevistador entre as citadas, nenhuma vale.
     Número fora da transcrição é ignorado."""
     citadas = sorted({n - 1 for n in numeros if 1 <= n <= len(falas)})
     pergunta = next((i for i in citadas if falas[i].papel == "entrevistador"), None)
     if pergunta is None:
-        return None
+        return []
     usadas = [pergunta, pergunta + 1] if pergunta + 1 in citadas else [pergunta]
-    trecho = " ".join(falas[i].texto.strip() for i in usadas)
-    return trecho if len(normalizar(trecho)) >= MINIMO_CARACTERES_TRECHO else None
+    return [falas[i] for i in usadas]
+
+
+def trecho_do_item(registro: ItemCorrigido, falas: list[Fala]) -> str | None:
+    """O trecho mostrado ao aluno, sempre literal (regra 1). A citação curta do LLM vale se
+    estiver nas falas que provam o item e pegar a fala do entrevistador; senão, vão as falas
+    inteiras. Sem falas que provam, não há trecho e o item é faltou."""
+    usadas = falas_que_provam(registro.falas, falas)
+    trecho = " ".join(f.texto.strip() for f in usadas)
+    if len(normalizar(trecho)) < MINIMO_CARACTERES_TRECHO:
+        return None
+    citacao = (registro.citacao or "").strip()
+    if citacao and TranscricaoNormalizada.de(usadas).mostra_entrevistador(citacao):
+        return citacao
+    return trecho
 
 
 def mensagem_feito(texto: str) -> str:
@@ -253,7 +269,7 @@ def montar_avaliacoes(itens: list[ItemAplicavel], resposta: CorrecaoLLM, falas: 
     for aplicavel in itens:
         item = aplicavel.item
         registro = registros.get(item.id)
-        trecho = trecho_das_falas(registro.falas, falas) if registro and registro.feito else None
+        trecho = trecho_do_item(registro, falas) if registro and registro.feito else None
         feito = trecho is not None
         avaliacoes.append(
             Avaliacao(

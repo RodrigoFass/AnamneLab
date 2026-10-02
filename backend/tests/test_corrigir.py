@@ -31,7 +31,7 @@ def resposta(*itens: tuple[str, bool, list[int]]) -> dict:
 
     Falas de exemplo: [1] E nome, [2] P, [3] E idade, [4] P, [5] E irradiação, [6] P,
     [7] E fuma, [8] P, [9] E suor, [10] P."""
-    return {"itens": [{"item_id": i, "feito": f, "falas": n} for i, f, n in itens]}
+    return {"itens": [{"item_id": i, "feito": f, "falas": n, "citacao": None} for i, f, n in itens]}
 
 
 def por_id(resultado) -> dict:
@@ -93,6 +93,38 @@ def test_vale_a_primeira_pergunta_citada_sem_juntar_falas_distantes(conteudo):
     assert avaliacoes["idade"].trecho == "Quantos anos o senhor tem?"
     # A fala do paciente antes da pergunta fica de fora.
     assert avaliacoes["tabagismo"].trecho == "O senhor fuma?"
+
+
+def test_citacao_curta_aparece_quando_esta_na_fala_do_entrevistador(conteudo):
+    registros = resposta(
+        ("idade", True, [3, 4]), ("nome", True, [1]), ("tabagismo", True, [7, 8]), ("irradiacao", True, [5])
+    )
+    citacoes = {
+        "idade": "anos o senhor tem? Cinquenta",  # pergunta e começo da resposta
+        "nome": "Qual é o seu nome",  # sem pontuação: confere normalizado
+        "tabagismo": "Fumo um maço por dia",  # só o paciente: vão as falas inteiras
+        "irradiacao": "Essa dor vai para o braço?",  # não está na fala: vão as falas inteiras
+    }
+    for registro in registros["itens"]:
+        registro["citacao"] = citacoes[registro["item_id"]]
+    avaliacoes = por_id(
+        corrigir(falas_exemplo(), ["dor-toracica"], conteudo, LLMRepete(registros), contar_rascunho=True)
+    )
+    assert avaliacoes["idade"].trecho == "anos o senhor tem? Cinquenta"
+    assert avaliacoes["nome"].trecho == "Qual é o seu nome"
+    assert avaliacoes["tabagismo"].trecho == "O senhor fuma? Fumo um maço por dia, sim."
+    assert avaliacoes["irradiacao"].trecho == "Essa dor vai para algum outro lugar?"
+
+
+def test_citacao_sem_falas_que_provam_nao_salva_o_item(conteudo):
+    registros = resposta(("idade", True, [4]))
+    registros["itens"][0]["citacao"] = "Quantos anos o senhor tem?"
+    assert (
+        por_id(corrigir(falas_exemplo(), ["dor-toracica"], conteudo, LLMRepete(registros), contar_rascunho=True))[
+            "idade"
+        ].status
+        == "faltou"
+    )
 
 
 def test_falas_vao_numeradas_para_o_llm(conteudo):
