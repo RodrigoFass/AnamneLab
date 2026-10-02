@@ -19,6 +19,8 @@ dependencies = [
 local = ["faster-whisper", "av<17"]
 # Transcrição pela API whisper-1 (TRANSCRICAO=api).
 api = ["openai"]
+# Voz do paciente pela IA com o Piper (VOZ_PACIENTE=piper).
+voz = ["piper-tts"]
 # Banco e login no Supabase (BANCO=supabase, AUTH=supabase).
 supabase = ["supabase"]
 dev = ["pytest", "jsonschema"]

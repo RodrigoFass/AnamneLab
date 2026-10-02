@@ -43,7 +43,7 @@ interface PropsFolha {
 }
 
 /** Folha com o termo em tópicos e a marca de aceite de quem abriu a sessão. */
-function FolhaAceite({ papel, nome, termo, sessaoId, onRegistrado, onFechar }: PropsFolha) {
+export function FolhaAceite({ papel, nome, termo, sessaoId, onRegistrado, onFechar }: PropsFolha) {
   const [aceito, setAceito] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);

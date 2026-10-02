@@ -100,6 +100,9 @@ class Saude(BaseModel):
     ok: bool
     modo_demonstracao: bool
     """True quando o LLM ou a transcrição são falsos: a interface avisa o aluno."""
+    vozes_paciente: list[SexoPaciente] = []
+    """Sexos com voz do Piper no backend (GET /api/sessoes/{id}/voz/{indice}). Vazio: o
+    navegador lê as respostas do paciente pela IA."""
 
 
 class Termo(BaseModel):

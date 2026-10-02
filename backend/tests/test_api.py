@@ -11,7 +11,8 @@ from app.auth import Usuario, usuario_atual
 from app.llm.base import ErroLLM
 from app.llm.falso import ClienteFalso
 from app.main import criar_app
-from app.pipeline.transcrever import Transcritor, TranscritorFalso
+from app.pipeline.transcrever import PERGUNTAS_EXEMPLO, Transcritor, TranscritorFalso
+from app.pipeline.voz import VozPiper
 from app.repositorio.arquivo import RepositorioArquivo
 from app.repositorio.memoria import RepositorioMemoria
 
@@ -79,7 +80,7 @@ def arquivos_de_audio(settings) -> list[Path]:
 
 
 def test_rotas_de_conteudo(cliente):
-    assert cliente.get("/api/saude").json() == {"ok": True, "modo_demonstracao": True}
+    assert cliente.get("/api/saude").json() == {"ok": True, "modo_demonstracao": True, "vozes_paciente": []}
     assert [q["id"] for q in cliente.get("/api/queixas").json()] == ["dor-toracica", "cefaleia"]
     assert cliente.get("/api/termo").json()["versao"] == "1"
     assert cliente.get("/api/cartoes/sortear").json()["id"] == "dor-toracica-teste-1"
@@ -522,10 +523,77 @@ def test_paciente_ia_conversa_e_segue_para_a_correcao(cliente):
     esperar(cliente, sessao_id, "aguardando_hipoteses")
 
 
-def test_paciente_ia_nao_grava_audio(cliente):
+def falar(cliente: TestClient, sessao_id: str):
+    return cliente.post(f"/api/sessoes/{sessao_id}/conversa/audio", files={"audio": AUDIO})
+
+
+def test_paciente_ia_nao_grava_a_consulta_inteira(cliente):
     sessao_id = paciente_ia(cliente)["id"]
-    assert consentir(cliente, sessao_id, "medico").status_code == 409
+    assert consentir(cliente, sessao_id, "medico").status_code == 201
     assert cliente.post(f"/api/sessoes/{sessao_id}/audio", files={"audio": AUDIO}).status_code == 409
+
+
+def test_paciente_ia_pergunta_falada_pede_o_aceite_e_apaga_o_audio(cliente, settings):
+    sessao_id = paciente_ia(cliente)["id"]
+    assert falar(cliente, sessao_id).status_code == 409
+    # Sem colega: o aviso ao colega não vale na conversa com a IA.
+    resposta = cliente.post(
+        f"/api/sessoes/{sessao_id}/consentimentos",
+        json={
+            "papel": "paciente",
+            "nome_informado": "Colega",
+            "versao_termo": "1",
+            "aceito": True,
+            "forma": "declarado_pelo_dono",
+        },
+    )
+    assert resposta.status_code == 409
+    assert consentir(cliente, sessao_id, "medico").status_code == 201
+
+    resposta = falar(cliente, sessao_id)
+    assert resposta.status_code == 200, resposta.text
+    falas = resposta.json()["falas"]
+    assert [f["papel"] for f in falas] == ["entrevistador", "paciente"]
+    assert falas[0]["texto"] == PERGUNTAS_EXEMPLO[0]
+    assert falar(cliente, sessao_id).json()["falas"][2]["texto"] == PERGUNTAS_EXEMPLO[1]
+    assert not list(settings.pasta_audio_temp.glob("anamnelab-*"))
+
+
+def test_paciente_ia_pergunta_falada_que_falha_apaga_o_audio(settings, repositorio):
+    app = criar_app(settings, repositorio=repositorio, transcritor=TranscritorQueFalha())
+    with TestClient(app) as cliente:
+        sessao_id = paciente_ia(cliente)["id"]
+        consentir(cliente, sessao_id, "medico")
+        resposta = falar(cliente, sessao_id)
+        assert resposta.status_code == 422
+        assert "pergunta" in resposta.json()["detail"]
+        assert cliente.get(f"/api/sessoes/{sessao_id}").json()["falas"] == []
+    assert not list(settings.pasta_audio_temp.glob("anamnelab-*"))
+
+
+class VozDeTeste(VozPiper):
+    def __init__(self) -> None:
+        super().__init__({"masculino": Path("masculina.onnx")})
+
+    def falar(self, texto: str, sexo: str) -> bytes:
+        return b"RIFF" + texto.encode()
+
+
+def test_voz_do_paciente(settings, repositorio):
+    with TestClient(criar_app(settings, repositorio=repositorio)) as cliente:
+        sessao_id = paciente_ia(cliente)["id"]
+        perguntar(cliente, sessao_id, "O que te traz aqui?")
+        # Sem Piper, quem fala é o navegador.
+        assert cliente.get(f"/api/sessoes/{sessao_id}/voz/1").status_code == 404
+
+    with TestClient(criar_app(settings, repositorio=repositorio, voz=VozDeTeste())) as cliente:
+        assert cliente.get("/api/saude").json()["vozes_paciente"] == ["masculino"]
+        resposta = cliente.get(f"/api/sessoes/{sessao_id}/voz/1")
+        assert resposta.status_code == 200
+        assert resposta.headers["content-type"] == "audio/wav"
+        assert resposta.content.startswith(b"RIFF")
+        assert cliente.get(f"/api/sessoes/{sessao_id}/voz/0").status_code == 404  # fala do aluno
+        assert cliente.get(f"/api/sessoes/{sessao_id}/voz/9").status_code == 404
 
 
 def test_paciente_ia_valida_pergunta_e_cartao(cliente):

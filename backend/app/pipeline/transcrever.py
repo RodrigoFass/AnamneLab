@@ -152,6 +152,24 @@ def apagar_audio(caminho: Path) -> None:
         logger.error("não deu para apagar um áudio temporário")
 
 
+PERGUNTAS_EXEMPLO = (
+    "Bom dia, eu sou estudante de Medicina. Qual é o seu nome?",
+    "O que te traz aqui hoje?",
+    "Quando isso começou?",
+    "Tem mais alguma coisa que o senhor ou a senhora sentiu junto?",
+    "Toma algum remédio?",
+)
+"""Perguntas do modo de demonstração, uma por fala gravada, para a conversa andar sem Whisper."""
+
+
+def transcrever_pergunta_e_apagar(caminho: Path, transcritor: Transcritor, *, numero: int, dica: str = "") -> str:
+    """A pergunta falada ao paciente pela IA. No modo de demonstração, uma pergunta de exemplo."""
+    if isinstance(transcritor, TranscritorFalso):
+        apagar_audio(caminho)
+        return PERGUNTAS_EXEMPLO[numero % len(PERGUNTAS_EXEMPLO)]
+    return transcrever_e_apagar(caminho, transcritor, dica=dica)
+
+
 def transcrever_e_apagar(caminho: Path, transcritor: Transcritor, *, dica: str = "") -> str:
     """Transcreve e SEMPRE apaga o áudio, inclusive em falha."""
     try:

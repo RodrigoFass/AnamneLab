@@ -20,9 +20,16 @@ from app.config import Settings, obter_settings
 from app.conteudo import QUEIXA_OUTRA, ErroConteudo
 from app.llm import ClienteLLM, ErroLLM
 from app.pipeline.comum import ErroPipeline
-from app.pipeline.paciente_ia import montar_caso, responder
 from app.pipeline.corrigir import ErroContestacao, contestar, item_do_checklist
-from app.pipeline.transcrever import Transcritor, apagar_audio
+from app.pipeline.paciente_ia import montar_caso, responder
+from app.pipeline.transcrever import (
+    ErroTranscricao,
+    Transcritor,
+    apagar_audio,
+    montar_dica,
+    transcrever_pergunta_e_apagar,
+)
+from app.pipeline.voz import ErroVoz, VozPiper
 from app.processamento import Processador
 from app.repositorio import Repositorio
 from app.schemas.conteudo import Cartao, Queixa
@@ -49,6 +56,8 @@ logger = logging.getLogger("app")
 PREFIXO_AUDIO = "anamnelab-"
 IDADE_MAXIMA_AUDIO_S = 2 * 60 * 60
 """Nenhum áudio leva mais que isso para ser transcrito; mais velho que isso é sobra."""
+TAMANHO_MAXIMO_PERGUNTA = 5 * 1024 * 1024
+"""Uma pergunta falada tem segundos; 5 MB passam de vários minutos no formato do app."""
 
 TIPOS_AUDIO = {
     "audio/webm": ".webm",
@@ -217,7 +226,8 @@ rotas = APIRouter(prefix="/api")
 def saude(servicos: ServicosDep) -> Saude:
     settings = servicos.settings
     demonstracao = settings.llm_provedor == "falso" or settings.transcricao == "falso"
-    return Saude(ok=True, modo_demonstracao=demonstracao)
+    vozes = servicos.voz.sexos if servicos.voz else []
+    return Saude(ok=True, modo_demonstracao=demonstracao, vozes_paciente=vozes)
 
 
 @rotas.get("/queixas", response_model=list[Queixa])
@@ -319,17 +329,81 @@ def perguntar_ao_paciente(
     sessao_id: str, corpo: PerguntaPaciente, servicos: ServicosDep, usuario: UsuarioDep
 ) -> Sessao:
     sessao = _em_conversa(servicos, sessao_id, usuario)
+    return _perguntar(servicos, sessao, corpo.texto)
+
+
+def _perguntar(servicos: Servicos, sessao: Sessao, texto: str) -> Sessao:
+    """Manda a pergunta ao paciente pela IA e guarda a pergunta e a resposta nas falas."""
     assert sessao.caso_ia is not None
     try:
-        resposta = responder(sessao.caso_ia, sessao.falas, corpo.texto, servicos.llm)
+        resposta = responder(sessao.caso_ia, sessao.falas, texto, servicos.llm)
     except ErroPipeline as erro:
         raise HTTPException(422, erro.mensagem) from None
     except ErroLLM:
-        logger.warning("paciente pela IA: sem resposta (sessao=%s)", sessao_id)
+        logger.warning("paciente pela IA: sem resposta (sessao=%s)", sessao.id)
         raise HTTPException(503, MENSAGEM_PACIENTE_FORA) from None
-    falas = [*sessao.falas, Fala(papel="entrevistador", texto=corpo.texto.strip()), Fala(papel="paciente", texto=resposta)]
-    servicos.repositorio.salvar_transcricao(sessao_id, falas, editada=False)
-    return _recarregar(servicos, sessao_id)
+    falas = [*sessao.falas, Fala(papel="entrevistador", texto=texto.strip()), Fala(papel="paciente", texto=resposta)]
+    servicos.repositorio.salvar_transcricao(sessao.id, falas, editada=False)
+    return _recarregar(servicos, sessao.id)
+
+
+@rotas.post("/sessoes/{sessao_id}/conversa/audio", response_model=Sessao)
+def perguntar_falando(
+    sessao_id: str,
+    servicos: ServicosDep,
+    usuario: UsuarioDep,
+    audio: Annotated[UploadFile, File()],
+) -> Sessao:
+    """Pergunta falada: o Whisper transcreve, o áudio é apagado e a pergunta segue como a escrita."""
+    sessao = _em_conversa(servicos, sessao_id, usuario)
+    versao_termo = servicos.conteudo.termo.versao
+    if not any(c.forma == "aceite" and c.versao_termo == versao_termo for c in sessao.consentimentos):
+        raise HTTPException(409, "Antes de falar com o paciente, aceite o termo de gravação.")
+    extensao = _extensao_audio(audio)
+    if extensao is None:
+        raise HTTPException(415, "Formato de áudio não aceito. Use webm, ogg, m4a, mp3 ou wav.")
+
+    pasta = servicos.settings.pasta_audio_temp
+    pasta.mkdir(parents=True, exist_ok=True, mode=0o700)
+    caminho = pasta / f"{PREFIXO_AUDIO}{secrets.token_hex(16)}{extensao}"
+    try:
+        total = 0
+        with caminho.open("wb") as destino:
+            while bloco := audio.file.read(1024 * 1024):
+                total += len(bloco)
+                if total > TAMANHO_MAXIMO_PERGUNTA:
+                    raise HTTPException(413, "A pergunta ficou longa demais. Fale uma pergunta de cada vez.")
+                destino.write(bloco)
+        if total == 0:
+            raise HTTPException(422, "Não deu para ouvir a pergunta. Segure o botão enquanto fala.")
+        numero = sum(1 for f in sessao.falas if f.papel == "entrevistador")
+        texto = transcrever_pergunta_e_apagar(
+            caminho, servicos.transcritor, numero=numero, dica=montar_dica(servicos.conteudo.queixas)
+        )
+    except ErroTranscricao:
+        raise HTTPException(422, "Não deu para entender a pergunta. Fale de novo, perto do microfone.") from None
+    finally:
+        apagar_audio(caminho)
+    return _perguntar(servicos, sessao, texto)
+
+
+@rotas.get("/sessoes/{sessao_id}/voz/{indice}")
+def voz_do_paciente(sessao_id: str, indice: int, servicos: ServicosDep, usuario: UsuarioDep) -> Response:
+    """A fala de número `indice` do paciente pela IA, em WAV, com a voz do Piper."""
+    sessao = _sessao_do_dono(servicos, sessao_id, usuario)
+    if servicos.voz is None:
+        raise HTTPException(404, "A voz do paciente fica com o navegador neste app.")
+    if sessao.origem_caso != "paciente_ia" or not 0 <= indice < len(sessao.falas):
+        raise HTTPException(404, "Fala não encontrada.")
+    fala = sessao.falas[indice]
+    if fala.papel != "paciente":
+        raise HTTPException(404, "Fala não encontrada.")
+    sexo = sessao.caso_ia.sexo if sessao.caso_ia else (sessao.sexo_paciente or "feminino")
+    try:
+        wav = servicos.voz.falar(fala.texto, sexo)
+    except ErroVoz:
+        raise HTTPException(503, "A voz do paciente não saiu agora. A resposta está escrita na tela.") from None
+    return Response(content=wav, media_type="audio/wav", headers={"Cache-Control": "private, max-age=3600"})
 
 
 @rotas.post("/sessoes/{sessao_id}/encerrar", response_model=Sessao)
@@ -384,7 +458,9 @@ def registrar_consentimento(
     sessao_id: str, corpo: ConsentimentoCriar, servicos: ServicosDep, usuario: UsuarioDep
 ) -> Consentimento:
     sessao = _sessao_do_dono(servicos, sessao_id, usuario)
-    if not _antes_da_gravacao(sessao):
+    # No paciente pela IA, o aceite vem antes da primeira pergunta falada; não há colega.
+    falando = sessao.status == "conversando" and corpo.forma == "aceite"
+    if not _antes_da_gravacao(sessao) and not falando:
         raise HTTPException(409, "O aceite é registrado antes da gravação, e esta sessão já foi gravada.")
     if corpo.versao_termo != servicos.conteudo.termo.versao:
         raise HTTPException(409, "O termo de gravação mudou. Leia a versão atual e aceite de novo.")
@@ -585,9 +661,10 @@ def criar_app(
     llm: ClienteLLM | None = None,
     transcritor: Transcritor | None = None,
     repositorio: Repositorio | None = None,
+    voz: VozPiper | None = None,
 ) -> FastAPI:
     settings = settings or obter_settings()
-    servicos = montar_servicos(settings, llm=llm, transcritor=transcritor, repositorio=repositorio)
+    servicos = montar_servicos(settings, llm=llm, transcritor=transcritor, repositorio=repositorio, voz=voz)
 
     @asynccontextmanager
     async def ciclo(_: FastAPI):

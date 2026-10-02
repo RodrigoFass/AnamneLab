@@ -42,6 +42,14 @@ class Settings(BaseSettings):
     whisper_modelo_local: str = "small"
     openai_api_key: SecretStr | None = None
 
+    # Voz do paciente pela IA
+    voz_paciente: Literal["navegador", "piper"] = "navegador"
+    """navegador: o aparelho do aluno lê a resposta. piper: o backend fala com o Piper."""
+    piper_voz_masculina: Path | None = None
+    piper_voz_feminina: Path | None = None
+    """Arquivos .onnx das vozes do Piper (com o .onnx.json ao lado). Sem a voz de um sexo,
+    o Piper usa a outra."""
+
     # Banco e login
     banco: Literal["memoria", "arquivo", "supabase"] = "memoria"
     """memoria some ao fechar o app; arquivo guarda o histórico num JSON no computador."""
@@ -70,9 +78,11 @@ class Settings(BaseSettings):
     duracao_maxima_min: int = 20
     tamanho_maximo_mb: int = 25
 
-    @field_validator("pasta_conteudo", "pasta_audio_temp")
+    @field_validator("pasta_conteudo", "pasta_audio_temp", "piper_voz_masculina", "piper_voz_feminina")
     @classmethod
-    def _relativo_ao_backend(cls, valor: Path) -> Path:
+    def _relativo_ao_backend(cls, valor: Path | None) -> Path | None:
+        if valor is None or str(valor).strip() in ("", "."):
+            return None
         valor = Path(valor).expanduser()
         if not valor.is_absolute():
             valor = PASTA_BACKEND / valor

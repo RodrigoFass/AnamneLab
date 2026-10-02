@@ -6,6 +6,11 @@
 # Histórico local (BANCO=arquivo): transcrições e notas, nunca vão para o git.
 backend/dados/
 
+# Vozes do Piper (arquivos grandes, baixados em cada máquina).
+backend/vozes/
+*.onnx
+*.onnx.json
+
 # Python
 __pycache__/
 *.py[cod]

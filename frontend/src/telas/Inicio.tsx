@@ -6,8 +6,9 @@ import { Aviso } from "../componentes/Aviso";
 import { Avatar } from "../componentes/Avatar";
 import { SeloDemonstracao } from "../componentes/AvisoDemonstracao";
 import { Contador } from "../componentes/Contador";
+import { Folha } from "../componentes/Folha";
 import { LinhaNotas } from "../componentes/Grafico";
-import { IconeArco, IconeAviso, IconeBalao, IconeMicrofone, IconeSeta } from "../componentes/Icones";
+import { IconeArco, IconeAviso, IconeBalao, IconeLixeira, IconeMicrofone, IconeSeta } from "../componentes/Icones";
 import { Logotipo } from "../componentes/Logotipo";
 import { formatarRelativo } from "../util/formato";
 import { marcarDirecao, movimentoReduzido, useNavegar } from "../util/movimento";
@@ -68,6 +69,10 @@ export function Inicio() {
   const { queixas } = useQueixas();
   const [sessoes, setSessoes] = useState<SessaoResumo[] | null>(null);
   const [erro, setErro] = useState<string | null>(null);
+  const [editando, setEditando] = useState(false);
+  const [apagar, setApagar] = useState<SessaoResumo | null>(null);
+  const [apagando, setApagando] = useState(false);
+  const [erroApagar, setErroApagar] = useState<string | null>(null);
 
   useEffect(() => {
     let ativo = true;
@@ -84,6 +89,23 @@ export function Inicio() {
     s.queixas_confirmadas.length > 0 ? nomesDasQueixas(s.queixas_confirmadas, queixas) : "Queixa a confirmar";
 
   const ultimaComNota = sessoes?.find((s) => typeof s.notas?.geral === "number");
+
+  const confirmarApagar = async () => {
+    if (!apagar) return;
+    setApagando(true);
+    setErroApagar(null);
+    try {
+      await api.excluirSessao(apagar.id);
+      const restantes = (sessoes ?? []).filter((s) => s.id !== apagar.id);
+      setSessoes(restantes);
+      if (restantes.length === 0) setEditando(false);
+      setApagar(null);
+    } catch (e) {
+      setErroApagar(textoDoErro(e));
+    } finally {
+      setApagando(false);
+    }
+  };
 
   return (
     <div className="app-tela app-inicio app-tela-abas">
@@ -127,46 +149,100 @@ export function Inicio() {
         </button>
 
         <section className="app-secao" aria-labelledby="titulo-historico">
-          <h2 className="app-subtitulo" id="titulo-historico">
-            Seu histórico
-          </h2>
+          <div className="app-secao-topo">
+            <h2 className="app-subtitulo" id="titulo-historico">
+              Seu histórico
+            </h2>
+            {sessoes && sessoes.length > 0 && (
+              <button className="al-botao al-botao-texto" type="button" onClick={() => setEditando((e) => !e)}>
+                {editando ? "Pronto" : "Apagar sessões"}
+              </button>
+            )}
+          </div>
           {erro && <Aviso tipo="erro">{erro}</Aviso>}
           {!erro && sessoes === null && <p className="app-carregando">Carregando o histórico…</p>}
           {sessoes?.length === 0 && (
-            <p className="app-vazio">
-              Nenhuma sessão ainda. Chame um colega, escolha um caso e grave a primeira.
-            </p>
+            <p className="app-vazio">Nenhuma sessão ainda. Chame um colega, escolha um caso e grave a primeira.</p>
           )}
           {sessoes && sessoes.length > 0 && (
             <ul className="app-lista app-cascata">
               {sessoes.map((s) => (
                 <li key={s.id}>
-                  <Link
-                    className="app-lista-linha"
-                    to={`/sessao/${s.id}`}
-                    viewTransition={!movimentoReduzido()}
-                    onClick={() => marcarDirecao("avancar")}
-                  >
-                    <span className="app-lista-texto">
-                      <span className="app-lista-titulo">{nomeDa(s)}</span>
-                      <span className="app-lista-meta">
-                        <Situacao s={s} />
+                  {editando ? (
+                    <div className="app-lista-linha">
+                      <span className="app-lista-texto">
+                        <span className="app-lista-titulo">{nomeDa(s)}</span>
+                        <span className="app-lista-meta">
+                          <Situacao s={s} />
+                        </span>
                       </span>
-                    </span>
-                    {typeof s.notas?.geral === "number" && (
-                      <span className="app-lista-nota app-tabular" aria-label={`Técnica geral ${s.notas.geral}`}>
-                        {s.notas.geral}
+                      <button
+                        className="al-botao al-botao-texto app-botao-perigo app-lista-apagar"
+                        type="button"
+                        onClick={() => {
+                          setErroApagar(null);
+                          setApagar(s);
+                        }}
+                      >
+                        <IconeLixeira />
+                        Apagar
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      className="app-lista-linha"
+                      to={`/sessao/${s.id}`}
+                      viewTransition={!movimentoReduzido()}
+                      onClick={() => marcarDirecao("avancar")}
+                    >
+                      <span className="app-lista-texto">
+                        <span className="app-lista-titulo">{nomeDa(s)}</span>
+                        <span className="app-lista-meta">
+                          <Situacao s={s} />
+                        </span>
                       </span>
-                    )}
-                    <IconeSeta className="app-lista-seta" />
-                  </Link>
+                      {typeof s.notas?.geral === "number" && (
+                        <span className="app-lista-nota app-tabular" aria-label={`Técnica geral ${s.notas.geral}`}>
+                          {s.notas.geral}
+                        </span>
+                      )}
+                      <IconeSeta className="app-lista-seta" />
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
           )}
         </section>
-
       </main>
+
+      {apagar && (
+        <Folha
+          titulo="Apagar esta sessão?"
+          subtitulo={`${nomeDa(apagar)}, ${formatarRelativo(apagar.criada_em)}. Isso apaga a conversa, a correção e os aceites do termo. Não dá para desfazer.`}
+          onFechar={() => !apagando && setApagar(null)}
+        >
+          <div className="app-grupo">
+            {erroApagar && <Aviso tipo="erro">{erroApagar}</Aviso>}
+            <button
+              className="al-botao al-botao-secundario app-botao-perigo app-botao-largo"
+              type="button"
+              onClick={() => void confirmarApagar()}
+              disabled={apagando}
+            >
+              {apagando ? "Apagando…" : "Sim, apagar"}
+            </button>
+            <button
+              className="al-botao al-botao-texto app-botao-largo"
+              type="button"
+              onClick={() => setApagar(null)}
+              disabled={apagando}
+            >
+              Cancelar
+            </button>
+          </div>
+        </Folha>
+      )}
     </div>
   );
 }

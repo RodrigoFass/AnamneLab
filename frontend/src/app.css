@@ -864,6 +864,18 @@ a.app-lista-linha:active {
 .app-lista-nota {
   font: 700 20px/24px var(--font-display);
 }
+/* Título da seção com uma ação de texto à direita (ex.: apagar sessões do histórico). */
+.app-secao-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+}
+.app-lista-apagar {
+  flex: none;
+  min-height: 44px;
+  gap: var(--espaco-1);
+}
 .app-lista-seta {
   width: 18px;
   height: 18px;
@@ -2251,6 +2263,58 @@ a.app-lista-linha:active {
   flex: none;
   height: 48px;
   border-radius: var(--raio-pilula);
+}
+/* Microfone da pergunta: segurar para falar. Vermelho de gravar só enquanto grava. */
+.app-botao-falar {
+  background: var(--papel-elevado);
+  color: var(--petroleo);
+  border: 1px solid var(--linha-forte);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.app-botao-falar.is-gravando {
+  background: var(--gravar);
+  border-color: var(--gravar);
+  color: var(--on-gravar);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gravar) 25%, transparent);
+}
+.app-perguntar-gravando {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: 48px;
+  margin: 0;
+  padding: var(--espaco-3) var(--espaco-4);
+  border: 1px solid var(--gravar);
+  border-radius: var(--raio-lg);
+  background: var(--papel-elevado);
+  color: var(--tinta);
+}
+.app-perguntar-gravando .app-tabular {
+  margin-left: auto;
+  color: var(--tinta-suave);
+}
+.app-alternar-voz {
+  align-self: center;
+  gap: var(--espaco-2);
+  color: var(--tinta-suave);
+}
+.app-ouvir {
+  flex: none;
+  width: 40px;
+  min-height: 40px;
+  padding: 0;
+  justify-content: center;
+  color: var(--tinta-suave);
+}
+.app-bolha-paciente.is-falando {
+  box-shadow: 0 0 0 2px var(--mostarda);
+}
+.app-bolha.is-transcrevendo {
+  font-style: italic;
 }
 @media (prefers-reduced-motion: reduce) {
   .app-bolha,

@@ -124,6 +124,8 @@ export interface Saude {
   ok: boolean;
   /** LLM ou transcrição falsos: a interface avisa em todas as telas. */
   modo_demonstracao: boolean;
+  /** Sexos com voz do Piper no backend. Vazio: o navegador lê as respostas do paciente pela IA. */
+  vozes_paciente: Sexo[];
 }
 
 export interface Termo {

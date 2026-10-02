@@ -92,6 +92,12 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
   Whisper usa a placa e precisa de `nvidia-cublas-cu12` e `nvidia-cudnn-cu12` (cuDNN 9) com
   as pastas `bin` deles no `PATH`.
 - **Whisper pela API:** `uv pip install -e ".[api]"`, `TRANSCRICAO=api` e `OPENAI_API_KEY`.
+- **Voz do paciente pela IA:** sem nada, o navegador lê as respostas com uma voz em
+  português do aparelho (no Windows, instale em Configurações, Hora e idioma, Fala). Para uma
+  voz mais natural, grátis e sem internet: `uv pip install -e ".[voz]"`, baixe as vozes do
+  Piper em português (o `.onnx` e o `.onnx.json`) para `backend/vozes/` (fora do git) e ponha
+  `VOZ_PACIENTE=piper` e `PIPER_VOZ_MASCULINA` e `PIPER_VOZ_FEMININA` no `.env`. A pergunta
+  falada usa a mesma transcrição da gravação (`TRANSCRICAO`).
 - **Histórico no computador, sem Supabase:** `BANCO=arquivo` guarda as sessões em
   `backend/dados/historico.json` (fora do git) e o histórico continua depois de fechar o app.
   Bom para o protótipo e para uma demonstração. Excluir uma sessão no app tira ela do arquivo.
@@ -117,6 +123,8 @@ Backend (`backend/.env`, modelo em `backend/.env.example`):
 | `TRANSCRICAO` | `local`, `api`, `falso` | `falso` |
 | `WHISPER_MODELO_LOCAL` | tamanho do faster-whisper | `small` |
 | `OPENAI_API_KEY` | chave da API (Whisper) | |
+| `VOZ_PACIENTE` | `navegador`, `piper` | `navegador` |
+| `PIPER_VOZ_MASCULINA`, `PIPER_VOZ_FEMININA` | arquivos `.onnx` das vozes do Piper | |
 | `BANCO` | `memoria`, `arquivo`, `supabase` | `memoria` |
 | `ARQUIVO_HISTORICO` | onde `BANCO=arquivo` guarda as sessões | `dados/historico.json` |
 | `AUTH` | `dev`, `supabase` | `dev` |
