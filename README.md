@@ -77,6 +77,7 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
 - **IA de correção (Anthropic):** `LLM_PROVEDOR=anthropic` e `ANTHROPIC_API_KEY`. O modelo
   sai de `LLM_MODELO` e o esforço de `LLM_ESFORCO`. A saída é JSON validado pelo Pydantic;
   JSON inválido ganha uma nova tentativa e, depois, um erro claro ao aluno.
+- **Teste real de ponta a ponta:** roteiro e script em [docs/teste-real.md](docs/teste-real.md).
 - **Whisper local:** `uv pip install -e ".[local]"` e `TRANSCRICAO=local`. O tamanho do
   modelo vem de `WHISPER_MODELO_LOCAL` (padrão `small`).
 - **Whisper pela API:** `uv pip install -e ".[api]"`, `TRANSCRICAO=api` e `OPENAI_API_KEY`.
