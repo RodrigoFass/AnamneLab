@@ -112,6 +112,7 @@ class Processador:
                 conteudo,
                 self._s.llm,
                 contar_rascunho=self._s.settings.contar_rascunho,
+                itens_por_pedido=self._s.settings.correcao_itens_por_pedido,
             )
             # Id e versão dos checklists primeiro: cada avaliação salva aponta para eles (regra 4).
             self._repo.atualizar_sessao(sessao_id, checklists_usados=resultado.checklists_usados)

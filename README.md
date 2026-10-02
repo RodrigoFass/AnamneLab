@@ -106,6 +106,7 @@ Backend (`backend/.env`, modelo em `backend/.env.example`):
 | `ANTHROPIC_API_KEY` | chave da API | |
 | `GEMINI_API_KEY` | chave do Google AI Studio | |
 | `GEMINI_MODELOS` | modelos em ordem, separados por vírgula | `gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite` |
+| `GEMINI_TEMPERATURA` | temperatura do Gemini; vazia usa o padrão do modelo | vazia |
 | `TRANSCRICAO` | `local`, `api`, `falso` | `falso` |
 | `WHISPER_MODELO_LOCAL` | tamanho do faster-whisper | `small` |
 | `OPENAI_API_KEY` | chave da API (Whisper) | |
@@ -114,6 +115,7 @@ Backend (`backend/.env`, modelo em `backend/.env.example`):
 | `SUPABASE_URL` | URL do projeto | |
 | `SUPABASE_SERVICE_KEY` | chave service_role (só no backend) | |
 | `CONTAR_RASCUNHO` | `true`, `false` | `true` |
+| `CORRECAO_ITENS_POR_PEDIDO` | máximo de itens por pedido de correção ao LLM, `0` para o checklist inteiro | `0` |
 | `CORS_ORIGENS` | origens separadas por vírgula | `http://localhost:5173` |
 
 Frontend (`frontend/.env.local`, modelo em `frontend/.env.example`):

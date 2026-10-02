@@ -16,6 +16,7 @@ import json
 import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from itertools import groupby
 
 from app.conteudo import QUEIXA_OUTRA, Conteudo
 from app.llm import ClienteLLM, ErroLLM
@@ -287,6 +288,26 @@ def calcular_notas(
     return Notas(geral=_nota(geral), queixa=_nota(queixa), provisoria=provisoria)
 
 
+def dividir_em_pedidos(itens: list[ItemAplicavel], limite: int) -> list[list[ItemAplicavel]]:
+    """Itens de um checklist em pedidos de até `limite` itens, sem partir uma seção quando ela
+    cabe inteira num pedido. Limite 0 (ou menor): tudo num pedido só."""
+    if limite <= 0 or len(itens) <= limite:
+        return [itens] if itens else []
+    pedidos: list[list[ItemAplicavel]] = []
+    atual: list[ItemAplicavel] = []
+    for _, da_secao in groupby(itens, key=lambda a: a.secao.titulo):
+        secao = list(da_secao)
+        for inicio in range(0, len(secao), limite):
+            pedaco = secao[inicio : inicio + limite]
+            if atual and len(atual) + len(pedaco) > limite:
+                pedidos.append(atual)
+                atual = []
+            atual.extend(pedaco)
+    if atual:
+        pedidos.append(atual)
+    return pedidos
+
+
 def _corrigir_checklist(
     checklist: Checklist, itens: list[ItemAplicavel], falas: list[Fala], llm: ClienteLLM
 ) -> list[ItemCorrigido]:
@@ -319,14 +340,16 @@ def corrigir(
     llm: ClienteLLM,
     *,
     contar_rascunho: bool,
+    itens_por_pedido: int = 0,
 ) -> ResultadoCorrecao:
+    """Um pedido ao LLM por checklist, ou mais de um se ele passa de `itens_por_pedido` itens."""
     checklists = checklists_aplicaveis(queixas_confirmadas, conteudo)
     itens = itens_aplicaveis(checklists, contar_rascunho)
     registros: list[ItemCorrigido] = []
     for checklist in checklists:
         do_checklist = [a for a in itens if a.checklist.id == checklist.id]
-        if do_checklist:
-            registros.extend(_corrigir_checklist(checklist, do_checklist, falas, llm))
+        for pedido in dividir_em_pedidos(do_checklist, itens_por_pedido):
+            registros.extend(_corrigir_checklist(checklist, pedido, falas, llm))
     avaliacoes = montar_avaliacoes(itens, CorrecaoLLM(itens=registros), falas)
     usados = registrar_checklists(checklists, contar_rascunho)
     tipos = {c.id: c.tipo for c in checklists}

@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     gemini_api_key: SecretStr | None = None
     gemini_modelos: str = "gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite"
     """Modelos do Gemini em ordem, separados por vírgula: se um esgota a cota grátis, tenta o próximo."""
+    gemini_temperatura: float | None = None
+    """Temperatura do Gemini. Vazia: o padrão do modelo. Mais baixa dá correções mais parecidas
+    entre si. Só vale para o Gemini: os modelos atuais da Claude não aceitam temperature."""
 
     # Transcrição
     transcricao: Literal["local", "api", "falso"] = "falso"
@@ -44,6 +47,9 @@ class Settings(BaseSettings):
     # Correção
     contar_rascunho: bool = True
     """Rascunho entra na nota (marcada como provisória) enquanto nenhum checklist foi assinado."""
+    correcao_itens_por_pedido: int = 0
+    """Máximo de itens por pedido de correção ao LLM. 0: cada checklist vai inteiro num pedido.
+    Pedidos menores ajudam modelos mais fracos a olhar item por item."""
 
     # Arquivos
     pasta_conteudo: Path = Path("../content")

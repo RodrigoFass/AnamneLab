@@ -9,6 +9,8 @@ from app.pipeline.corrigir import (
     calcular_notas,
     checklists_aplicaveis,
     corrigir,
+    dividir_em_pedidos,
+    itens_aplicaveis,
     mensagem_feito,
 )
 from app.schemas.sessao import Avaliacao, ChecklistUsado
@@ -321,3 +323,38 @@ def test_registro_de_item_que_nao_foi_pedido_e_ignorado(conteudo):
 def test_instrucoes_deixam_a_mesma_fala_provar_varios_itens():
     assert "A mesma fala pode provar vários itens" in SISTEMA
     assert "outras palavras" in SISTEMA
+
+
+# ---------- pedidos menores ----------
+
+
+def test_dividir_em_pedidos_respeita_o_limite_e_junta_secoes(conteudo):
+    geral = itens_aplicaveis([conteudo.checklist_geral], contar_rascunho=True)
+    assert [len(p) for p in dividir_em_pedidos(geral, 0)] == [len(geral)]
+    assert dividir_em_pedidos([], 3) == []
+    for limite in (1, 2, 3):
+        pedidos = dividir_em_pedidos(geral, limite)
+        assert all(0 < len(p) <= limite for p in pedidos)
+        assert [a.item.id for p in pedidos for a in p] == [a.item.id for a in geral]  # nada some nem troca de ordem
+
+
+def test_secao_que_cabe_inteira_nao_e_partida(conteudo):
+    geral = itens_aplicaveis([conteudo.checklist_geral], contar_rascunho=True)
+    secoes = [s.titulo for s in conteudo.checklist_geral.secoes]
+    maior = max(sum(1 for a in geral if a.secao.titulo == t) for t in secoes)
+    for pedido in dividir_em_pedidos(geral, maior):
+        for titulo in {a.secao.titulo for a in pedido}:
+            # Cada seção presente no pedido está inteira nele.
+            assert sum(1 for a in pedido if a.secao.titulo == titulo) == sum(
+                1 for a in geral if a.secao.titulo == titulo
+            )
+
+
+def test_corrigir_em_pedidos_menores_da_o_mesmo_resultado(conteudo):
+    registros = resposta(("nome", True, [1]), ("idade", True, [3, 4]), ("irradiacao", True, [5]))
+    inteiro = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, LLMRepete(registros), contar_rascunho=True)
+    llm = LLMRepete(registros)
+    em_partes = corrigir(falas_exemplo(), ["dor-toracica"], conteudo, llm, contar_rascunho=True, itens_por_pedido=1)
+    assert len(llm.chamadas) == 7  # um item por pedido
+    assert em_partes.avaliacoes == inteiro.avaliacoes
+    assert em_partes.notas == inteiro.notas

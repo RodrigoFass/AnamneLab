@@ -87,7 +87,14 @@ def testar(settings: Settings) -> None:
     resultado = _etapa(
         "Corrigir pelos checklists",
         llm,
-        lambda: corrigir(falas, queixas, conteudo, llm, contar_rascunho=settings.contar_rascunho),
+        lambda: corrigir(
+            falas,
+            queixas,
+            conteudo,
+            llm,
+            contar_rascunho=settings.contar_rascunho,
+            itens_por_pedido=settings.correcao_itens_por_pedido,
+        ),
         lambda r: (
             f"{sum(a.status == 'feito' for a in r.avaliacoes)} de {len(r.avaliacoes)} itens feitos, "
             f"nota geral {r.notas.geral}, queixa {r.notas.queixa}"

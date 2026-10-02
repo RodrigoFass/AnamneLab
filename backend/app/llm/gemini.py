@@ -111,6 +111,7 @@ class ClienteGemini(ClienteLLM):
         self.ultimo_erro: ErroGemini | None = None
         self.ultimo_modelo: str | None = None
         self.espera_nova_tentativa_s = ESPERA_NOVA_TENTATIVA_S
+        self._temperatura = settings.gemini_temperatura
 
     def _gerar_json(
         self,
@@ -130,15 +131,18 @@ class ClienteGemini(ClienteLLM):
             logger.warning("GEMINI_MODELOS vazio (tarefa=%s)", tarefa)
             raise ErroLLM(MENSAGEM_PADRAO)
 
+        configuracao: dict[str, Any] = {
+            "responseMimeType": "application/json",
+            # `responseJsonSchema` está marcado como obsoleto em favor de `responseFormat`, mas
+            # é o que os modelos atuais aceitam com certeza; trocar só testando com chave real.
+            "responseJsonSchema": schema_para_gemini(saida),
+        }
+        if self._temperatura is not None:
+            configuracao["temperature"] = self._temperatura
         corpo = {
             "systemInstruction": {"parts": [{"text": sistema}]},
             "contents": [{"role": "user", "parts": [{"text": mensagem}]}],
-            # `responseJsonSchema` está marcado como obsoleto em favor de `responseFormat`, mas
-            # é o que os modelos atuais aceitam com certeza; trocar só testando com chave real.
-            "generationConfig": {
-                "responseMimeType": "application/json",
-                "responseJsonSchema": schema_para_gemini(saida),
-            },
+            "generationConfig": configuracao,
         }
         # A cota esgotada vale mais que o erro do último modelo: é o que o aluno precisa saber.
         cotas: list[ErroGemini] = []
@@ -173,6 +177,7 @@ class ClienteGemini(ClienteLLM):
 
             if resposta.status_code == 200:
                 self.ultimo_modelo = modelo
+                logger.info("Gemini respondeu (tarefa=%s, modelo=%s)", tarefa, modelo)
                 return self._ler_texto(resposta, tarefa=tarefa, modelo=modelo)
 
             erro = _ler_erro(resposta, modelo)

@@ -104,6 +104,12 @@ def test_monta_o_pedido_com_schema_e_sem_temperatura():
     assert "temperature" not in json.dumps(corpo)
 
 
+def test_temperatura_so_vai_quando_configurada():
+    servidor = Servidor(_resposta_ok(VALIDO))
+    _gerar(_cliente(servidor, gemini_temperatura=0.0))
+    assert json.loads(servidor.pedidos[0].content)["generationConfig"]["temperature"] == 0.0
+
+
 def _refs(no):
     if isinstance(no, dict):
         if "$ref" in no:
