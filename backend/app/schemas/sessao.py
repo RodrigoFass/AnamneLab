@@ -27,6 +27,10 @@ StatusSessao = Literal[
 
 StatusItem = Literal["feito", "faltou"]
 SexoPaciente = Literal["feminino", "masculino"]
+FormaConsentimento = Literal["aceite", "declarado_pelo_dono"]
+"""`aceite`: a pessoa leu e aceitou o termo. `declarado_pelo_dono`: o colega não aceita no app;
+quem abriu a sessão aceitou um termo em que se compromete a avisá-lo antes de gravar, e o app
+registra esse aviso na sessão."""
 
 
 # ---------- entrada ----------
@@ -46,6 +50,7 @@ class ConsentimentoCriar(BaseModel):
     nome_informado: str = Field(min_length=1, max_length=120)
     versao_termo: str
     aceito: Literal[True]
+    forma: FormaConsentimento = "aceite"
 
 
 class TranscricaoEditar(BaseModel):
@@ -103,6 +108,7 @@ class Consentimento(BaseModel):
     nome_informado: str
     versao_termo: str
     aceito_em: datetime
+    forma: FormaConsentimento = "aceite"
 
 
 class ChecklistUsado(BaseModel):

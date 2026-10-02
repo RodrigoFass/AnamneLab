@@ -444,3 +444,31 @@ def test_sexo_invalido_e_recusado(cliente):
         f"/api/sessoes/{sessao_id}/queixa", json={"queixas": ["dor-toracica"], "sexo_paciente": "x"}
     )
     assert resposta.status_code == 422
+
+
+def test_colega_avisado_pelo_dono_libera_a_gravacao(cliente):
+    sessao_id = nova_sessao(cliente)
+    declarado = {"papel": "paciente", "nome_informado": "Ana", "versao_termo": "1", "aceito": True, "forma": "declarado_pelo_dono"}
+
+    # Sem o aceite do dono, o aviso ao colega não vale.
+    resposta = cliente.post(f"/api/sessoes/{sessao_id}/consentimentos", json=declarado)
+    assert resposta.status_code == 409
+
+    assert consentir(cliente, sessao_id, "medico").status_code == 201
+    resposta = cliente.post(f"/api/sessoes/{sessao_id}/consentimentos", json=declarado)
+    assert resposta.status_code == 201
+    assert resposta.json()["forma"] == "declarado_pelo_dono"
+
+    assert cliente.post(f"/api/sessoes/{sessao_id}/audio", files={"audio": AUDIO}).status_code == 200
+    sessao = esperar(cliente, sessao_id, "aguardando_queixa")
+    assert sorted(c["forma"] for c in sessao["consentimentos"]) == ["aceite", "declarado_pelo_dono"]
+
+
+def test_aviso_do_dono_nao_vale_para_o_proprio_papel(cliente):
+    sessao_id = nova_sessao(cliente)
+    assert consentir(cliente, sessao_id, "medico").status_code == 201
+    resposta = cliente.post(
+        f"/api/sessoes/{sessao_id}/consentimentos",
+        json={"papel": "medico", "nome_informado": "Rodrigo", "versao_termo": "1", "aceito": True, "forma": "declarado_pelo_dono"},
+    )
+    assert resposta.status_code == 409

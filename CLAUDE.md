@@ -52,7 +52,8 @@ docs/api.md
 
 ## Privacidade (LGPD)
 
-- Nenhuma gravação começa sem o consentimento do colega registrado em `consentimentos` (sessão, papel, nome informado, versão do termo, data e hora).
+- Só quem abriu a sessão aceita o termo de gravação, uma vez (vale até retirar no Perfil ou o termo mudar de versão). O termo traz o compromisso de avisar o colega antes de cada gravação; o colega não aceita no app (decisão do Rodrigo em 2026-10-02).
+- Nenhuma gravação começa sem os dois registros em `consentimentos` (sessão, papel, nome informado, versão do termo, data e hora, forma): o aceite do dono (`aceite`) e o aviso ao colega (`declarado_pelo_dono`), que só vale depois do aceite do dono.
 - O áudio é apagado logo após a transcrição, inclusive quando ela falha. Só texto e nota ficam salvos.
 - Nunca registrar áudio, transcrição ou dados pessoais em log. Segredos só em `.env`, fora do git.
 - O dono pode excluir uma sessão; isso apaga transcrição e avaliações.

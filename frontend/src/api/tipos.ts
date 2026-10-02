@@ -80,11 +80,15 @@ export interface SessaoCriar {
   cartao_id?: string | null;
 }
 
+/** `aceite`: a pessoa aceitou o termo. `declarado_pelo_dono`: quem abriu a sessão avisou o colega. */
+export type FormaConsentimento = "aceite" | "declarado_pelo_dono";
+
 export interface ConsentimentoCriar {
   papel: Papel;
   nome_informado: string;
   versao_termo: string;
   aceito: true;
+  forma?: FormaConsentimento;
 }
 
 export interface TranscricaoEditar {
@@ -132,6 +136,7 @@ export interface Consentimento {
   nome_informado: string;
   versao_termo: string;
   aceito_em: string;
+  forma: FormaConsentimento;
 }
 
 export interface ChecklistUsado {

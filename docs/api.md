@@ -25,8 +25,8 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 | POST | `/api/sessoes` | `SessaoCriar` | `Sessao` | Abre uma sessão (status `criada`) |
 | GET | `/api/sessoes/{id}` | | `Sessao` | Estado atual; o frontend consulta a cada 2 s enquanto processa |
 | DELETE | `/api/sessoes/{id}` | | 204 | Apaga sessão, transcrição, avaliações e consentimentos |
-| POST | `/api/sessoes/{id}/consentimentos` | `ConsentimentoCriar` | `Consentimento` | Registra o aceite de uma voz (médico ou paciente) |
-| POST | `/api/sessoes/{id}/audio` | multipart `audio` | `Sessao` | Exige os dois consentimentos na versão vigente do termo. Status vai para `processando_audio` e o processamento roda em segundo plano |
+| POST | `/api/sessoes/{id}/consentimentos` | `ConsentimentoCriar` | `Consentimento` | Registra o aceite de quem abriu a sessão (`forma: "aceite"`, o padrão) ou o aviso ao colega (`forma: "declarado_pelo_dono"`, que exige antes o aceite do dono no outro papel; senão 409) |
+| POST | `/api/sessoes/{id}/audio` | multipart `audio` | `Sessao` | Exige um registro por papel (médico e paciente) na versão vigente do termo. Status vai para `processando_audio` e o processamento roda em segundo plano |
 | PUT | `/api/sessoes/{id}/transcricao` | `TranscricaoEditar` | `Sessao` | Corrige quem disse o quê ou um erro de transcrição; marca `transcricao_editada` |
 | POST | `/api/sessoes/{id}/queixa` | `QueixaConfirmar` | `Sessao` | Aluno confirma a queixa e o sexo do paciente simulado (`sexo_paciente`: `feminino`, `masculino` ou `null`; sem o campo, fica o detectado na conversa). Item de checklist só de um sexo sai da correção quando o paciente é do outro. `outra` vale sozinha (não se mistura com queixa da lista) e entra na `fila_queixas`. Dispara anamnese e correção em segundo plano |
 | POST | `/api/sessoes/{id}/hipoteses` | `HipotesesAluno` | `Sessao` | Aluno escreve as hipóteses. Libera a correção e dispara as sugestões da IA |

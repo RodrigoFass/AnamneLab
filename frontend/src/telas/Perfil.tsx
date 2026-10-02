@@ -177,7 +177,7 @@ export function Perfil() {
           <>
             <p className="app-ajuda">
               Você aceitou o termo (v{aceite.versao}) em {formatarData(aceite.em)}. Ele vale para as suas
-              sessões neste aparelho. O colega que faz o outro papel confirma a cada gravação.
+              sessões neste aparelho. O colega não precisa aceitar no app; basta avisar antes de cada gravação.
             </p>
             <button
               className="al-botao al-botao-texto app-botao-largo"

@@ -297,6 +297,11 @@ def registrar_consentimento(
     nome = corpo.nome_informado.strip()
     if not nome:
         raise HTTPException(422, "Escreva o nome de quem está aceitando o termo.")
+    if corpo.forma == "declarado_pelo_dono" and not any(
+        c.forma == "aceite" and c.papel != corpo.papel and c.versao_termo == corpo.versao_termo
+        for c in sessao.consentimentos
+    ):
+        raise HTTPException(409, "Primeiro, quem abriu a sessão aceita o termo de gravação.")
     consentimento = Consentimento(
         id=str(uuid.uuid4()),
         sessao_id=sessao_id,
@@ -304,6 +309,7 @@ def registrar_consentimento(
         nome_informado=nome,
         versao_termo=corpo.versao_termo,
         aceito_em=_agora(),
+        forma=corpo.forma,
     )
     servicos.repositorio.adicionar_consentimento(consentimento)
     return consentimento

@@ -84,7 +84,7 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
   As tarefas simples começam por `GEMINI_MODELOS_LEVES`, para sobrar cota dos modelos melhores
   para separar as falas e corrigir. A cota grátis dos modelos melhores é pequena: evite rodar
   muitos testes no dia de uma demonstração. No plano grátis o Google pode guardar o texto, usar para
-  melhorar os produtos dele e ter pessoas revisando; o termo (v2) avisa disso. Para conferir a
+  melhorar os produtos dele e ter pessoas revisando; o termo avisa disso. Para conferir a
   chave e os modelos, rode `uv run python -m app.testar_ia` dentro de `backend/` (no Windows
   sem uv: `.venv\Scripts\python -m app.testar_ia`); `--modelos` lista os modelos da chave.
 - **Whisper local:** `uv pip install -e ".[local]"` e `TRANSCRICAO=local`. O tamanho do
@@ -159,7 +159,7 @@ build do frontend em todo push e pull request.
 
 ## Privacidade (LGPD)
 
-- Nenhuma gravação começa sem o consentimento das duas vozes, registrado com papel, nome, versão do termo e data e hora.
+- Só quem abriu a sessão aceita o termo, uma vez; o termo traz o compromisso de avisar o colega antes de cada gravação. Nenhuma gravação começa sem o aceite do dono e o registro desse aviso na sessão, com papel, nome, versão do termo e data e hora.
 - O áudio é apagado logo após a transcrição, inclusive quando ela falha; só texto e nota ficam salvos.
 - Áudio, transcrição e dados pessoais nunca vão para log; segredos ficam só em `.env`, fora do git.
 - O aluno pode excluir uma sessão, e isso apaga transcrição, avaliações e consentimentos.

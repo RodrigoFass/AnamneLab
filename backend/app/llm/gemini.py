@@ -2,7 +2,7 @@
 
 Tem plano gratuito sem cartão (chave criada no Google AI Studio): serve para mostrar o
 app com correção de verdade sem custo. No plano gratuito o Google pode guardar o conteúdo,
-usar para melhorar os produtos dele e ter pessoas revisando; o termo avisa disso (v2) e o
+usar para melhorar os produtos dele e ter pessoas revisando; o termo avisa disso (desde a v2) e o
 caso é sempre simulado.
 
 Cada modelo tem a sua cota gratuita. `GEMINI_MODELOS` é uma lista em ordem: quando um
