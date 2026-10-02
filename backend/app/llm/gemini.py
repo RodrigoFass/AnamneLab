@@ -52,7 +52,7 @@ ESPERA_MAXIMA_COTA_S = 20.0
 """Cota por minuto (429 que não é do dia): se o Google pede para esperar até isso, o mesmo
 modelo ganha mais uma chance depois da espera, em vez de cair para um modelo mais fraco."""
 
-TAREFAS_LEVES = {"queixa", "anamnese", "sugestoes"}
+TAREFAS_LEVES = {"queixa", "anamnese", "sugestoes", "paciente_caso", "paciente_resposta"}
 """Tarefas em que um modelo mais simples basta. Separar as falas e corrigir pedem o melhor."""
 
 PARADA_RECUSA = {

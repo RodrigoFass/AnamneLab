@@ -5,7 +5,8 @@ App de treino de anamnese para estudantes de Medicina. Dois alunos simulam uma c
 ## Escopo deste repositório
 
 - Só **Modo Livre**. O app vale para qualquer queixa: checklist geral + um checklist por queixa da biblioteca (`content/queixas.json`). Queixa nova é só um JSON em `content/checklists/`; o código não depende de queixa nenhuma.
-- Não implementar: Modo Caso, Paciente Virtual, Modo Aula, painel ou conta de professor, pagamento, app nativo, gravação offline.
+- Paciente pela IA (protótipo, pedido do Rodrigo em 2026-10-02): o aluno entrevista por escrito um paciente simulado. O caso parte de um cartão de `content/cartoes/`; a IA monta uma ficha fictícia (`caso_ia`, escondida até o fim da conversa) e responde só pela ficha. A conversa vira as falas da sessão e passa pela mesma correção. Sem áudio, sem colega e sem termo de gravação.
+- Não implementar: Modo Caso, Modo Aula, painel ou conta de professor, pagamento, app nativo, gravação offline.
 - Usuários: só estudantes de Medicina. Nunca paciente real; o app avisa antes de cada gravação.
 
 ## Stack
@@ -46,7 +47,7 @@ docs/api.md
 2. A queixa vem de `content/queixas.json` ou é "outra". O aluno confirma a queixa antes da correção. "Outra" vai para `fila_queixas` e é corrigida só pelo checklist geral.
 3. Só checklist com `status: "aprovado"` conta na nota. Rascunho aparece como sugestão, fora da nota. Exceção do protótipo: com `CONTAR_RASCUNHO=true` (padrão enquanto nenhum checklist foi assinado), rascunho entra na conta e a nota aparece como provisória.
 4. Checklists nunca são gerados pelo LLM em tempo de execução. A sessão guarda o id e a versão de cada checklist usado.
-5. O caso é sempre do aluno. O app não guarda o texto do caso, só a transcrição. Professor não tem conta: a assinatura dele fica no JSON (`validado_por`, `validado_em`, `versao`).
+5. O caso é sempre do aluno. O app não guarda o texto do caso, só a transcrição. Exceção: no paciente pela IA, o caso é a ficha fictícia que o próprio app montou, e ela fica na sessão. Professor não tem conta: a assinatura dele fica no JSON (`validado_por`, `validado_em`, `versao`).
 6. A IA nunca afirma diagnóstico. Hipóteses aparecem como "sugestão, não gabarito", depois que o aluno escreve as dele.
 7. LLM com saída estruturada (JSON Schema) validada pelo Pydantic. JSON inválido: uma nova tentativa, depois erro claro ao aluno. Os modelos atuais da Claude não aceitam `temperature`: não passe esse parâmetro.
 

@@ -14,7 +14,7 @@ import { Aviso } from "../componentes/Aviso";
 import { Avatar } from "../componentes/Avatar";
 import { BarraProgresso } from "../componentes/BarraProgresso";
 import { Folha } from "../componentes/Folha";
-import { IconeArco, IconeAviso, IconeCasa, IconeCheck, IconeLampada, IconeTrocar } from "../componentes/Icones";
+import { IconeArco, IconeAviso, IconeBalao, IconeCasa, IconeCheck, IconeLampada, IconeTrocar } from "../componentes/Icones";
 import { ItemChecklist, ItemSugestao } from "../componentes/ItemChecklist";
 import { Recado } from "../componentes/Recado";
 import { Selo } from "../componentes/Selo";
@@ -26,6 +26,19 @@ import { nomesDasQueixas, rotaDaSessao, useQueixas, useSessao } from "../util/se
 import { movimentoReduzido, useNavegar, vibrar } from "../util/movimento";
 
 const ID_GERAL = "geral";
+
+type ParteDoCaso = "historia_da_doenca" | "antecedentes" | "medicacoes" | "alergias" | "habitos" | "familia" | "vida_social";
+
+/** Partes da ficha do paciente pela IA, mostradas depois da correção. */
+const CAMPOS_CASO: { campo: ParteDoCaso; rotulo: string }[] = [
+  { campo: "historia_da_doenca", rotulo: "História da doença" },
+  { campo: "antecedentes", rotulo: "Antecedentes" },
+  { campo: "medicacoes", rotulo: "Medicações" },
+  { campo: "alergias", rotulo: "Alergias" },
+  { campo: "habitos", rotulo: "Hábitos" },
+  { campo: "familia", rotulo: "Família" },
+  { campo: "vida_social", rotulo: "Vida social" },
+];
 
 const CAMPOS_ANAMNESE: { campo: keyof AnamneseEstruturada; rotulo: string }[] = [
   { campo: "identificacao", rotulo: "Identificação" },
@@ -592,7 +605,35 @@ export function Correcao() {
         </details>
       )}
 
+      {sessao.caso_ia && (
+        <details className="app-recolhivel">
+          <summary>O caso do paciente</summary>
+          <p className="app-ajuda">
+            {sessao.caso_ia.nome}, {sessao.caso_ia.idade} anos, {sessao.caso_ia.profissao}. É tudo o que a IA sabia; o
+            que você não perguntou ficou fora da conversa.
+          </p>
+          <dl className="app-anamnese">
+            {CAMPOS_CASO.map(({ campo, rotulo }) => (
+              <div key={campo}>
+                <dt>{rotulo}</dt>
+                <dd>{sessao.caso_ia?.[campo].join(" ")}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+      )}
+
       <section className="app-secao app-acoes-finais" aria-label="Próximos passos">
+        {sessao.origem_caso === "paciente_ia" && (
+          <button
+            className="al-botao al-botao-principal app-botao-largo"
+            type="button"
+            onClick={() => navegar("/paciente-ia")}
+          >
+            <IconeBalao />
+            Treinar com outro paciente
+          </button>
+        )}
         {nomes.medico && nomes.paciente && (
           <div className={`app-troca${trocando ? " is-trocando" : ""}`} ref={troca} aria-hidden="true">
             <span className="app-troca-pessoa">
@@ -606,15 +647,17 @@ export function Correcao() {
             </span>
           </div>
         )}
-        <button
-          className="al-botao al-botao-principal app-botao-largo"
-          type="button"
-          onClick={trocarPapel}
-          disabled={trocando}
-        >
-          <IconeTrocar />
-          Trocar de papel e gravar
-        </button>
+        {sessao.origem_caso !== "paciente_ia" && (
+          <button
+            className="al-botao al-botao-principal app-botao-largo"
+            type="button"
+            onClick={trocarPapel}
+            disabled={trocando}
+          >
+            <IconeTrocar />
+            Trocar de papel e gravar
+          </button>
+        )}
         <button
           className="al-botao al-botao-secundario app-botao-largo"
           type="button"

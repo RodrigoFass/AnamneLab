@@ -73,6 +73,8 @@ class ClienteFalso(ClienteLLM):
             "corrigir": _corrigir,
             "sugestoes": _sugestoes,
             "verificar_contestacao": _verificar_contestacao,
+            "paciente_caso": _paciente_caso,
+            "paciente_resposta": _paciente_resposta,
         }
         if tarefa not in respostas:
             raise ValueError(f"tarefa desconhecida para o provedor falso: {tarefa}")
@@ -201,3 +203,58 @@ def _verificar_contestacao(contexto: dict[str, Any]) -> dict[str, Any]:
     item = contexto.get("item") or {}
     chaves = [normalizar(p) for p in item.get("palavras_chave", []) if normalizar(p)]
     return {"cumpre": any(chave in trecho for chave in chaves)}
+
+
+def _paciente_caso(contexto: dict[str, Any]) -> dict[str, Any]:
+    """Ficha fixa a partir do cartão: os detalhes dele viram a história da doença."""
+    cartao: dict[str, Any] = contexto.get("cartao", {})
+    mulher = cartao.get("sexo") == "feminino"
+    return {
+        "nome": "Maria Souza" if mulher else "José Lima",
+        "idade": cartao.get("idade", 40),
+        "sexo": "feminino" if mulher else "masculino",
+        "profissao": "professora" if mulher else "motorista",
+        "queixa_nas_palavras_dele": cartao.get("resumo", "Não estou me sentindo bem."),
+        "historia_da_doenca": [*cartao.get("detalhes", []), "Nunca senti isso antes."],
+        "antecedentes": ["Tenho pressão alta há uns cinco anos."],
+        "medicacoes": ["Tomo losartana de manhã."],
+        "alergias": ["Não tenho alergia a remédio."],
+        "habitos": ["Não bebo. Caminho no fim de semana."],
+        "familia": ["Meu pai teve infarto aos 60 anos."],
+        "vida_social": ["Moro com a família e trabalho de dia."],
+        "jeito_de_falar": "Tranquilo, responde direto.",
+    }
+
+
+_TEMAS_PACIENTE: list[tuple[tuple[str, ...], str]] = [
+    (("nome", "chama"), "nome"),
+    (("idade", "anos voce tem", "quantos anos"), "idade"),
+    (("trabalh", "profiss", "faz da vida"), "profissao"),
+    (("remedio", "medica"), "medicacoes"),
+    (("alergi",), "alergias"),
+    (("fuma", "bebe", "alcool", "atividade", "exercicio"), "habitos"),
+    (("famil", "pai", "mae", "irmao"), "familia"),
+    (("doenca", "problema de saude", "pressao", "diabetes", "cirurgia", "internad"), "antecedentes"),
+    (("mora", "casad", "filhos"), "vida_social"),
+    (("traz", "motivo", "aconteceu", "ajudar", "sentindo"), "queixa"),
+]
+
+
+def _paciente_resposta(contexto: dict[str, Any]) -> dict[str, Any]:
+    """Responde pela primeira palavra-chave que casar; o resto vira um fato da história."""
+    caso: dict[str, Any] = contexto.get("caso", {})
+    pergunta = normalizar(contexto.get("pergunta", ""))
+    for termos, tema in _TEMAS_PACIENTE:
+        if any(t in pergunta for t in termos):
+            if tema == "nome":
+                return {"resposta": f"Meu nome é {caso.get('nome', '')}."}
+            if tema == "idade":
+                return {"resposta": f"Tenho {caso.get('idade')} anos."}
+            if tema == "profissao":
+                return {"resposta": f"Trabalho como {caso.get('profissao', '')}."}
+            if tema == "queixa":
+                return {"resposta": caso.get("queixa_nas_palavras_dele", "")}
+            return {"resposta": " ".join(caso.get(tema, [])) or "Não que eu saiba."}
+    historia: list[str] = caso.get("historia_da_doenca", [])
+    indice = sum(map(ord, pergunta)) % len(historia) if historia else 0
+    return {"resposta": historia[indice] if historia else "Não sei dizer."}

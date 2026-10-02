@@ -78,6 +78,9 @@ export function ConfirmarQueixa() {
 
   const trocaValida = outra ? descricao.trim().length > 0 : marcadas.length > 0;
 
+  // Consulta com o paciente da IA: não houve áudio, e o sexo vem da ficha do caso.
+  const porEscrito = sessao?.origem_caso === "paciente_ia";
+
   return (
     <Tela
       titulo="Preparando sua correção"
@@ -90,9 +93,9 @@ export function ConfirmarQueixa() {
 
       {sessao && (
         <>
-          <Etapas etapas={etapasDoAudio(sessao)} />
+          {!porEscrito && <Etapas etapas={etapasDoAudio(sessao)} />}
 
-          {sessao.falas.length > 0 && (
+          {!porEscrito && sessao.falas.length > 0 && (
             <section className="app-trecho" aria-label="Trecho da transcrição">
               <p className="app-legenda">Trecho da transcrição, falas separadas</p>
               <ul className="app-falas-curtas app-cascata">
@@ -110,28 +113,30 @@ export function ConfirmarQueixa() {
             </section>
           )}
 
-          <fieldset className="app-grupo">
-            <legend className="app-subtitulo">O paciente simulado é</legend>
-            <div className="app-segmentado">
-              {SEXOS.map((o) => (
-                <label key={o.valor} className={sexo === o.valor ? "is-marcada" : ""}>
-                  <input
-                    type="radio"
-                    name="sexo-paciente"
-                    value={o.valor}
-                    checked={sexo === o.valor}
-                    onChange={() => setSexoEscolhido(o.valor)}
-                  />
-                  {o.rotulo}
-                </label>
-              ))}
-            </div>
-            <p className="app-ajuda">
-              {sexo === null
-                ? "Escolha para o app tirar da nota as perguntas que não valem para este paciente."
-                : "Perguntas que não valem para este paciente, como a data da última menstruação num homem, saem da nota."}
-            </p>
-          </fieldset>
+          {!porEscrito && (
+            <fieldset className="app-grupo">
+              <legend className="app-subtitulo">O paciente simulado é</legend>
+              <div className="app-segmentado">
+                {SEXOS.map((o) => (
+                  <label key={o.valor} className={sexo === o.valor ? "is-marcada" : ""}>
+                    <input
+                      type="radio"
+                      name="sexo-paciente"
+                      value={o.valor}
+                      checked={sexo === o.valor}
+                      onChange={() => setSexoEscolhido(o.valor)}
+                    />
+                    {o.rotulo}
+                  </label>
+                ))}
+              </div>
+              <p className="app-ajuda">
+                {sexo === null
+                  ? "Escolha para o app tirar da nota as perguntas que não valem para este paciente."
+                  : "Perguntas que não valem para este paciente, como a data da última menstruação num homem, saem da nota."}
+              </p>
+            </fieldset>
+          )}
 
           {!semDeteccao && !trocando && (
             <QueixaDetectada
@@ -143,9 +148,7 @@ export function ConfirmarQueixa() {
             />
           )}
 
-          {semDeteccao && (
-            <Aviso>Não deu para identificar a queixa na conversa. Escolha na lista abaixo.</Aviso>
-          )}
+          {semDeteccao && <Aviso>Não deu para identificar a queixa na conversa. Escolha na lista abaixo.</Aviso>}
 
           {mostrarLista && (
             <fieldset className="app-grupo">
@@ -173,9 +176,7 @@ export function ConfirmarQueixa() {
                   />
                   <span>
                     <span className="app-opcao-rotulo">Outra</span>
-                    <span className="app-opcao-ajuda">
-                      Não está na lista. A correção usa só o checklist geral.
-                    </span>
+                    <span className="app-opcao-ajuda">Não está na lista. A correção usa só o checklist geral.</span>
                   </span>
                 </label>
               </div>
@@ -216,9 +217,11 @@ export function ConfirmarQueixa() {
 
           {erro && <Aviso tipo="erro">{erro}</Aviso>}
 
-          <Link className="al-botao al-botao-texto app-link" to={`/sessao/${id}/transcricao`}>
-            Revisar a transcrição
-          </Link>
+          {!porEscrito && (
+            <Link className="al-botao al-botao-texto app-link" to={`/sessao/${id}/transcricao`}>
+              Revisar a transcrição
+            </Link>
+          )}
         </>
       )}
     </Tela>

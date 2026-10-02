@@ -9,13 +9,14 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.schemas.llm import AnamneseEstruturada, Fala, SugestoesIA
+from app.schemas.llm import AnamneseEstruturada, CasoPaciente, Fala, SugestoesIA
 
-OrigemCaso = Literal["livro", "internet", "inventado", "cartao"]
+OrigemCaso = Literal["livro", "internet", "inventado", "cartao", "paciente_ia"]
 Papel = Literal["medico", "paciente"]
 
 StatusSessao = Literal[
     "criada",                 # sessão aberta, esperando consentimentos e áudio
+    "conversando",            # paciente pela IA: o aluno está entrevistando por escrito
     "processando_audio",      # transcrevendo e separando falas
     "aguardando_queixa",      # aluno confirma a queixa (e pode corrigir a transcrição)
     "corrigindo",             # montando anamnese e correção
@@ -51,6 +52,12 @@ class ConsentimentoCriar(BaseModel):
     versao_termo: str
     aceito: Literal[True]
     forma: FormaConsentimento = "aceite"
+
+
+class PerguntaPaciente(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    texto: str = Field(min_length=1, max_length=500)
 
 
 class TranscricaoEditar(BaseModel):
@@ -177,6 +184,8 @@ class Sessao(BaseModel):
     """Só é preenchido na resposta depois que o aluno enviou as hipóteses."""
     notas: Notas | None = None
     sugestoes: SugestoesIA | None = None
+    caso_ia: CasoPaciente | None = None
+    """Ficha do paciente pela IA (caso fictício). O aluno só vê depois de encerrar a conversa."""
 
 
 class SessaoResumo(BaseModel):

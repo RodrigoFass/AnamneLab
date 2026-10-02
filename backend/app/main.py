@@ -18,7 +18,9 @@ from fastapi.responses import JSONResponse, Response
 from app.auth import Usuario, usuario_atual
 from app.config import Settings, obter_settings
 from app.conteudo import QUEIXA_OUTRA, ErroConteudo
-from app.llm import ClienteLLM
+from app.llm import ClienteLLM, ErroLLM
+from app.pipeline.comum import ErroPipeline
+from app.pipeline.paciente_ia import montar_caso, responder
 from app.pipeline.corrigir import ErroContestacao, contestar, item_do_checklist
 from app.pipeline.transcrever import Transcritor, apagar_audio
 from app.processamento import Processador
@@ -30,6 +32,7 @@ from app.schemas.sessao import (
     ConsentimentoCriar,
     ContestacaoCriar,
     HipotesesAluno,
+    PerguntaPaciente,
     QueixaConfirmar,
     Saude,
     Sessao,
@@ -39,6 +42,7 @@ from app.schemas.sessao import (
     TranscricaoEditar,
 )
 from app.servicos import Servicos, montar_servicos
+from app.texto import normalizar
 
 logger = logging.getLogger("app")
 
@@ -163,9 +167,11 @@ def correcao_liberada(sessao: Sessao) -> bool:
 
 
 def para_aluno(sessao: Sessao) -> Sessao:
+    # A ficha do paciente pela IA é o gabarito do caso: só aparece depois da conversa.
+    oculto = {"caso_ia": None} if sessao.status == "conversando" else {}
     if correcao_liberada(sessao):
-        return sessao
-    return sessao.model_copy(update={"avaliacoes": [], "notas": None, "sugestoes": None})
+        return sessao.model_copy(update=oculto) if oculto else sessao
+    return sessao.model_copy(update={"avaliacoes": [], "notas": None, "sugestoes": None, **oculto})
 
 
 def _recarregar(servicos: Servicos, sessao_id: str) -> Sessao:
@@ -248,6 +254,8 @@ def listar_sessoes(servicos: ServicosDep, usuario: UsuarioDep) -> list[SessaoRes
 
 @rotas.post("/sessoes", response_model=Sessao, status_code=201)
 def criar_sessao(corpo: SessaoCriar, servicos: ServicosDep, usuario: UsuarioDep) -> Sessao:
+    if corpo.origem_caso == "paciente_ia":
+        return _criar_sessao_paciente_ia(corpo, servicos, usuario)
     cartao_id = corpo.cartao_id
     if corpo.origem_caso == "cartao":
         if not cartao_id:
@@ -266,6 +274,92 @@ def criar_sessao(corpo: SessaoCriar, servicos: ServicosDep, usuario: UsuarioDep)
     )
     servicos.repositorio.criar_sessao(sessao)
     return sessao
+
+
+MENSAGEM_PACIENTE_FORA = "O paciente não respondeu agora. Tente de novo em alguns instantes."
+
+
+def _criar_sessao_paciente_ia(corpo: SessaoCriar, servicos: ServicosDep, usuario: Usuario) -> Sessao:
+    """Sorteia (ou usa) um cartão e monta a ficha do paciente que a IA vai interpretar."""
+    cartoes = servicos.conteudo.cartoes.cartoes
+    if corpo.cartao_id:
+        cartao = next((c for c in cartoes if c.id == corpo.cartao_id), None)
+        if cartao is None:
+            raise HTTPException(422, "Esse cartão não existe. Sorteie outro.")
+    else:
+        cartao = random.choice(cartoes)
+    try:
+        caso = montar_caso(cartao, servicos.llm)
+    except ErroLLM:
+        logger.warning("paciente pela IA: ficha não montada")
+        raise HTTPException(503, "Não deu para chamar o paciente agora. Tente de novo em alguns minutos.") from None
+    sessao = Sessao(
+        id=str(uuid.uuid4()),
+        dono_id=usuario.id,
+        criada_em=_agora(),
+        status="conversando",
+        origem_caso="paciente_ia",
+        cartao_id=cartao.id,
+        sexo_paciente=caso.sexo,
+        caso_ia=caso,
+    )
+    servicos.repositorio.criar_sessao(sessao)
+    return para_aluno(sessao)
+
+
+def _em_conversa(servicos: Servicos, sessao_id: str, usuario: Usuario) -> Sessao:
+    sessao = _sessao_do_dono(servicos, sessao_id, usuario)
+    if sessao.status != "conversando" or sessao.caso_ia is None:
+        raise HTTPException(409, "Esta consulta já foi encerrada.")
+    return sessao
+
+
+@rotas.post("/sessoes/{sessao_id}/conversa", response_model=Sessao)
+def perguntar_ao_paciente(
+    sessao_id: str, corpo: PerguntaPaciente, servicos: ServicosDep, usuario: UsuarioDep
+) -> Sessao:
+    sessao = _em_conversa(servicos, sessao_id, usuario)
+    assert sessao.caso_ia is not None
+    try:
+        resposta = responder(sessao.caso_ia, sessao.falas, corpo.texto, servicos.llm)
+    except ErroPipeline as erro:
+        raise HTTPException(422, erro.mensagem) from None
+    except ErroLLM:
+        logger.warning("paciente pela IA: sem resposta (sessao=%s)", sessao_id)
+        raise HTTPException(503, MENSAGEM_PACIENTE_FORA) from None
+    falas = [*sessao.falas, Fala(papel="entrevistador", texto=corpo.texto.strip()), Fala(papel="paciente", texto=resposta)]
+    servicos.repositorio.salvar_transcricao(sessao_id, falas, editada=False)
+    return _recarregar(servicos, sessao_id)
+
+
+@rotas.post("/sessoes/{sessao_id}/encerrar", response_model=Sessao)
+def encerrar_conversa(sessao_id: str, servicos: ServicosDep, usuario: UsuarioDep) -> Sessao:
+    """Fim da entrevista: a queixa do cartão vem sugerida e o aluno confirma, como na gravação."""
+    sessao = _em_conversa(servicos, sessao_id, usuario)
+    if not any(f.papel == "entrevistador" for f in sessao.falas):
+        raise HTTPException(409, "Faça pelo menos uma pergunta antes de encerrar.")
+    cartao = next((c for c in servicos.conteudo.cartoes.cartoes if c.id == sessao.cartao_id), None)
+    da_biblioteca = next((q for q in servicos.conteudo.queixas.queixas if cartao and q.id == cartao.queixa), None)
+    queixa = [da_biblioteca.id] if da_biblioteca else []
+    # Trecho: a primeira fala do paciente que fala da queixa (nome ou sinônimo); sem ela, nenhum.
+    termos = [normalizar(t) for t in ([da_biblioteca.nome, *da_biblioteca.sinonimos] if da_biblioteca else [])]
+    trecho = next(
+        (
+            f.texto
+            for f in sessao.falas
+            if f.papel == "paciente" and any(t and t in normalizar(f.texto) for t in termos)
+        ),
+        None,
+    )
+    servicos.repositorio.atualizar_sessao(
+        sessao_id,
+        status="aguardando_queixa",
+        progresso=100,
+        mensagem_erro=None,
+        queixa_detectada=queixa,
+        queixa_trecho=trecho,
+    )
+    return _recarregar(servicos, sessao_id)
 
 
 @rotas.get("/sessoes/{sessao_id}", response_model=Sessao)

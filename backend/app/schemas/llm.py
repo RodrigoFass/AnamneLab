@@ -106,3 +106,33 @@ class SugestoesIA(BaseModel):
 
     hipoteses: list[HipoteseIA]
     perguntas_sugeridas: list[str]
+
+
+# ---------- paciente pela IA ----------
+
+
+class CasoPaciente(BaseModel):
+    """Ficha do paciente simulado que a IA interpreta. Caso fictício, montado a partir de um cartão."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    nome: str
+    idade: int
+    sexo: Literal["feminino", "masculino"]
+    profissao: str
+    queixa_nas_palavras_dele: str
+    historia_da_doenca: list[str]
+    """Fatos da doença atual, um por linha: início, local, tipo, intensidade, piora, melhora, sintomas juntos."""
+    antecedentes: list[str]
+    medicacoes: list[str]
+    alergias: list[str]
+    habitos: list[str]
+    familia: list[str]
+    vida_social: list[str]
+    jeito_de_falar: str
+
+
+class RespostaPaciente(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    resposta: str

@@ -7,7 +7,7 @@ import { Avatar } from "../componentes/Avatar";
 import { SeloDemonstracao } from "../componentes/AvisoDemonstracao";
 import { Contador } from "../componentes/Contador";
 import { LinhaNotas } from "../componentes/Grafico";
-import { IconeArco, IconeAviso, IconeMicrofone, IconeSeta } from "../componentes/Icones";
+import { IconeArco, IconeAviso, IconeBalao, IconeMicrofone, IconeSeta } from "../componentes/Icones";
 import { Logotipo } from "../componentes/Logotipo";
 import { formatarRelativo } from "../util/formato";
 import { marcarDirecao, movimentoReduzido, useNavegar } from "../util/movimento";
@@ -116,6 +116,14 @@ export function Inicio() {
         >
           <IconeMicrofone />
           Começar sessão
+        </button>
+        <button
+          className="al-botao al-botao-secundario app-botao-largo"
+          type="button"
+          onClick={() => navegar("/paciente-ia")}
+        >
+          <IconeBalao />
+          Treinar com paciente da IA
         </button>
 
         <section className="app-secao" aria-labelledby="titulo-historico">

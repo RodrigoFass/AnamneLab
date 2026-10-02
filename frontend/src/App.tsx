@@ -15,6 +15,7 @@ import { Inicio } from "./telas/Inicio";
 import { Login, NovaSenha } from "./telas/Login";
 import { NaoEncontrada } from "./telas/NaoEncontrada";
 import { NovaSessao } from "./telas/NovaSessao";
+import { Conversa, NovoPacienteIA } from "./telas/PacienteIA";
 import { Processando } from "./telas/Processando";
 import { SessaoRedireciona } from "./telas/SessaoRedireciona";
 import { Termo } from "./telas/Termo";
@@ -40,9 +41,11 @@ export const rotas: RouteObject[] = [
       },
       { path: "/configuracoes", element: <Configuracoes /> },
       { path: "/sessao/nova", element: <NovaSessao /> },
+      { path: "/paciente-ia", element: <NovoPacienteIA /> },
       { path: "/sessao/:id", element: <SessaoRedireciona /> },
       { path: "/sessao/:id/termo", element: <Termo /> },
       { path: "/sessao/:id/gravar", element: <Gravar /> },
+      { path: "/sessao/:id/conversa", element: <Conversa /> },
       { path: "/sessao/:id/processando", element: <Processando /> },
       { path: "/sessao/:id/queixa", element: <ConfirmarQueixa /> },
       { path: "/sessao/:id/transcricao", element: <Transcricao /> },

@@ -22,10 +22,12 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 | GET | `/api/cartoes/sortear?queixa=<id>` | | `Cartao` | Sorteia um cartão (queixa opcional) |
 | GET | `/api/termo` | | `Termo` | Termo de gravação vigente (versão e texto) |
 | GET | `/api/sessoes` | | `SessaoResumo[]` | Histórico do aluno, mais recente primeiro |
-| POST | `/api/sessoes` | `SessaoCriar` | `Sessao` | Abre uma sessão (status `criada`) |
+| POST | `/api/sessoes` | `SessaoCriar` | `Sessao` | Abre uma sessão (status `criada`). Com `origem_caso: "paciente_ia"`, sorteia um cartão (ou usa `cartao_id`), monta a ficha do paciente e abre com status `conversando`; 503 se a IA não responder |
 | GET | `/api/sessoes/{id}` | | `Sessao` | Estado atual; o frontend consulta a cada 2 s enquanto processa |
 | DELETE | `/api/sessoes/{id}` | | 204 | Apaga sessão, transcrição, avaliações e consentimentos |
 | POST | `/api/sessoes/{id}/consentimentos` | `ConsentimentoCriar` | `Consentimento` | Registra o aceite de quem abriu a sessão (`forma: "aceite"`, o padrão) ou o aviso ao colega (`forma: "declarado_pelo_dono"`, que exige antes o aceite do dono no outro papel; senão 409) |
+| POST | `/api/sessoes/{id}/conversa` | `PerguntaPaciente` (`texto`, até 500 caracteres) | `Sessao` | Paciente pela IA: manda uma pergunta e recebe a sessão com a pergunta e a resposta nas falas. Só com status `conversando`; 422 para pergunta vazia ou longa, 503 se a IA não responder (a pergunta não fica) |
+| POST | `/api/sessoes/{id}/encerrar` | | `Sessao` | Paciente pela IA: fim da entrevista. Status vai para `aguardando_queixa` com a queixa do cartão sugerida; a ficha `caso_ia` passa a vir na sessão |
 | POST | `/api/sessoes/{id}/audio` | multipart `audio` | `Sessao` | Exige um registro por papel (médico e paciente) na versão vigente do termo. Status vai para `processando_audio` e o processamento roda em segundo plano |
 | PUT | `/api/sessoes/{id}/transcricao` | `TranscricaoEditar` | `Sessao` | Corrige quem disse o quê ou um erro de transcrição; marca `transcricao_editada` |
 | POST | `/api/sessoes/{id}/queixa` | `QueixaConfirmar` | `Sessao` | Aluno confirma a queixa e o sexo do paciente simulado (`sexo_paciente`: `feminino`, `masculino` ou `null`; sem o campo, fica o detectado na conversa). Item de checklist só de um sexo sai da correção quando o paciente é do outro. `outra` vale sozinha (não se mistura com queixa da lista) e entra na `fila_queixas`. Dispara anamnese e correção em segundo plano |
@@ -38,6 +40,9 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 criada
   └─ POST audio ──────────────► processando_audio  (transcrever, apagar áudio, rotular falas, detectar queixa)
                                    └──────────────► aguardando_queixa
+conversando (paciente pela IA)
+  └─ POST conversa (repete) ─► conversando
+  └─ POST encerrar ──────────► aguardando_queixa
   POST queixa ─────────────────► corrigindo        (anamnese, correção, conferência dos trechos, notas)
                                    └──────────────► aguardando_hipoteses
   POST hipoteses ──────────────► gerando_sugestoes (hipóteses sugeridas; perguntas sugeridas só se falta checklist)
@@ -49,6 +54,7 @@ qualquer etapa com falha ───────► erro (mensagem_erro em PT-BR)
 - `avaliacoes` e `notas` só aparecem na resposta a partir de `gerando_sugestoes`: o aluno
   escreve as hipóteses antes de ver a correção.
 - Enquanto `aguardando_queixa`, o aluno pode editar a transcrição.
+- Paciente pela IA: `caso_ia` vem `null` enquanto `conversando` (é o gabarito do caso) e aparece depois de encerrar.
 - Duração máxima do áudio: 20 minutos; tamanho máximo: 25 MB.
 
 ## Sugestões da IA

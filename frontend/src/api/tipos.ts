@@ -58,11 +58,12 @@ export interface Cartao {
 
 // ---------- sessao.py ----------
 
-export type OrigemCaso = "livro" | "internet" | "inventado" | "cartao";
+export type OrigemCaso = "livro" | "internet" | "inventado" | "cartao" | "paciente_ia";
 export type Papel = "medico" | "paciente";
 
 export type StatusSessao =
   | "criada"
+  | "conversando"
   | "processando_audio"
   | "aguardando_queixa"
   | "corrigindo"
@@ -206,6 +207,25 @@ export interface Sessao {
   avaliacoes: Avaliacao[];
   notas: Notas | null;
   sugestoes: SugestoesIA | null;
+  /** Ficha do paciente pela IA; só vem depois que a conversa termina. */
+  caso_ia?: CasoPaciente | null;
+}
+
+/** Paciente fictício que a IA interpreta. */
+export interface CasoPaciente {
+  nome: string;
+  idade: number;
+  sexo: Sexo;
+  profissao: string;
+  queixa_nas_palavras_dele: string;
+  historia_da_doenca: string[];
+  antecedentes: string[];
+  medicacoes: string[];
+  alergias: string[];
+  habitos: string[];
+  familia: string[];
+  vida_social: string[];
+  jeito_de_falar: string;
 }
 
 export interface SessaoResumo {

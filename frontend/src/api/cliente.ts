@@ -118,6 +118,10 @@ export const api = {
       body: corpo,
     });
   },
+  perguntarAoPaciente: (id: string, texto: string) =>
+    requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/conversa`, json("POST", { texto })),
+  encerrarConversa: (id: string) =>
+    requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/encerrar`, { method: "POST" }),
   editarTranscricao: (id: string, dados: TranscricaoEditar) =>
     requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/transcricao`, json("PUT", dados)),
   confirmarQueixa: (id: string, dados: QueixaConfirmar) =>

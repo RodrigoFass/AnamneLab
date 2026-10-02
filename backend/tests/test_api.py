@@ -472,3 +472,82 @@ def test_aviso_do_dono_nao_vale_para_o_proprio_papel(cliente):
         json={"papel": "medico", "nome_informado": "Rodrigo", "versao_termo": "1", "aceito": True, "forma": "declarado_pelo_dono"},
     )
     assert resposta.status_code == 409
+
+
+# ---------- paciente pela IA ----------
+
+
+def paciente_ia(cliente: TestClient) -> dict[str, Any]:
+    resposta = cliente.post("/api/sessoes", json={"origem_caso": "paciente_ia"})
+    assert resposta.status_code == 201, resposta.text
+    return resposta.json()
+
+
+def perguntar(cliente: TestClient, sessao_id: str, texto: str):
+    return cliente.post(f"/api/sessoes/{sessao_id}/conversa", json={"texto": texto})
+
+
+def test_paciente_ia_conversa_e_segue_para_a_correcao(cliente):
+    sessao = paciente_ia(cliente)
+    assert sessao["status"] == "conversando"
+    assert sessao["cartao_id"] == "dor-toracica-teste-1"
+    assert sessao["sexo_paciente"] in ("feminino", "masculino")
+    assert sessao["caso_ia"] is None  # a ficha é o gabarito: escondida durante a conversa
+    sessao_id = sessao["id"]
+
+    # Não dá para encerrar sem perguntar nada.
+    assert cliente.post(f"/api/sessoes/{sessao_id}/encerrar").status_code == 409
+
+    resposta = perguntar(cliente, sessao_id, "O que te traz aqui hoje?")
+    assert resposta.status_code == 200
+    falas = resposta.json()["falas"]
+    assert [f["papel"] for f in falas] == ["entrevistador", "paciente"]
+    assert falas[1]["texto"]
+    assert resposta.json()["caso_ia"] is None
+    for pergunta in ["Quando começou?", "Toma algum remédio?", "Tem alergia?", "Alguém na família tem problema do coração?"]:
+        assert perguntar(cliente, sessao_id, pergunta).status_code == 200
+
+    encerrada = cliente.post(f"/api/sessoes/{sessao_id}/encerrar")
+    assert encerrada.status_code == 200
+    encerrada = encerrada.json()
+    assert encerrada["status"] == "aguardando_queixa"
+    assert encerrada["queixa_detectada"] == ["dor-toracica"]
+    assert encerrada["queixa_trecho"] == "Dor no peito há 2 horas"  # a fala que cita a queixa
+    assert encerrada["caso_ia"]["nome"]
+    assert len(encerrada["falas"]) == 10
+
+    # Encerrada, não aceita mais pergunta; a correção segue como na gravação.
+    assert perguntar(cliente, sessao_id, "Mais alguma coisa?").status_code == 409
+    assert cliente.post(f"/api/sessoes/{sessao_id}/queixa", json={"queixas": ["dor-toracica"]}).status_code == 200
+    esperar(cliente, sessao_id, "aguardando_hipoteses")
+
+
+def test_paciente_ia_nao_grava_audio(cliente):
+    sessao_id = paciente_ia(cliente)["id"]
+    assert consentir(cliente, sessao_id, "medico").status_code == 409
+    assert cliente.post(f"/api/sessoes/{sessao_id}/audio", files={"audio": AUDIO}).status_code == 409
+
+
+def test_paciente_ia_valida_pergunta_e_cartao(cliente):
+    sessao_id = paciente_ia(cliente)["id"]
+    assert perguntar(cliente, sessao_id, "").status_code == 422
+    assert perguntar(cliente, sessao_id, "x" * 501).status_code == 422
+    assert perguntar(cliente, sessao_id, "   ").status_code == 422
+    resposta = cliente.post("/api/sessoes", json={"origem_caso": "paciente_ia", "cartao_id": "nao-existe"})
+    assert resposta.status_code == 422
+
+
+def test_paciente_ia_fora_do_ar_explica(settings, repositorio):
+    app = criar_app(settings, repositorio=repositorio, llm=FalsoQueFalhaUmaVez("paciente_caso"))
+    with TestClient(app) as cliente:
+        resposta = cliente.post("/api/sessoes", json={"origem_caso": "paciente_ia"})
+        assert resposta.status_code == 503
+        assert "paciente" in resposta.json()["detail"]
+        sessao_id = paciente_ia(cliente)["id"]
+
+    app = criar_app(settings, repositorio=repositorio, llm=FalsoQueFalhaUmaVez("paciente_resposta"))
+    with TestClient(app) as cliente:
+        resposta = perguntar(cliente, sessao_id, "O que te traz aqui?")
+        assert resposta.status_code == 503
+        assert cliente.get(f"/api/sessoes/{sessao_id}").json()["falas"] == []  # pergunta sem resposta não fica
+        assert perguntar(cliente, sessao_id, "O que te traz aqui?").status_code == 200

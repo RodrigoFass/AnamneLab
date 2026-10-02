@@ -184,3 +184,18 @@ export const IconeEngrenagem = ({ className }: P) => (
     <circle cx="17" cy="18" r="2" />
   </Svg>
 );
+
+/** Balão de conversa: consulta por escrito com o paciente da IA. */
+export const IconeBalao = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-8l-4 3.5V16H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" />
+    <path d="M8 9.5h8M8 12.5h5" />
+  </Svg>
+);
+
+/** Seta para cima: enviar a pergunta. */
+export const IconeEnviar = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M12 19V5M6 11l6-6 6 6" />
+  </Svg>
+);
