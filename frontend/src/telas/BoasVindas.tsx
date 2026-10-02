@@ -22,7 +22,7 @@ type Passo = "oi" | "cadastro" | "pronto";
 export function BoasVindas() {
   const tema = useTema();
   const [passo, setPasso] = useState<Passo>("oi");
-  const [perfil, setPerfil] = useState<Perfil>({ nome: "", disciplina: "Semiologia", periodo: "" });
+  const [perfil, setPerfil] = useState<Perfil>({ nome: "", disciplina: "Semiologia", periodo: "", avatar: "" });
 
   const concluir = () => {
     vibrar([10, 60, 10]);

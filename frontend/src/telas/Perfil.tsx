@@ -4,6 +4,7 @@ import { api } from "../api/cliente";
 import type { SessaoResumo } from "../api/tipos";
 import { useAuth } from "../auth/Autenticacao";
 import { Avatar } from "../componentes/Avatar";
+import { AVATARES } from "../componentes/Avatares";
 import { Contador } from "../componentes/Contador";
 import { IconeCheck, IconeEngrenagem } from "../componentes/Icones";
 import { Recado } from "../componentes/Recado";
@@ -19,6 +20,27 @@ export const PERIODOS = ["1º", "2º", "3º", "4º", "5º", "6º", "7º", "8º",
 export function CamposPerfil({ perfil, onMudar }: { perfil: TipoPerfil; onMudar: (p: TipoPerfil) => void }) {
   return (
     <>
+      <fieldset className="app-grupo">
+        <legend className="app-campo-rotulo">Escolha um avatar</legend>
+        <div className="app-avatares">
+          {[{ id: "", rotulo: "Só a inicial do nome" }, ...AVATARES].map(({ id, rotulo }) => (
+            <label key={id || "inicial"} className={`app-avatar-opcao${perfil.avatar === id ? " is-marcada" : ""}`} title={rotulo}>
+              <input
+                className="app-so-leitor"
+                type="radio"
+                name="avatar"
+                aria-label={rotulo}
+                checked={perfil.avatar === id}
+                onChange={() => {
+                  vibrar(6);
+                  onMudar({ ...perfil, avatar: id });
+                }}
+              />
+              <Avatar nome={perfil.nome} papel="medico" tamanho={56} avatar={id} />
+            </label>
+          ))}
+        </div>
+      </fieldset>
       <label className="app-campo">
         <span className="app-campo-rotulo">Como você se chama?</span>
         <input

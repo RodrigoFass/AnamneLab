@@ -2,17 +2,19 @@ import { useSyncExternalStore } from "react";
 import { loginAtivo, supabase } from "../auth/supabase";
 
 /**
- * Perfil do aluno: nome, disciplina e período. Fica neste aparelho; com login ativo,
+ * Perfil do aluno: nome, disciplina, período e avatar. Fica neste aparelho; com login ativo,
  * vai também para os metadados da conta, para aparecer em outro aparelho.
  */
 export interface Perfil {
   nome: string;
   disciplina: string;
   periodo: string;
+  /** Id de um avatar pronto (componentes/Avatares); vazio usa a inicial do nome. */
+  avatar: string;
 }
 
 const CHAVE = "anamnelab:perfil";
-const VAZIO: Perfil = { nome: "", disciplina: "", periodo: "" };
+const VAZIO: Perfil = { nome: "", disciplina: "", periodo: "", avatar: "" };
 const ouvintes = new Set<() => void>();
 let atual: Perfil | null = null;
 
@@ -20,7 +22,7 @@ function ler(): Perfil {
   if (atual) return atual;
   try {
     const p = JSON.parse(localStorage.getItem(CHAVE) ?? "{}") as Partial<Perfil>;
-    atual = { nome: p.nome ?? "", disciplina: p.disciplina ?? "", periodo: p.periodo ?? "" };
+    atual = { nome: p.nome ?? "", disciplina: p.disciplina ?? "", periodo: p.periodo ?? "", avatar: p.avatar ?? "" };
   } catch {
     atual = VAZIO;
   }
@@ -28,7 +30,7 @@ function ler(): Perfil {
 }
 
 export function salvarPerfil(perfil: Perfil, sincronizar = true): void {
-  atual = { nome: perfil.nome.trim(), disciplina: perfil.disciplina.trim(), periodo: perfil.periodo };
+  atual = { nome: perfil.nome.trim(), disciplina: perfil.disciplina.trim(), periodo: perfil.periodo, avatar: perfil.avatar };
   try {
     localStorage.setItem(CHAVE, JSON.stringify(atual));
   } catch {
@@ -46,7 +48,7 @@ export function salvarPerfil(perfil: Perfil, sincronizar = true): void {
 export function adotarPerfilDaConta(dados: unknown): void {
   const p = (dados as { perfil?: Partial<Perfil> } | null)?.perfil;
   if (!p?.nome || ler().nome) return;
-  salvarPerfil({ nome: p.nome, disciplina: p.disciplina ?? "", periodo: p.periodo ?? "" }, false);
+  salvarPerfil({ nome: p.nome, disciplina: p.disciplina ?? "", periodo: p.periodo ?? "", avatar: p.avatar ?? "" }, false);
 }
 
 export function usePerfil(): Perfil {

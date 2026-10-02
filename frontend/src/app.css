@@ -2053,6 +2053,39 @@ a.app-lista-linha:active {
   outline-offset: 2px;
 }
 
+/* Avatares prontos para escolher no perfil e no cadastro. */
+.app-avatares {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: var(--espaco-2);
+  margin-top: var(--espaco-1);
+}
+.app-avatar-opcao {
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  border: 2px solid transparent;
+  border-radius: var(--raio-pilula);
+  cursor: pointer;
+  justify-self: center;
+  transition: transform 0.3s var(--mola-quique), border-color 0.2s;
+}
+.app-avatar-opcao:active {
+  transform: scale(0.9);
+}
+.app-avatar-opcao.is-marcada {
+  border-color: var(--petroleo);
+  animation: app-pulo 0.45s var(--mola-quique);
+}
+.app-avatar-opcao:has(input:focus-visible) {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+.app-avatar-desenho {
+  overflow: hidden;
+  background: none;
+}
+
 /* ---------- boas-vindas, cadastro e entrar ---------- */
 
 .app-boas-vindas > .app-topo-linha,
@@ -2580,6 +2613,7 @@ a.app-lista-linha:active {
   .app-perfil-topo .app-avatar-letra,
   .app-aba[aria-current="page"] .al-icone,
   .app-periodo.is-marcada,
+  .app-avatar-opcao.is-marcada,
   .app-origem.is-marcada .al-icone {
     animation: none;
   }
@@ -2694,6 +2728,7 @@ html[data-movimento="reduzido"] .app-item .al-item-status,
 html[data-movimento="reduzido"] .app-perfil-topo .app-avatar-letra,
 html[data-movimento="reduzido"] .app-aba[aria-current="page"] .al-icone,
 html[data-movimento="reduzido"] .app-periodo.is-marcada,
+html[data-movimento="reduzido"] .app-avatar-opcao.is-marcada,
 html[data-movimento="reduzido"] .app-origem.is-marcada .al-icone {
   animation: none;
 }
