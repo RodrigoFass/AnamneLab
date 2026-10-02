@@ -3093,56 +3093,78 @@ html[data-texto="maior"] body {
   min-height: 60vh;
   text-align: center;
 }
-/* A esfera cresce com o volume (--nivel, de 0 a 1). Petróleo é o aluno; mostarda, o paciente. */
+/* Duas gotas que giram devagar enquanto alguém fala: petróleo é o médico (aluno), mostarda é
+   o paciente. Quem fala cresce com o volume (--nivel, de 0 a 1). */
 .app-esfera {
   --nivel: 0;
+  position: relative;
   width: min(62vw, 240px);
   aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--papel-elevado) 85%, transparent) 0 18%, transparent 55%),
-    radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--petroleo) 55%, var(--papel-elevado)) 0 35%, var(--petroleo) 100%);
-  box-shadow: 0 18px 50px color-mix(in srgb, var(--petroleo) 30%, transparent);
-  transform: scale(calc(1 + var(--nivel) * 0.18));
-  transition:
-    transform 90ms linear,
-    filter 300ms ease,
-    background 400ms ease;
+  animation: app-gotas-girar 9s linear infinite;
+  animation-play-state: paused;
 }
-.app-esfera.is-inicio,
-.app-esfera.is-mudo {
-  filter: grayscale(0.85) opacity(0.6);
-}
-.app-esfera.is-pensando {
-  animation: app-esfera-pensa 1.6s ease-in-out infinite;
-}
+.app-esfera.is-aluno,
 .app-esfera.is-paciente {
-  background:
-    radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--papel-elevado) 85%, transparent) 0 18%, transparent 55%),
-    radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--mostarda) 55%, var(--papel-elevado)) 0 35%, var(--mostarda) 100%);
-  box-shadow: 0 18px 50px color-mix(in srgb, var(--mostarda) 35%, transparent);
-  animation: app-esfera-fala 0.9s ease-in-out infinite;
+  animation-play-state: running;
 }
-@keyframes app-esfera-pensa {
-  50% {
-    transform: scale(0.94);
-    opacity: 0.75;
+.app-gotas {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.app-gota {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 120ms linear,
+    opacity 300ms ease,
+    filter 300ms ease;
+}
+.app-gota-medico {
+  transform: scale(calc(1 + var(--nivel) * 0.18));
+}
+.app-esfera.is-paciente .app-gota-paciente {
+  animation: app-gota-fala 0.8s ease-in-out infinite;
+}
+.app-esfera.is-paciente .app-gota-medico,
+.app-esfera.is-aluno .app-gota-paciente {
+  opacity: 0.55;
+}
+.app-esfera.is-ouvindo .app-gota {
+  animation: app-gota-pensa 3.2s ease-in-out infinite;
+}
+.app-esfera.is-pensando .app-gota {
+  animation: app-gota-pensa 1.6s ease-in-out infinite;
+}
+.app-esfera.is-inicio .app-gota,
+.app-esfera.is-mudo .app-gota {
+  filter: grayscale(0.8);
+  opacity: 0.55;
+}
+@keyframes app-gotas-girar {
+  to {
+    transform: rotate(360deg);
   }
 }
-@keyframes app-esfera-fala {
+@keyframes app-gota-fala {
   50% {
-    transform: scale(1.08);
+    transform: scale(1.12);
+  }
+}
+@keyframes app-gota-pensa {
+  50% {
+    opacity: 0.6;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .app-esfera {
+  .app-esfera,
+  .app-gota {
     animation: none !important;
-    transition: none;
   }
 }
-html[data-movimento="reduzido"] .app-esfera {
+html[data-movimento="reduzido"] .app-esfera,
+html[data-movimento="reduzido"] .app-gota {
   animation: none !important;
-  transition: none;
 }
 .app-voz-estado {
   margin: 0;

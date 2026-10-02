@@ -38,6 +38,42 @@ function mensagemMicrofone(e: unknown): string {
   return "Não deu para ligar o microfone. Tente de novo ou use a conversa por chat.";
 }
 
+/** Duas gotas encaixadas: petróleo é o médico (aluno) e mostarda, o paciente. A cauda some aos poucos. */
+function Gotas() {
+  // Meia gota de um círculo de raio 100: a cabeça é o círculo de raio 50 embaixo, a cauda sobe pela borda.
+  const gota = "M0,-100 A100,100 0 0,0 0,100 A50,50 0 0,0 0,0 A50,50 0 0,1 0,-100 Z";
+  return (
+    <svg className="app-gotas" viewBox="-130 -130 260 260" aria-hidden="true" focusable="false">
+      <defs>
+        <radialGradient id="gota-medico" gradientUnits="userSpaceOnUse" cx="-20" cy="50" r="125">
+          <stop offset="0" stopColor="var(--petroleo)" />
+          <stop offset="0.5" stopColor="var(--petroleo)" />
+          <stop offset="1" stopColor="var(--petroleo)" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="gota-paciente" gradientUnits="userSpaceOnUse" cx="-20" cy="50" r="125">
+          <stop offset="0" stopColor="var(--mostarda)" />
+          <stop offset="0.5" stopColor="var(--mostarda)" />
+          <stop offset="1" stopColor="var(--mostarda)" stopOpacity="0" />
+        </radialGradient>
+        <filter id="gota-borda" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" />
+        </filter>
+      </defs>
+      <g className="app-gota app-gota-medico">
+        <path d={gota} transform="translate(-6 4) scale(0.9)" fill="url(#gota-medico)" filter="url(#gota-borda)" />
+      </g>
+      <g className="app-gota app-gota-paciente">
+        <path
+          d={gota}
+          transform="rotate(180) translate(-6 4) scale(0.9)"
+          fill="url(#gota-paciente)"
+          filter="url(#gota-borda)"
+        />
+      </g>
+    </svg>
+  );
+}
+
 /** Consulta por voz, sem botão: o app percebe quando o aluno fala e o paciente responde falando. */
 export function ConversaVoz() {
   const { id } = useParams();
@@ -93,7 +129,7 @@ export function ConversaVoz() {
         const { vozesPiper: piper, sexo } = atual.current;
         const falou = await falarPaciente({ sessaoId: atualizada.id, indice: ultima, texto: fala.texto, sexo, piper });
         if (!falou && ativo.current) {
-          setAviso("Este aparelho não tem voz em português. A resposta aparece escrita abaixo da esfera.");
+          setAviso("Este aparelho não tem voz em português. A resposta aparece escrita logo abaixo.");
         }
       }
       if (!ativo.current) return;
@@ -329,7 +365,9 @@ export function ConversaVoz() {
             className={`app-esfera is-${estado}${mudo ? " is-mudo" : ""}`}
             role="img"
             aria-label={LEGENDA[estado]}
-          />
+          >
+            <Gotas />
+          </div>
           <p className="app-voz-estado" aria-live="polite">
             {mudo && estado === "ouvindo" ? "Microfone silenciado." : LEGENDA[estado]}
           </p>
