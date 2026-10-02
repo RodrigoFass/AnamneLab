@@ -43,8 +43,11 @@ class Settings(BaseSettings):
     openai_api_key: SecretStr | None = None
 
     # Voz do paciente pela IA
-    voz_paciente: Literal["navegador", "piper"] = "navegador"
-    """navegador: o aparelho do aluno lê a resposta. piper: o backend fala com o Piper."""
+    voz_paciente: Literal["navegador", "edge", "piper"] = "navegador"
+    """navegador: o aparelho do aluno lê a resposta. edge: vozes neurais do Edge (internet).
+    piper: o backend fala com o Piper, na máquina."""
+    edge_voz_feminina: str = "pt-BR-FranciscaNeural"
+    edge_voz_masculina: str = "pt-BR-AntonioNeural"
     piper_voz_masculina: Path | None = None
     piper_voz_feminina: Path | None = None
     """Arquivos .onnx das vozes do Piper (com o .onnx.json ao lado). Sem a voz de um sexo,

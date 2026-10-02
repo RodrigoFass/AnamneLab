@@ -29,7 +29,7 @@ from app.pipeline.transcrever import (
     montar_dica,
     transcrever_pergunta_e_apagar,
 )
-from app.pipeline.voz import ErroVoz, VozPiper
+from app.pipeline.voz import ErroVoz, VozPaciente
 from app.processamento import Processador
 from app.repositorio import Repositorio
 from app.schemas.conteudo import Cartao, Queixa
@@ -389,7 +389,7 @@ def perguntar_falando(
 
 @rotas.get("/sessoes/{sessao_id}/voz/{indice}")
 def voz_do_paciente(sessao_id: str, indice: int, servicos: ServicosDep, usuario: UsuarioDep) -> Response:
-    """A fala de número `indice` do paciente pela IA, em WAV, com a voz do Piper."""
+    """A fala de número `indice` do paciente pela IA, com a voz do backend (Edge ou Piper)."""
     sessao = _sessao_do_dono(servicos, sessao_id, usuario)
     if servicos.voz is None:
         raise HTTPException(404, "A voz do paciente fica com o navegador neste app.")
@@ -403,7 +403,9 @@ def voz_do_paciente(sessao_id: str, indice: int, servicos: ServicosDep, usuario:
         wav = servicos.voz.falar(fala.texto, sexo)
     except ErroVoz:
         raise HTTPException(503, "A voz do paciente não saiu agora. A resposta está escrita na tela.") from None
-    return Response(content=wav, media_type="audio/wav", headers={"Cache-Control": "private, max-age=3600"})
+    return Response(
+        content=wav, media_type=servicos.voz.tipo_audio, headers={"Cache-Control": "private, max-age=3600"}
+    )
 
 
 @rotas.post("/sessoes/{sessao_id}/encerrar", response_model=Sessao)
@@ -661,7 +663,7 @@ def criar_app(
     llm: ClienteLLM | None = None,
     transcritor: Transcritor | None = None,
     repositorio: Repositorio | None = None,
-    voz: VozPiper | None = None,
+    voz: VozPaciente | None = None,
 ) -> FastAPI:
     settings = settings or obter_settings()
     servicos = montar_servicos(settings, llm=llm, transcritor=transcritor, repositorio=repositorio, voz=voz)

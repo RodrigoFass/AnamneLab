@@ -110,21 +110,6 @@ export function Configuracoes() {
           ajuda="Só em celulares que vibram."
         />
       </section>
-
-      <section className="app-secao app-grupo">
-        <h2 className="app-subtitulo">Paciente pela IA</h2>
-        <Escolha
-          titulo="Voz do paciente"
-          nome="vozPaciente"
-          valor={p.vozPaciente}
-          onMudar={(vozPaciente) => mudar({ vozPaciente })}
-          opcoes={[
-            { valor: true, rotulo: "Ligada" },
-            { valor: false, rotulo: "Desligada" },
-          ]}
-          ajuda="Com a voz ligada, o paciente lê as respostas em voz alta. Elas também aparecem escritas."
-        />
-      </section>
     </Tela>
   );
 }

@@ -214,3 +214,12 @@ export const IconeSemSom = ({ className }: P) => (
     <path d="M17 10l4 4M21 10l-4 4" />
   </Svg>
 );
+
+export const IconeMicrofoneMudo = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M9 9v2a3 3 0 0 0 5.1 2.1M15 10V6a3 3 0 0 0-5.7-1.3" />
+    <path d="M5 11a7 7 0 0 0 11.6 5.3M19 11a7 7 0 0 1-.6 2.8" />
+    <path d="M12 18v3" />
+    <path d="M4 4l16 16" />
+  </Svg>
+);

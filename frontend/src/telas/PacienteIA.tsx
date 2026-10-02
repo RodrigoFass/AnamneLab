@@ -12,7 +12,6 @@ import {
   IconeLampada,
   IconeMicrofone,
   IconeSelo,
-  IconeSemSom,
   IconeSom,
 } from "../componentes/Icones";
 import { Carregando, Tela } from "../componentes/Tela";
@@ -20,8 +19,6 @@ import { rotaDaSessao, useQueixas, useSessao } from "../util/sessao";
 import { useNavegar, vibrar } from "../util/movimento";
 import { aceitarComoDono, useAceiteDono } from "../util/aceites";
 import { usePerfil } from "../util/perfil";
-import { salvarPreferencias, usePreferencias } from "../util/preferencias";
-import { destravarSom, falarPaciente, pararVoz } from "../util/vozPaciente";
 import { FolhaAceite } from "./Termo";
 
 /** Igual a MAXIMO_PERGUNTA no backend. */
@@ -58,9 +55,9 @@ function mensagemMicrofone(e: unknown): string {
 type Microfone = "parado" | "ligando" | "segurando" | "tocado";
 
 const PONTOS = [
-  { icone: <IconeBalao />, texto: "Você faz o médico e fala ou escreve as perguntas. A IA responde como o paciente." },
+  { icone: <IconeBalao />, texto: "Você faz o médico. A IA responde como o paciente." },
   { icone: <IconeLampada />, texto: "Ela só conta o que você perguntar, do jeito de quem não é da saúde." },
-  { icone: <IconeSom />, texto: "O paciente responde em voz alta. Dá para desligar a voz na consulta." },
+  { icone: <IconeSom />, texto: "Por chat, você escreve ou manda áudio. Por voz, vocês conversam falando." },
   { icone: <IconeSelo />, texto: "No fim, a correção é a mesma da gravação, item a item." },
 ];
 
@@ -69,20 +66,20 @@ export function NovoPacienteIA() {
   const navegar = useNavegar();
   const { queixas } = useQueixas();
   const [queixa, setQueixa] = useState("");
-  const [chamando, setChamando] = useState(false);
+  const [chamando, setChamando] = useState<"chat" | "voz" | null>(null);
   const [erro, setErro] = useState<string | null>(null);
 
-  const chamar = async () => {
-    setChamando(true);
+  const chamar = async (modo: "chat" | "voz") => {
+    setChamando(modo);
     setErro(null);
     try {
       const cartao = queixa ? await api.sortearCartao(queixa) : null;
       const sessao = await api.criarSessao({ origem_caso: "paciente_ia", cartao_id: cartao?.id ?? null });
       vibrar(10);
-      navegar(rotaDaSessao(sessao), { replace: true });
+      navegar(modo === "voz" ? `/sessao/${sessao.id}/voz` : rotaDaSessao(sessao), { replace: true });
     } catch (e) {
       setErro(textoDoErro(e));
-      setChamando(false);
+      setChamando(null);
     }
   };
 
@@ -92,14 +89,26 @@ export function NovoPacienteIA() {
       subtitulo="Treine sozinho, quando quiser, com um paciente simulado."
       voltar="/"
       rodape={
-        <button
-          className={`al-botao al-botao-principal app-botao-largo${chamando ? " is-enviando" : ""}`}
-          type="button"
-          onClick={() => void chamar()}
-          disabled={chamando}
-        >
-          {chamando ? "Chamando o paciente…" : "Chamar o paciente"}
-        </button>
+        <div className="app-grupo">
+          <button
+            className={`al-botao al-botao-principal app-botao-largo${chamando === "voz" ? " is-enviando" : ""}`}
+            type="button"
+            onClick={() => void chamar("voz")}
+            disabled={Boolean(chamando)}
+          >
+            <IconeSom />
+            {chamando === "voz" ? "Chamando o paciente…" : "Conversar por voz"}
+          </button>
+          <button
+            className={`al-botao al-botao-secundario app-botao-largo${chamando === "chat" ? " is-enviando" : ""}`}
+            type="button"
+            onClick={() => void chamar("chat")}
+            disabled={Boolean(chamando)}
+          >
+            <IconeBalao />
+            {chamando === "chat" ? "Chamando o paciente…" : "Conversar por chat"}
+          </button>
+        </div>
       }
     >
       <ul className="app-topicos">
@@ -136,7 +145,6 @@ export function Conversa() {
   const { sessao, erro: erroSessao, definir } = useSessao(id);
   const perfil = usePerfil();
   const aceiteDono = useAceiteDono();
-  const { vozPaciente } = usePreferencias();
   const [texto, setTexto] = useState("");
   const [esperando, setEsperando] = useState<string | null>(null);
   const [ouvindo, setOuvindo] = useState(false);
@@ -146,8 +154,6 @@ export function Conversa() {
   const [encerrando, setEncerrando] = useState(false);
   const [microfone, setMicrofone] = useState<Microfone>("parado");
   const [segundos, setSegundos] = useState(0);
-  const [falando, setFalando] = useState<number | null>(null);
-  const [vozesPiper, setVozesPiper] = useState<("feminino" | "masculino")[]>([]);
   const [termo, setTermo] = useState<TipoTermo | null>(null);
   const [pedirAceite, setPedirAceite] = useState(false);
   const fim = useRef<HTMLDivElement>(null);
@@ -174,10 +180,6 @@ export function Conversa() {
 
   useEffect(() => {
     let ativo = true;
-    api.saude().then(
-      (s) => ativo && setVozesPiper(s.vozes_paciente ?? []),
-      () => undefined,
-    );
     api.termo().then(
       (t) => ativo && setTermo(t),
       () => undefined,
@@ -193,41 +195,19 @@ export function Conversa() {
     fluxo.current = null;
   }, []);
 
-  // Ao sair da consulta: microfone desligado e paciente calado.
+  // Ao sair da consulta: microfone desligado.
   useEffect(
     () => () => {
       enviarAoParar.current = false;
       if (gravador.current?.state === "recording") gravador.current.stop();
       soltarMicrofone();
-      pararVoz();
     },
     [soltarMicrofone],
   );
 
-  const sexo = sessao?.sexo_paciente ?? "feminino";
-
-  const ouvirFala = useCallback(
-    async (indice: number, textoFala: string) => {
-      if (!id) return;
-      setFalando(indice);
-      const falou = await falarPaciente({ sessaoId: id, indice, texto: textoFala, sexo, piper: vozesPiper });
-      setFalando((f) => (f === indice ? null : f));
-      if (!falou) {
-        setAviso(
-          "Este aparelho não tem voz em português. No Windows, instale em Configurações, Hora e idioma, Fala. A resposta continua escrita.",
-        );
-      }
-    },
-    [id, sexo, vozesPiper],
-  );
-
-  /** Depois de cada resposta, o paciente fala a última fala dele (com a voz ligada). */
   const responder = (atualizada: NonNullable<typeof sessao>) => {
     definir(() => atualizada);
     vibrar(6);
-    const ultima = atualizada.falas.length - 1;
-    const fala = atualizada.falas[ultima];
-    if (vozPaciente && fala?.papel === "paciente") void ouvirFala(ultima, fala.texto);
   };
 
   if (!id) return <Navigate to="/" replace />;
@@ -236,8 +216,6 @@ export function Conversa() {
   const enviar = async () => {
     const pergunta = texto.trim();
     if (!pergunta || ocupado || pergunta.length > LIMITE_PERGUNTA) return;
-    destravarSom();
-    pararVoz();
     setEsperando(pergunta);
     setTexto("");
     setErro(null);
@@ -310,7 +288,6 @@ export function Conversa() {
   const ligarMicrofone = async (modo: Microfone) => {
     setErro(null);
     setAviso(null);
-    pararVoz();
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
       setErro("Este navegador não grava áudio. Escreva a pergunta ou use o Chrome ou o Safari atualizados.");
       return;
@@ -373,7 +350,6 @@ export function Conversa() {
   const aoApertar = async (e: PointerEvent<HTMLButtonElement>) => {
     if (e.button !== 0 || ocupado || !sessao) return;
     e.currentTarget.setPointerCapture(e.pointerId);
-    destravarSom();
     if (microfone === "tocado") {
       pararGravacao(true);
       return;
@@ -395,7 +371,6 @@ export function Conversa() {
     if (e.key !== " " && e.key !== "Enter") return;
     e.preventDefault();
     if (e.repeat || ocupado || !sessao) return;
-    destravarSom();
     if (gravando) {
       pararGravacao(true);
       return;
@@ -406,7 +381,6 @@ export function Conversa() {
   const encerrar = async () => {
     setEncerrando(true);
     setErro(null);
-    pararVoz();
     try {
       const atualizada = await api.encerrarConversa(id);
       vibrar([10, 60, 10]);
@@ -416,11 +390,6 @@ export function Conversa() {
       setEncerrando(false);
       setConfirmar(false);
     }
-  };
-
-  const alternarVoz = () => {
-    if (vozPaciente) pararVoz();
-    salvarPreferencias({ vozPaciente: !vozPaciente });
   };
 
   return (
@@ -515,9 +484,14 @@ export function Conversa() {
           <p className="app-dica">
             <IconeAviso />O paciente chegou e está sentado à sua frente. Comece como numa consulta de verdade.
           </p>
-          <button className="al-botao al-botao-texto app-alternar-voz" type="button" onClick={alternarVoz}>
-            {vozPaciente ? <IconeSom /> : <IconeSemSom />}
-            {vozPaciente ? "Voz do paciente ligada" : "Voz do paciente desligada"}
+          <button
+            className="al-botao al-botao-texto app-alternar-voz"
+            type="button"
+            onClick={() => navegar(`/sessao/${id}/voz`, { replace: true })}
+            disabled={ocupado || gravando}
+          >
+            <IconeSom />
+            Mudar para conversa por voz
           </button>
           {falas.map((f, i) =>
             f.papel === "entrevistador" ? (
@@ -527,23 +501,7 @@ export function Conversa() {
             ) : (
               <div key={i} className="app-bolha-linha">
                 <Avatar nome="Paciente" papel="paciente" tamanho={28} avatar="" />
-                <p className={`app-bolha app-bolha-paciente${falando === i ? " is-falando" : ""}`}>{f.texto}</p>
-                {vozPaciente && (
-                  <button
-                    className="al-botao al-botao-texto app-ouvir"
-                    type="button"
-                    aria-label={falando === i ? "Parar a voz" : "Ouvir de novo"}
-                    onClick={() => {
-                      destravarSom();
-                      if (falando === i) {
-                        pararVoz();
-                        setFalando(null);
-                      } else void ouvirFala(i, f.texto);
-                    }}
-                  >
-                    {falando === i ? <IconeSemSom /> : <IconeSom />}
-                  </button>
-                )}
+                <p className="app-bolha app-bolha-paciente">{f.texto}</p>
               </div>
             ),
           )}

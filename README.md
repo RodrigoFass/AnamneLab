@@ -93,8 +93,9 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
   as pastas `bin` deles no `PATH`.
 - **Whisper pela API:** `uv pip install -e ".[api]"`, `TRANSCRICAO=api` e `OPENAI_API_KEY`.
 - **Voz do paciente pela IA:** sem nada, o navegador lê as respostas com uma voz em
-  português do aparelho (no Windows, instale em Configurações, Hora e idioma, Fala). Para uma
-  voz mais natural, grátis e sem internet: `uv pip install -e ".[voz]"`, baixe as vozes do
+  português do aparelho (no Windows, instale em Configurações, Hora e idioma, Fala). Voz mais
+  natural, grátis, de homem e de mulher: `uv pip install -e ".[voz]"` e `VOZ_PACIENTE=edge`
+  (vozes neurais do Edge; precisa de internet). Sem internet: baixe as vozes do
   Piper em português (o `.onnx` e o `.onnx.json`) para `backend/vozes/` (fora do git) e ponha
   `VOZ_PACIENTE=piper` e `PIPER_VOZ_MASCULINA` e `PIPER_VOZ_FEMININA` no `.env`. A pergunta
   falada usa a mesma transcrição da gravação (`TRANSCRICAO`).
@@ -123,7 +124,8 @@ Backend (`backend/.env`, modelo em `backend/.env.example`):
 | `TRANSCRICAO` | `local`, `api`, `falso` | `falso` |
 | `WHISPER_MODELO_LOCAL` | tamanho do faster-whisper | `small` |
 | `OPENAI_API_KEY` | chave da API (Whisper) | |
-| `VOZ_PACIENTE` | `navegador`, `piper` | `navegador` |
+| `VOZ_PACIENTE` | `navegador`, `edge`, `piper` | `navegador` |
+| `EDGE_VOZ_FEMININA`, `EDGE_VOZ_MASCULINA` | vozes do Edge | `pt-BR-FranciscaNeural`, `pt-BR-AntonioNeural` |
 | `PIPER_VOZ_MASCULINA`, `PIPER_VOZ_FEMININA` | arquivos `.onnx` das vozes do Piper | |
 | `BANCO` | `memoria`, `arquivo`, `supabase` | `memoria` |
 | `ARQUIVO_HISTORICO` | onde `BANCO=arquivo` guarda as sessões | `dados/historico.json` |

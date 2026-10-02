@@ -8,8 +8,6 @@ export interface Preferencias {
   /** "automatico" segue o "reduzir movimento" do sistema. */
   movimento: "automatico" | "reduzido";
   vibracao: boolean;
-  /** O paciente pela IA lê as respostas em voz alta. */
-  vozPaciente: boolean;
 }
 
 export const PADRAO: Preferencias = {
@@ -17,7 +15,6 @@ export const PADRAO: Preferencias = {
   texto: "normal",
   movimento: "automatico",
   vibracao: true,
-  vozPaciente: true,
 };
 
 const CHAVE = "anamnelab:preferencias";
@@ -37,7 +34,6 @@ export function lerPreferencias(): Preferencias {
       texto: um(p.texto, ["normal", "grande", "maior"], PADRAO.texto),
       movimento: um(p.movimento, ["automatico", "reduzido"], PADRAO.movimento),
       vibracao: typeof p.vibracao === "boolean" ? p.vibracao : PADRAO.vibracao,
-      vozPaciente: typeof p.vozPaciente === "boolean" ? p.vozPaciente : PADRAO.vozPaciente,
     };
   } catch {
     atual = PADRAO;

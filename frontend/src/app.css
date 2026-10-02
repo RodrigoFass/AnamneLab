@@ -3076,3 +3076,159 @@ html[data-texto="maior"] body {
     opacity: 0;
   }
 }
+
+/* ---------- consulta por voz ---------- */
+
+.app-tela-voz .app-conteudo {
+  display: flex;
+  flex-direction: column;
+}
+.app-voz {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaco-4);
+  min-height: 60vh;
+  text-align: center;
+}
+/* A esfera cresce com o volume (--nivel, de 0 a 1). Petróleo é o aluno; mostarda, o paciente. */
+.app-esfera {
+  --nivel: 0;
+  width: min(62vw, 240px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--papel-elevado) 85%, transparent) 0 18%, transparent 55%),
+    radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--petroleo) 55%, var(--papel-elevado)) 0 35%, var(--petroleo) 100%);
+  box-shadow: 0 18px 50px color-mix(in srgb, var(--petroleo) 30%, transparent);
+  transform: scale(calc(1 + var(--nivel) * 0.18));
+  transition:
+    transform 90ms linear,
+    filter 300ms ease,
+    background 400ms ease;
+}
+.app-esfera.is-inicio,
+.app-esfera.is-mudo {
+  filter: grayscale(0.85) opacity(0.6);
+}
+.app-esfera.is-pensando {
+  animation: app-esfera-pensa 1.6s ease-in-out infinite;
+}
+.app-esfera.is-paciente {
+  background:
+    radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--papel-elevado) 85%, transparent) 0 18%, transparent 55%),
+    radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--mostarda) 55%, var(--papel-elevado)) 0 35%, var(--mostarda) 100%);
+  box-shadow: 0 18px 50px color-mix(in srgb, var(--mostarda) 35%, transparent);
+  animation: app-esfera-fala 0.9s ease-in-out infinite;
+}
+@keyframes app-esfera-pensa {
+  50% {
+    transform: scale(0.94);
+    opacity: 0.75;
+  }
+}
+@keyframes app-esfera-fala {
+  50% {
+    transform: scale(1.08);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-esfera {
+    animation: none !important;
+    transition: none;
+  }
+}
+html[data-movimento="reduzido"] .app-esfera {
+  animation: none !important;
+  transition: none;
+}
+.app-voz-estado {
+  margin: 0;
+  font: 600 18px/1.3 var(--font-display);
+  color: var(--tinta);
+}
+.app-voz-comecar {
+  gap: var(--espaco-2);
+}
+.app-voz-legendas {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  text-align: left;
+}
+.app-voz-legendas p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+.app-voz-voce {
+  color: var(--tinta-suave);
+}
+.app-voz-paciente {
+  padding: var(--espaco-2) var(--espaco-3);
+  border-radius: var(--raio-lg);
+  background: var(--mostarda-suave);
+  color: var(--tinta);
+}
+.app-voz-controles {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+}
+.app-voz-escrever {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-1);
+  min-height: 52px;
+  padding: 0 var(--espaco-1) 0 var(--espaco-4);
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-pilula);
+  background: var(--papel-elevado);
+}
+.app-voz-escrever input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font: 16px/1.4 var(--font-texto);
+  outline: none;
+}
+.app-voz-escrever:focus-within {
+  outline: 2px solid var(--foco);
+  outline-offset: 1px;
+}
+.app-voz-escrever .app-botao-icone {
+  width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  color: var(--petroleo);
+}
+.app-voz-redondo {
+  flex: none;
+  width: 52px;
+  min-height: 52px;
+  height: 52px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--linha-forte);
+  background: var(--papel-elevado);
+  color: var(--tinta);
+}
+.app-voz-redondo.is-mudo {
+  background: var(--tinta);
+  color: var(--papel);
+  border-color: var(--tinta);
+}
+.app-voz-encerrar {
+  background: var(--tinta);
+  color: var(--papel);
+  border-color: var(--tinta);
+}

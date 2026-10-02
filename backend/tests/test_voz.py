@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from app.config import Settings
-from app.pipeline.voz import ErroVoz, VozPiper, obter_voz
+from app.pipeline.voz import ErroVoz, VozEdge, VozPiper, obter_voz
 
 
 class ModeloDeTeste:
@@ -76,3 +76,29 @@ def test_fala_vazia_ou_que_falha_vira_erro_de_voz():
 
     with pytest.raises(ErroVoz):
         Quebrada({"feminino": Path("mulher.onnx")}).falar("Oi", "feminino")
+
+
+def test_edge_usa_a_voz_do_sexo_e_devolve_mp3(monkeypatch):
+    voz = obter_voz(Settings(_env_file=None, voz_paciente="edge"))
+    assert isinstance(voz, VozEdge)
+    assert voz.sexos == ["feminino", "masculino"]
+    assert voz.tipo_audio == "audio/mpeg"
+    pedidas: list[str] = []
+
+    async def sintetizar(texto: str, nome: str) -> bytes:
+        pedidas.append(nome)
+        return b"ID3" + texto.encode()
+
+    monkeypatch.setattr(VozEdge, "_sintetizar", staticmethod(sintetizar))
+    assert voz.falar(" Dói aqui. ", "feminino") == "ID3Dói aqui.".encode()
+    assert voz.falar("Dói aqui.", "masculino").startswith(b"ID3")
+    assert pedidas == ["pt-BR-FranciscaNeural", "pt-BR-AntonioNeural"]
+
+
+def test_edge_sem_internet_vira_erro_de_voz(monkeypatch):
+    async def sem_rede(texto: str, nome: str) -> bytes:
+        raise OSError("sem conexão")
+
+    monkeypatch.setattr(VozEdge, "_sintetizar", staticmethod(sem_rede))
+    with pytest.raises(ErroVoz):
+        VozEdge({"feminino": "pt-BR-FranciscaNeural"}).falar("Oi", "masculino")

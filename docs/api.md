@@ -17,7 +17,7 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 
 | Método | Rota | Corpo | Resposta | O que faz |
 | --- | --- | --- | --- | --- |
-| GET | `/api/saude` | | `Saude` | Verificação simples. `{"ok": true, "modo_demonstracao": <bool>, "vozes_paciente": [...]}`: `modo_demonstracao` vem `true` quando `LLM_PROVEDOR=falso` ou `TRANSCRICAO=falso`, e a interface mostra em todas as telas que a transcrição e a correção são de exemplo. `vozes_paciente` lista os sexos com voz do Piper (vazio: o navegador fala) |
+| GET | `/api/saude` | | `Saude` | Verificação simples. `{"ok": true, "modo_demonstracao": <bool>, "vozes_paciente": [...]}`: `modo_demonstracao` vem `true` quando `LLM_PROVEDOR=falso` ou `TRANSCRICAO=falso`, e a interface mostra em todas as telas que a transcrição e a correção são de exemplo. `vozes_paciente` lista os sexos com voz no backend, Edge ou Piper (vazio: o navegador fala) |
 | GET | `/api/queixas` | | `Queixa[]` | Biblioteca fechada de queixas |
 | GET | `/api/cartoes/sortear?queixa=<id>` | | `Cartao` | Sorteia um cartão (queixa opcional) |
 | GET | `/api/termo` | | `Termo` | Termo de gravação vigente (versão e texto) |
@@ -28,7 +28,7 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 | POST | `/api/sessoes/{id}/consentimentos` | `ConsentimentoCriar` | `Consentimento` | Registra o aceite de quem abriu a sessão (`forma: "aceite"`, o padrão) ou o aviso ao colega (`forma: "declarado_pelo_dono"`, que exige antes o aceite do dono no outro papel; senão 409). Antes da gravação; no paciente pela IA, só o aceite, durante a conversa |
 | POST | `/api/sessoes/{id}/conversa` | `PerguntaPaciente` (`texto`, até 1000 caracteres) | `Sessao` | Paciente pela IA: manda uma pergunta e recebe a sessão com a pergunta e a resposta nas falas. Só com status `conversando`; 422 para pergunta vazia ou longa, 503 se a IA não responder (a pergunta não fica) |
 | POST | `/api/sessoes/{id}/conversa/audio` | multipart `audio` (até 5 MB) | `Sessao` | Paciente pela IA, pergunta falada: o Whisper transcreve, o áudio é apagado (também em falha) e a pergunta segue como a escrita. 409 sem o aceite do termo (`forma: "aceite"`, versão atual) na sessão; 422 se não deu para entender. No modo de demonstração, a pergunta é uma de exemplo |
-| GET | `/api/sessoes/{id}/voz/{indice}` | | `audio/wav` | Paciente pela IA: a fala `indice` do paciente com a voz do Piper. 404 sem Piper (o navegador fala) ou se a fala não é do paciente; 503 se a voz falhar |
+| GET | `/api/sessoes/{id}/voz/{indice}` | | `audio/mpeg` (Edge) ou `audio/wav` (Piper) | Paciente pela IA: a fala `indice` do paciente com a voz do backend. 404 sem voz no backend (o navegador fala) ou se a fala não é do paciente; 503 se a voz falhar |
 | POST | `/api/sessoes/{id}/encerrar` | | `Sessao` | Paciente pela IA: fim da entrevista. Status vai para `aguardando_queixa` com a queixa do cartão sugerida; a ficha `caso_ia` passa a vir na sessão |
 | POST | `/api/sessoes/{id}/audio` | multipart `audio` | `Sessao` | Exige um registro por papel (médico e paciente) na versão vigente do termo. Status vai para `processando_audio` e o processamento roda em segundo plano |
 | PUT | `/api/sessoes/{id}/transcricao` | `TranscricaoEditar` | `Sessao` | Corrige quem disse o quê ou um erro de transcrição; marca `transcricao_editada` |
