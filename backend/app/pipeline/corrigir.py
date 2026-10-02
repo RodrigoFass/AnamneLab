@@ -53,8 +53,11 @@ inclusive no meio de uma fala longa ou junto com outras perguntas.
 - Um item é feito quando o entrevistador perguntou ou explorou o assunto. Em falas, ponha o \
 número da fala do entrevistador que mostra isso e, se ajudar, o da resposta do paciente \
 logo depois: [12, 13].
-- O que o paciente contou sem ser perguntado não basta. Só conta se o entrevistador voltou \
-ao assunto, e aí cite essa fala do entrevistador.
+- Vale o que o paciente contou na resposta a uma pergunta do entrevistador, mesmo aberta \
+("como é essa dor?", "me conte mais"): cite a pergunta e a resposta logo depois. A pergunta \
+aberta vale só para o que está nessa resposta.
+- O que o paciente contou em outro momento, fora da resposta à pergunta, não basta. Só conta \
+se o entrevistador voltou ao assunto, e aí cite essa fala do entrevistador.
 - Se nenhuma fala do entrevistador trata do assunto do item, feito é false e falas é []. \
 Não marque por suposição.
 - Responda exatamente um registro por item, com o item_id igual ao enviado. Não crie itens.

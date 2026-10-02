@@ -325,6 +325,11 @@ def test_instrucoes_deixam_a_mesma_fala_provar_varios_itens():
     assert "outras palavras" in SISTEMA
 
 
+def test_instrucoes_dizem_ate_onde_vale_a_pergunta_aberta():
+    assert "mesmo aberta" in SISTEMA
+    assert "fora da resposta à pergunta, não basta" in SISTEMA
+
+
 # ---------- pedidos menores ----------
 
 
