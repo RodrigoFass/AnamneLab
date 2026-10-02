@@ -34,6 +34,8 @@ export interface HipoteseIA {
 export interface SugestoesIA {
   hipoteses: HipoteseIA[];
   perguntas_sugeridas: string[];
+  /** As hipóteses do aluno, na ordem dele: o que a conversa apoia e o que falta checar. */
+  sobre_hipoteses_aluno?: HipoteseIA[];
 }
 
 // ---------- conteudo.py ----------

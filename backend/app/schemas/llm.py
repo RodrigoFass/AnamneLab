@@ -106,6 +106,15 @@ class SugestoesIA(BaseModel):
 
     hipoteses: list[HipoteseIA]
     perguntas_sugeridas: list[str]
+    sobre_hipoteses_aluno: list[HipoteseIA] = []
+    """As hipóteses do próprio aluno, na ordem dele, com o que a conversa apoia e o que falta checar.
+    Nunca diz se está certa ou errada. Vazia em sessões antigas."""
+
+
+class SugestoesGeradas(SugestoesIA):
+    """Saída pedida ao LLM: a análise das hipóteses do aluno é obrigatória."""
+
+    sobre_hipoteses_aluno: list[HipoteseIA]
 
 
 # ---------- paciente pela IA ----------

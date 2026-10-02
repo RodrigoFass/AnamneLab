@@ -184,6 +184,10 @@ legend {
   color: var(--tinta-suave);
   margin-top: var(--espaco-2);
 }
+h4.app-secao-titulo {
+  color: var(--tinta);
+  margin-top: var(--espaco-3);
+}
 
 .app-ajuda {
   color: var(--tinta-suave);
@@ -1606,6 +1610,56 @@ a.app-lista-linha:active {
 .app-hipotese-linha b {
   color: var(--tinta);
   font-weight: 600;
+}
+.app-hipoteses-aluno li {
+  font-weight: 600;
+}
+.app-hipoteses-aluno li + li {
+  margin-top: var(--espaco-2);
+}
+.app-hipoteses-aluno .app-hipotese-linha {
+  margin: var(--espaco-1) 0 0;
+}
+
+/* Faltou de peso menor: sem o vermelho do faltou, porque nem toda pergunta vale em todo caso. */
+.app-item.app-item-poderia .al-item-status {
+  background: var(--linha);
+  color: var(--tinta-suave);
+}
+.app-item.app-item-poderia .al-item-rotulo {
+  color: var(--tinta-suave);
+}
+
+/* Cobertura de cada parte do checklist. */
+.app-cobertura {
+  list-style: none;
+  margin: 0;
+  padding: var(--espaco-3) var(--espaco-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-cobertura li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px var(--espaco-3);
+  font-size: 16px;
+}
+.app-cobertura-barra {
+  grid-column: 1 / -1;
+  height: 6px;
+  border-radius: var(--raio-pilula);
+  background: var(--linha);
+  overflow: hidden;
+}
+.app-cobertura-barra span {
+  display: block;
+  height: 100%;
+  background: var(--petroleo);
+  border-radius: inherit;
 }
 
 .app-troca {

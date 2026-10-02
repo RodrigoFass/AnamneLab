@@ -194,6 +194,14 @@ def _sugestoes(contexto: dict[str, Any]) -> dict[str, Any]:
             }
         ],
         "perguntas_sugeridas": [item["texto"] for item in faltantes] if pedir_perguntas else [],
+        "sobre_hipoteses_aluno": [
+            {
+                "nome": h,
+                "a_favor": ["Exemplo: dado da conversa que apoia a sua hipótese."],
+                "contra": ["Exemplo: o que falta perguntar para avançar."],
+            }
+            for h in contexto.get("hipoteses_aluno", [])
+        ],
     }
 
 

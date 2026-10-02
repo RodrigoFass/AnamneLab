@@ -59,6 +59,10 @@ citacao é null.
 - Vale o que o paciente contou na resposta a uma pergunta do entrevistador, mesmo aberta \
 ("como é essa dor?", "me conte mais"): cite a pergunta e a resposta logo depois. A pergunta \
 aberta vale só para o que está nessa resposta.
+- Também é feito o item que a resposta a outra pergunta já esclareceu: o entrevistador \
+perguntou se quem comeu junto também passou mal e o paciente disse que comeu sozinho; \
+nesse caso, o item sobre outras pessoas com o mesmo quadro foi investigado. Cite a \
+pergunta e a resposta.
 - O que o paciente contou em outro momento, fora da resposta à pergunta, não basta. Só conta \
 se o entrevistador voltou ao assunto, e aí cite essa fala do entrevistador.
 - Se nenhuma fala do entrevistador trata do assunto do item, feito é false, falas é [] e citacao é null. \
