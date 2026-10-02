@@ -49,3 +49,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Cache do TypeScript
+*.tsbuildinfo
