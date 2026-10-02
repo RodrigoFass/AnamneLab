@@ -25,7 +25,7 @@ escreveu as suas.
 backend/            API em Python 3.12 + FastAPI
   app/main.py       rotas (contrato em docs/api.md)
   app/pipeline/     transcrever, rotular falas, queixa, anamnese, corrigir, sugestões
-  app/llm/          um cliente por provedor, mesma interface (anthropic, falso)
+  app/llm/          um cliente por provedor, mesma interface (anthropic, gemini, falso)
   app/schemas/      modelos Pydantic (saída do LLM, sessão, avaliação)
   app/repositorio/  armazenamento (memória ou Supabase)
   tests/
@@ -77,8 +77,17 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
 - **IA de correção (Anthropic):** `LLM_PROVEDOR=anthropic` e `ANTHROPIC_API_KEY`. O modelo
   sai de `LLM_MODELO` e o esforço de `LLM_ESFORCO`. A saída é JSON validado pelo Pydantic;
   JSON inválido ganha uma nova tentativa e, depois, um erro claro ao aluno.
+- **IA de correção grátis (Gemini):** crie uma chave no Google AI Studio
+  (https://aistudio.google.com/apikey, sem cartão) e ponha `LLM_PROVEDOR=gemini` e
+  `GEMINI_API_KEY`. `GEMINI_MODELOS` é a lista de modelos em ordem: quando um esgota a cota
+  grátis, o app tenta o próximo. No plano grátis o Google pode guardar o texto, usar para
+  melhorar os produtos dele e ter pessoas revisando; o termo (v2) avisa disso. Para conferir a
+  chave e os modelos, rode `uv run python -m app.testar_ia` dentro de `backend/` (no Windows
+  sem uv: `.venv\Scripts\python -m app.testar_ia`); `--modelos` lista os modelos da chave.
 - **Whisper local:** `uv pip install -e ".[local]"` e `TRANSCRICAO=local`. O tamanho do
-  modelo vem de `WHISPER_MODELO_LOCAL` (padrão `small`).
+  modelo vem de `WHISPER_MODELO_LOCAL` (padrão `small`). No Windows com placa NVIDIA, o
+  Whisper usa a placa e precisa de `nvidia-cublas-cu12` e `nvidia-cudnn-cu12` (cuDNN 9) com
+  as pastas `bin` deles no `PATH`.
 - **Whisper pela API:** `uv pip install -e ".[api]"`, `TRANSCRICAO=api` e `OPENAI_API_KEY`.
 - **Supabase:** crie o projeto e aplique a migração seguindo `supabase/README.md`. Depois
   `uv pip install -e ".[supabase]"`, `BANCO=supabase`, `AUTH=supabase`, `SUPABASE_URL` e
@@ -91,10 +100,12 @@ Backend (`backend/.env`, modelo em `backend/.env.example`):
 
 | Variável | Valores | Padrão |
 | --- | --- | --- |
-| `LLM_PROVEDOR` | `anthropic`, `falso` | `falso` |
+| `LLM_PROVEDOR` | `anthropic`, `gemini`, `falso` | `falso` |
 | `LLM_MODELO` | id do modelo | `claude-opus-5-5` |
 | `LLM_ESFORCO` | `low`, `medium`, `high`, `xhigh`, `max` | `medium` |
 | `ANTHROPIC_API_KEY` | chave da API | |
+| `GEMINI_API_KEY` | chave do Google AI Studio | |
+| `GEMINI_MODELOS` | modelos em ordem, separados por vírgula | `gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite` |
 | `TRANSCRICAO` | `local`, `api`, `falso` | `falso` |
 | `WHISPER_MODELO_LOCAL` | tamanho do faster-whisper | `small` |
 | `OPENAI_API_KEY` | chave da API (Whisper) | |

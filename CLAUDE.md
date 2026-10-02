@@ -23,7 +23,7 @@ backend/app/
   main.py            rotas (contrato em docs/api.md)
   processamento.py   etapas em segundo plano, com status e progresso
   pipeline/          transcrever.py, rotular_falas.py, queixa.py, anamnese.py, corrigir.py, sugestoes.py
-  llm/               um cliente por provedor, mesma interface (anthropic, falso)
+  llm/               um cliente por provedor, mesma interface (anthropic, gemini, falso)
   repositorio/       memoria (dev e testes) e supabase
   schemas/           modelos Pydantic (conteúdo, saída do LLM, sessão)
   conteudo.py        carrega e valida content/

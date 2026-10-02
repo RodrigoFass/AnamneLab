@@ -22,10 +22,13 @@ class Settings(BaseSettings):
     )
 
     # IA de correção
-    llm_provedor: Literal["anthropic", "falso"] = "falso"
+    llm_provedor: Literal["anthropic", "gemini", "falso"] = "falso"
     llm_modelo: str = "claude-opus-5-5"
     llm_esforco: Literal["low", "medium", "high", "xhigh", "max"] = "medium"
     anthropic_api_key: SecretStr | None = None
+    gemini_api_key: SecretStr | None = None
+    gemini_modelos: str = "gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite"
+    """Modelos do Gemini em ordem, separados por vírgula: se um esgota a cota grátis, tenta o próximo."""
 
     # Transcrição
     transcricao: Literal["local", "api", "falso"] = "falso"
@@ -65,6 +68,10 @@ class Settings(BaseSettings):
     @property
     def lista_cors(self) -> list[str]:
         return [origem.strip() for origem in self.cors_origens.split(",") if origem.strip()]
+
+    @property
+    def lista_modelos_gemini(self) -> list[str]:
+        return [modelo.strip() for modelo in self.gemini_modelos.split(",") if modelo.strip()]
 
     @property
     def tamanho_maximo_bytes(self) -> int:

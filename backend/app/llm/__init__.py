@@ -11,6 +11,10 @@ def obter_cliente_llm(settings: Settings) -> ClienteLLM:
         from app.llm.anthropic import ClienteAnthropic
 
         return ClienteAnthropic(settings)
+    if settings.llm_provedor == "gemini":
+        from app.llm.gemini import ClienteGemini
+
+        return ClienteGemini(settings)
     from app.llm.falso import ClienteFalso
 
     return ClienteFalso()
