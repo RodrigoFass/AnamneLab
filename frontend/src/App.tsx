@@ -1,7 +1,11 @@
-import { Route, Routes } from "react-router-dom";
+import { Outlet, useLocation, type RouteObject } from "react-router-dom";
 import { useAuth } from "./auth/Autenticacao";
-import { AvisoDemonstracao } from "./componentes/AvisoDemonstracao";
+import { Abas } from "./componentes/Abas";
+import { ProvedorDemonstracao } from "./componentes/AvisoDemonstracao";
 import { Carregando } from "./componentes/Tela";
+import { BoasVindas } from "./telas/BoasVindas";
+import { Evolucao } from "./telas/Evolucao";
+import { Perfil } from "./telas/Perfil";
 import { ConfirmarQueixa } from "./telas/ConfirmarQueixa";
 import { Correcao } from "./telas/Correcao";
 import { Gravar } from "./telas/Gravar";
@@ -14,18 +18,60 @@ import { Processando } from "./telas/Processando";
 import { SessaoRedireciona } from "./telas/SessaoRedireciona";
 import { Termo } from "./telas/Termo";
 import { Transcricao } from "./telas/Transcricao";
+import { usePerfil } from "./util/perfil";
 
-export function App() {
+/**
+ * Rotas do roteador de dados (createBrowserRouter). Ficam todas aqui, num nível só,
+ * para os links terem transição de tela: rotas dentro de <Routes> perdem a View Transition.
+ */
+export const rotas: RouteObject[] = [
+  {
+    element: <App />,
+    children: [
+      {
+        // As três abas dividem a mesma barra, que fica montada entre elas: o fundo da aba ativa desliza.
+        element: <ComAbas />,
+        children: [
+          { path: "/", element: <Inicio /> },
+          { path: "/evolucao", element: <Evolucao /> },
+          { path: "/perfil", element: <Perfil /> },
+        ],
+      },
+      { path: "/sessao/nova", element: <NovaSessao /> },
+      { path: "/sessao/:id", element: <SessaoRedireciona /> },
+      { path: "/sessao/:id/termo", element: <Termo /> },
+      { path: "/sessao/:id/gravar", element: <Gravar /> },
+      { path: "/sessao/:id/processando", element: <Processando /> },
+      { path: "/sessao/:id/queixa", element: <ConfirmarQueixa /> },
+      { path: "/sessao/:id/transcricao", element: <Transcricao /> },
+      { path: "/sessao/:id/hipoteses", element: <Hipoteses /> },
+      { path: "/sessao/:id/correcao", element: <Correcao /> },
+      { path: "*", element: <NaoEncontrada /> },
+    ],
+  },
+];
+
+function App() {
+  return (
+    <ProvedorDemonstracao>
+      <Telas />
+    </ProvedorDemonstracao>
+  );
+}
+
+function ComAbas() {
   return (
     <>
-      <AvisoDemonstracao />
-      <Telas />
+      <Outlet />
+      <Abas />
     </>
   );
 }
 
 function Telas() {
-  const { carregando, logado } = useAuth();
+  const { carregando, logado, loginAtivo } = useAuth();
+  const perfil = usePerfil();
+  const { pathname } = useLocation();
 
   if (carregando) {
     return (
@@ -35,20 +81,9 @@ function Telas() {
     );
   }
   if (!logado) return <Login />;
+  // Sem login (demonstração), /entrar mostra a tela de entrar só para ver o visual.
+  if (!loginAtivo && pathname === "/entrar") return <Login />;
+  if (!perfil.nome) return <BoasVindas />;
 
-  return (
-    <Routes>
-      <Route path="/" element={<Inicio />} />
-      <Route path="/sessao/nova" element={<NovaSessao />} />
-      <Route path="/sessao/:id" element={<SessaoRedireciona />} />
-      <Route path="/sessao/:id/termo" element={<Termo />} />
-      <Route path="/sessao/:id/gravar" element={<Gravar />} />
-      <Route path="/sessao/:id/processando" element={<Processando />} />
-      <Route path="/sessao/:id/queixa" element={<ConfirmarQueixa />} />
-      <Route path="/sessao/:id/transcricao" element={<Transcricao />} />
-      <Route path="/sessao/:id/hipoteses" element={<Hipoteses />} />
-      <Route path="/sessao/:id/correcao" element={<Correcao />} />
-      <Route path="*" element={<NaoEncontrada />} />
-    </Routes>
-  );
+  return <Outlet />;
 }

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { adotarPerfilDaConta } from "../util/perfil";
 import { loginAtivo, supabase } from "./supabase";
 
 interface EstadoAuth {
@@ -33,10 +34,12 @@ export function ProvedorAuth({ children }: { children: ReactNode }) {
       if (cancelado) return;
       setLogado(Boolean(data.session));
       setEmail(data.session?.user.email ?? null);
+      adotarPerfilDaConta(data.session?.user.user_metadata ?? null);
       setCarregando(false);
       const { data: inscricao } = sb.auth.onAuthStateChange((_evento, sessao) => {
         setLogado(Boolean(sessao));
         setEmail(sessao?.user.email ?? null);
+        adotarPerfilDaConta(sessao?.user.user_metadata ?? null);
       });
       desinscrever = () => inscricao.subscription.unsubscribe();
     });

@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import { Aviso } from "../componentes/Aviso";
 import { BotaoGravar } from "../componentes/BotaoGravar";
+import { Contador } from "../componentes/Contador";
+import { IconeAviso } from "../componentes/Icones";
+import { Onda } from "../componentes/Onda";
 import { Carregando, Tela } from "../componentes/Tela";
 import { formatarTempo } from "../util/formato";
+import { linhaDaDupla } from "../util/nomes";
 import { rotaDaSessao, useSessao } from "../util/sessao";
+import { useNavegar } from "../util/movimento";
 
 /** 20 minutos. */
 const DURACAO_MAXIMA_S = 20 * 60;
@@ -54,7 +59,7 @@ interface Gravacao {
 
 export function Gravar() {
   const { id } = useParams();
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { sessao, erro: erroSessao } = useSessao(id);
 
   const [fase, setFase] = useState<Fase>("pronto");
@@ -62,6 +67,8 @@ export function Gravar() {
   const [gravacao, setGravacao] = useState<Gravacao | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
+  /** O mesmo fluxo do microfone, em estado, para a onda desenhar o volume. */
+  const [fluxoAtivo, setFluxoAtivo] = useState<MediaStream | null>(null);
 
   const gravador = useRef<MediaRecorder | null>(null);
   const fluxo = useRef<MediaStream | null>(null);
@@ -78,6 +85,7 @@ export function Gravar() {
     }
     fluxo.current?.getTracks().forEach((t) => t.stop());
     fluxo.current = null;
+    setFluxoAtivo(null);
     void travaTela.current?.release().catch(() => undefined);
     travaTela.current = null;
   }, []);
@@ -133,6 +141,7 @@ export function Gravar() {
       return;
     }
     fluxo.current = stream;
+    setFluxoAtivo(stream);
 
     const formato = escolherFormato();
     let g: MediaRecorder;
@@ -241,55 +250,61 @@ export function Gravar() {
   }
 
   const estadoBotao = fase === "gravando" ? "gravando" : fase === "enviando" ? "processando" : "pronto";
+  const titulo =
+    fase === "gravando" ? "Gravando" : fase === "pronto" ? "Pronto para gravar" : "Gravação concluída";
+  const tempo = fase === "parado" || fase === "enviando" ? (gravacao?.segundos ?? segundos) : segundos;
 
   return (
-    <Tela titulo="Gravar a consulta" voltar={fase === "gravando" ? undefined : "/"} rotuloVoltar="Voltar ao início">
+    <Tela
+      titulo={titulo}
+      sobretitulo={sessao ? linhaDaDupla(sessao.consentimentos, sessao.origem_caso) : undefined}
+      voltar={fase === "gravando" ? undefined : "/"}
+      rotuloVoltar="Voltar ao início"
+      className="app-tela-gravar"
+      chaveTitulo={titulo}
+    >
       {erroSessao && <Aviso tipo="erro">{erroSessao}</Aviso>}
       {!sessao && !erroSessao && <Carregando />}
 
       {sessao && (
         <>
-          <Aviso>Use só casos simulados. Não grave pacientes reais.</Aviso>
+          <p className={`app-cronometro app-tabular${fase === "gravando" ? " is-gravando" : ""}`} aria-hidden="true">
+            <Contador texto={formatarTempo(tempo)} />
+          </p>
+          <Onda fluxo={fase === "gravando" ? fluxoAtivo : null} />
 
-          {fase !== "parado" && (
-            <ul className="app-dicas">
-              <li>Deixe o celular entre vocês dois, sobre a mesa, com a tela para cima.</li>
-              <li>Procure um lugar calmo, sem música ou conversa ao fundo.</li>
-              <li>A gravação vai até 20 minutos e para sozinha.</li>
-            </ul>
+          <p className="app-dica">
+            <IconeAviso />
+            {fase === "parado"
+              ? "O áudio é apagado logo depois da transcrição."
+              : "Celular entre os dois, num lugar calmo. Use só casos simulados."}
+          </p>
+          {fase === "pronto" && (
+            <p className="app-legenda app-centro">A gravação vai até 20 minutos e para sozinha.</p>
           )}
 
           {aviso && <Aviso titulo="Gravação encerrada">{aviso}</Aviso>}
           {erro && <Aviso tipo="erro">{erro}</Aviso>}
 
-          {fase === "parado" && gravacao ? (
-            <section className="app-gravado" aria-labelledby="titulo-gravado">
-              <h2 className="app-subtitulo" id="titulo-gravado">
-                Gravação pronta
-              </h2>
-              <p>
-                Duração: <span className="app-tabular">{formatarTempo(gravacao.segundos)}</span>. O
-                áudio é apagado logo depois da transcrição.
-              </p>
-              <div className="app-acoes">
-                <button className="al-botao al-botao-principal" type="button" onClick={() => void enviar()}>
+          <div className="app-gravar-area">
+            {fase === "parado" && gravacao ? (
+              <div className="app-gravado app-surge">
+                <button className="al-botao al-botao-principal app-botao-largo" type="button" onClick={() => void enviar()}>
                   Enviar para correção
                 </button>
-                <button className="al-botao al-botao-secundario" type="button" onClick={descartar}>
+                <button className="al-botao al-botao-texto app-botao-largo" type="button" onClick={descartar}>
                   Gravar de novo
                 </button>
               </div>
-            </section>
-          ) : (
-            <div className="app-gravar-area">
+            ) : (
               <BotaoGravar
                 estado={estadoBotao}
                 segundos={segundos}
-                legendaProcessando="Enviando…"
+                legendaProcessando="Enviando para correção"
                 onAlternar={alternar}
               />
-            </div>
-          )}
+            )}
+          </div>
         </>
       )}
     </Tela>

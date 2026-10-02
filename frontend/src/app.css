@@ -75,28 +75,13 @@ legend {
 /* ---------- moldura das telas ---------- */
 
 .app-tela {
-  max-width: 560px;
+  max-width: 480px;
   margin: 0 auto;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   padding: 0 max(var(--espaco-4), env(safe-area-inset-right)) 0 max(var(--espaco-4), env(safe-area-inset-left));
   animation: app-entrar 0.3s cubic-bezier(0.2, 0, 0, 1) both;
-}
-
-/* Modo de demonstração: aviso discreto acima de todas as telas, na mesma coluna. */
-.app-demonstracao {
-  max-width: 560px;
-  margin: 0 auto;
-  padding: max(var(--espaco-2), env(safe-area-inset-top)) max(var(--espaco-4), env(safe-area-inset-right)) 0
-    max(var(--espaco-4), env(safe-area-inset-left));
-}
-.app-demonstracao .app-aviso {
-  padding: var(--espaco-2) var(--espaco-3);
-  box-shadow: none;
-}
-.app-demonstracao .app-aviso-texto {
-  color: var(--tinta-suave);
 }
 
 @keyframes app-entrar {
@@ -108,15 +93,47 @@ legend {
 
 .app-topo {
   display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: max(var(--espaco-2), env(safe-area-inset-top)) 0 var(--espaco-4);
+}
+
+.app-topo-linha {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--espaco-2);
-  min-height: 64px;
-  padding-top: env(safe-area-inset-top);
+  min-height: 48px;
+}
+
+.app-sobretitulo {
+  font: 500 13px/18px var(--font-texto);
+  color: var(--tinta-suave);
+}
+
+.app-subtitulo-tela {
+  margin-top: var(--espaco-1);
+  font: 400 15px/22px var(--font-texto);
+  color: var(--tinta-suave);
+}
+
+/* Modo de demonstração: selo pequeno no canto do topo, em todas as telas. */
+.app-demo {
+  font: 600 12px/16px var(--font-texto);
+  color: var(--tinta-suave);
+  padding: 4px var(--espaco-2);
+  border: 1px dashed var(--linha-forte);
+  border-radius: var(--raio-pilula);
+  white-space: nowrap;
 }
 
 .app-voltar {
   width: 48px;
   height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
   margin-left: calc(-1 * var(--espaco-3));
   display: grid;
   place-items: center;
@@ -129,7 +146,7 @@ legend {
 }
 
 .app-titulo {
-  font: 700 24px/30px var(--font-display);
+  font: 700 26px/32px var(--font-display);
   letter-spacing: -0.01em;
   color: var(--tinta);
 }
@@ -214,15 +231,17 @@ legend {
 /* ---------- início ---------- */
 
 .app-inicio-topo {
-  padding: var(--espaco-6) 0 var(--espaco-5);
-  padding-top: max(var(--espaco-6), env(safe-area-inset-top));
+  padding: max(var(--espaco-2), env(safe-area-inset-top)) 0 var(--espaco-5);
   display: flex;
   flex-direction: column;
-  gap: var(--espaco-2);
+  gap: var(--espaco-1);
+}
+.app-inicio-topo .al-logo-nome {
+  font-size: 20px;
 }
 
 .app-assinatura {
-  margin-top: var(--espaco-3);
+  margin-top: var(--espaco-4);
   font: 700 32px/38px var(--font-display);
   letter-spacing: -0.02em;
   color: var(--tinta);
@@ -475,9 +494,10 @@ legend {
 
 .app-gravar-area {
   flex: 1;
-  display: grid;
-  place-items: center;
-  padding: var(--espaco-6) 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--espaco-6) 0 var(--espaco-5);
 }
 
 .app-gravar-tempo {
@@ -485,13 +505,10 @@ legend {
 }
 
 .app-gravado {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--espaco-3);
-  padding: var(--espaco-4);
-  background: var(--papel-elevado);
-  border-radius: var(--raio-md);
-  box-shadow: var(--sombra-cartao);
+  gap: var(--espaco-2);
 }
 
 .app-processando {
@@ -744,6 +761,1742 @@ legend {
   background: var(--papel-elevado);
 }
 
+
+/* ---------- visual do vídeo: listas, cartões, folhas e movimento ---------- */
+
+.al-botao {
+  transition:
+    background-color 0.12s,
+    transform 0.12s cubic-bezier(0.2, 0, 0, 1);
+}
+.al-botao:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.app-centro {
+  text-align: center;
+}
+
+/* Entra subindo, um depois do outro (cascata). */
+.app-cascata > * {
+  animation: app-subir 0.42s var(--mola) both;
+  animation-delay: var(--atraso, 0ms);
+}
+.app-cascata > :nth-child(2) { --atraso: 40ms; }
+.app-cascata > :nth-child(3) { --atraso: 80ms; }
+.app-cascata > :nth-child(4) { --atraso: 120ms; }
+.app-cascata > :nth-child(5) { --atraso: 160ms; }
+.app-cascata > :nth-child(6) { --atraso: 200ms; }
+.app-cascata > :nth-child(n + 7) { --atraso: 240ms; }
+
+.app-surge {
+  animation: app-surgir-escala 0.38s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes app-subir {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes app-surgir-escala {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+/* Lista em um cartão só, com linhas separadas por fio (histórico, aceites). */
+.app-lista {
+  list-style: none;
+  padding: 0;
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+  overflow: hidden;
+}
+.app-lista > li + li {
+  border-top: 1px solid var(--linha);
+}
+.app-lista-linha {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  min-height: 56px;
+  padding: var(--espaco-3) var(--espaco-4);
+  color: var(--tinta);
+  text-decoration: none;
+}
+.app-lista > .app-lista-linha + .app-lista-linha {
+  border-top: 1px solid var(--linha);
+}
+a.app-lista-linha:active {
+  background: var(--papel);
+}
+.app-lista-texto {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.app-lista-titulo {
+  font-weight: 600;
+}
+.app-lista-meta {
+  font: 500 13px/18px var(--font-texto);
+  color: var(--tinta-suave);
+}
+.app-lista-meta .app-status {
+  gap: var(--espaco-1);
+}
+.app-lista-meta .al-icone {
+  width: 14px;
+  height: 14px;
+}
+.app-lista-nota {
+  font: 700 20px/24px var(--font-display);
+}
+.app-lista-seta {
+  width: 18px;
+  height: 18px;
+  color: var(--tinta-suave);
+}
+
+/* Início: última sessão com a linha das notas. */
+.app-ultima {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espaco-4);
+  padding: var(--espaco-4);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+  color: var(--tinta);
+  text-decoration: none;
+  animation: app-subir 0.42s cubic-bezier(0.2, 0, 0, 1) both;
+}
+.app-ultima-nota {
+  font: 700 48px/52px var(--font-display);
+  letter-spacing: -0.02em;
+}
+.app-linha-notas {
+  flex: none;
+  overflow: visible;
+}
+.app-linha-traco {
+  fill: none;
+  stroke: var(--petroleo);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: app-desenhar 0.9s 0.2s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+.app-linha-ponto {
+  fill: var(--petroleo);
+  animation: app-surgir 0.3s 1s both;
+}
+@keyframes app-desenhar {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Avatares e dupla. */
+.app-avatar {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--raio-pilula);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1;
+}
+.app-avatar-medico {
+  background: var(--petroleo);
+  color: var(--on-petroleo);
+}
+.app-avatar-paciente {
+  background: var(--mostarda);
+  color: var(--on-mostarda);
+}
+
+.app-dupla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaco-2);
+}
+.app-pessoa {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: 56px;
+  padding: var(--espaco-2) var(--espaco-3);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+  cursor: text;
+}
+.app-pessoa:focus-within {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+.app-pessoa-texto {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.app-pessoa-nome {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: 600 16px/22px var(--font-texto);
+  color: var(--tinta);
+}
+.app-pessoa-nome:focus-visible {
+  outline: none;
+}
+.app-pessoa-nome::placeholder {
+  color: var(--tinta-suave);
+  font-weight: 500;
+}
+.app-pessoa-papel {
+  font: 500 12px/16px var(--font-texto);
+  color: var(--tinta-suave);
+}
+
+/* Origem do caso em grade 2x2, com ícone. */
+.app-grade-origem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaco-2);
+}
+.app-origem {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: 48px;
+  padding: 0 var(--espaco-3);
+  background: var(--papel-elevado);
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    color 0.2s 0.06s,
+    border-color 0.2s,
+    transform 0.3s var(--mola-quique);
+}
+.app-origem:active {
+  transform: scale(0.97);
+}
+.app-origem.is-marcada {
+  border-color: var(--petroleo);
+  color: var(--on-petroleo);
+}
+.app-origem:has(input:focus-visible) {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.app-cartao {
+  animation: app-virar 0.5s cubic-bezier(0.2, 0, 0, 1) both;
+}
+@keyframes app-virar {
+  from {
+    opacity: 0;
+    transform: perspective(800px) rotateX(-12deg) translateY(12px);
+  }
+}
+.app-cartao-detalhes {
+  margin: 0;
+  padding-left: var(--espaco-5);
+  font: 500 15px/22px var(--font-texto);
+}
+
+/* Folha que sobe de baixo. */
+.app-sem-rolagem {
+  overflow: hidden;
+}
+.app-folha-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(21, 35, 37, 0.42);
+  animation: app-surgir 0.25s ease-out backwards;
+}
+.app-folha {
+  width: 100%;
+  max-width: 480px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: var(--espaco-2) var(--espaco-4) max(var(--espaco-5), env(safe-area-inset-bottom));
+  background: var(--papel-elevado);
+  border-radius: var(--raio-lg) var(--raio-lg) 0 0;
+  box-shadow: var(--sombra-folha);
+  animation: app-folha-sobe 0.42s var(--mola-folha) backwards;
+  transition: transform 0.45s var(--mola-folha);
+}
+.app-folha:focus-visible {
+  outline: none;
+}
+.app-folha-alca {
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin: 0 auto var(--espaco-4);
+  border-radius: var(--raio-pilula);
+  background: var(--linha);
+}
+.app-folha-titulo {
+  font: 700 22px/28px var(--font-display);
+  color: var(--tinta);
+}
+.app-folha-corpo {
+  margin-top: var(--espaco-4);
+}
+@keyframes app-folha-sobe {
+  from {
+    transform: translateY(100%);
+  }
+}
+/* Alça e título: puxar para baixo fecha a folha. */
+.app-folha-pega {
+  touch-action: none;
+  cursor: grab;
+}
+.app-folha-pega:active {
+  cursor: grabbing;
+}
+/* Saída: a folha desce de onde estiver e o véu clareia. */
+.app-folha-fundo.is-saindo {
+  pointer-events: none;
+  animation: app-veu-sai 0.3s ease-in forwards;
+}
+.app-folha-fundo.is-saindo .app-folha {
+  animation: app-folha-desce 0.3s var(--saida) forwards;
+}
+@keyframes app-folha-desce {
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes app-veu-sai {
+  to {
+    background-color: transparent;
+  }
+}
+
+.app-topicos {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+.app-topicos li {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: var(--espaco-3);
+  font: 400 15px/22px var(--font-texto);
+}
+.app-topicos .al-icone {
+  margin-top: 1px;
+  color: var(--petroleo);
+}
+
+/* Recado que sobe do rodapé. */
+.app-recado {
+  --recado-desce: 16px;
+  position: fixed;
+  left: 50%;
+  bottom: max(var(--espaco-5), env(safe-area-inset-bottom));
+  z-index: 30;
+  width: min(440px, calc(100% - 2 * var(--espaco-4)));
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  padding: var(--espaco-3) var(--espaco-4);
+  border-radius: var(--raio-md);
+  background: var(--tinta);
+  color: var(--papel);
+  font-weight: 500;
+  transform: translateX(-50%);
+  animation: app-recado 0.5s var(--mola-quique) both;
+}
+@keyframes app-recado {
+  from {
+    opacity: 0;
+    transform: translate(-50%, var(--recado-desce)) scale(0.96);
+  }
+}
+.app-recado.is-saindo {
+  animation: app-recado-sai 0.24s var(--saida) forwards;
+}
+@keyframes app-recado-sai {
+  to {
+    opacity: 0;
+    transform: translate(-50%, var(--recado-desce));
+  }
+}
+.app-recado .al-icone {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+/* Gravar: cronômetro grande, onda e o botão embaixo. */
+.app-tela-gravar .app-topo {
+  align-items: center;
+  text-align: center;
+}
+.app-tela-gravar .app-topo-linha {
+  align-self: stretch;
+}
+.app-tela-gravar .app-conteudo {
+  gap: var(--espaco-4);
+}
+.app-cronometro {
+  margin-top: var(--espaco-4);
+  text-align: center;
+  font: 700 64px/1 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--tinta);
+}
+.app-tela-gravar .app-titulo::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: var(--espaco-2);
+  border-radius: var(--raio-pilula);
+  background: var(--gravar);
+  vertical-align: middle;
+  transform: scale(0);
+  transition: transform 0.2s;
+}
+.app-tela-gravar:has(.app-gravar-bloco.is-gravando) .app-titulo::before {
+  transform: scale(1);
+  animation: app-piscar 1.2s ease-in-out infinite;
+}
+@keyframes app-piscar {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.app-onda {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+}
+.app-onda span {
+  flex: 1;
+  height: 100%;
+  max-width: 5px;
+  border-radius: var(--raio-pilula);
+  background: var(--petroleo);
+  /* A altura vem do Onda.tsx a cada quadro, já suavizada; sem transição para não atrasar. */
+  transform: scaleY(0.08);
+}
+/* Parada: pontos no lugar, que só respiram. Nada anda para os lados. */
+.app-onda.is-parada {
+  height: 64px;
+  background: radial-gradient(circle, var(--petroleo) 1.5px, transparent 2px) 50% 50% / 8px 8px repeat-x;
+  opacity: 0.8;
+  animation: app-pontos-respiram 2.4s ease-in-out infinite;
+}
+@keyframes app-pontos-respiram {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.app-dica {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  padding: var(--espaco-2) var(--espaco-3);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-pilula);
+  box-shadow: var(--sombra-cartao);
+  font: 500 14px/20px var(--font-texto);
+  color: var(--tinta);
+}
+.app-dica .al-icone {
+  width: 16px;
+  height: 16px;
+  color: var(--petroleo);
+}
+
+.app-gravar-bloco {
+  position: relative;
+  /* O anel do botão pulsa até 13px para fora; o texto fica longe dele. */
+  gap: calc(var(--espaco-5) + var(--espaco-1));
+}
+/* Dois anéis que se abrem do botão enquanto grava. */
+.app-gravar-aneis,
+.app-gravar-aneis::after {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 76px;
+  height: 76px;
+  margin-left: -38px;
+  border-radius: var(--raio-pilula);
+  border: 2px solid var(--gravar);
+  opacity: 0;
+  pointer-events: none;
+}
+.app-gravar-aneis::after {
+  content: "";
+  top: -2px;
+  margin-left: -38px;
+  left: calc(50% - 2px);
+}
+.app-gravar-bloco.is-gravando .app-gravar-aneis,
+.app-gravar-bloco.is-gravando .app-gravar-aneis::after {
+  animation: app-anel 2s cubic-bezier(0.2, 0, 0, 1) infinite;
+}
+.app-gravar-bloco.is-gravando .app-gravar-aneis::after {
+  animation-delay: 1s;
+}
+@keyframes app-anel {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+.app-gravar-bloco .al-gravar {
+  position: relative;
+  transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1);
+}
+.app-gravar-bloco .al-gravar:active {
+  transform: scale(0.94);
+}
+
+/* Etapas do processamento, com o check que se desenha. */
+.app-etapas {
+  list-style: none;
+  padding: 0;
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-etapa {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  min-height: 48px;
+  padding: var(--espaco-2) var(--espaco-4);
+  color: var(--tinta-suave);
+  transition: color 0.2s;
+}
+.app-etapa + .app-etapa {
+  border-top: 1px solid var(--linha);
+}
+.app-etapa.is-feita,
+.app-etapa.is-atual {
+  color: var(--tinta);
+}
+.app-etapa-marca {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--raio-pilula);
+  border: 2px solid var(--linha);
+}
+.app-etapa.is-atual .app-etapa-marca {
+  border-color: var(--linha);
+  border-top-color: var(--petroleo);
+  animation: app-girar 0.9s linear infinite;
+}
+.app-etapa.is-feita .app-etapa-marca {
+  border-color: var(--feito-suave);
+  background: var(--feito-suave);
+  color: var(--feito);
+}
+.app-etapa-marca .al-icone {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3;
+}
+.app-check-desenha path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: app-check 0.4s 0.05s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+@keyframes app-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.app-nota-rodape {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  font: 500 13px/18px var(--font-texto);
+  color: var(--tinta-suave);
+}
+.app-nota-rodape .al-icone {
+  width: 16px;
+  height: 16px;
+}
+
+/* Trecho da transcrição na confirmação da queixa. */
+.app-trecho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  padding: var(--espaco-3) var(--espaco-4);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-falas-curtas {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+}
+.app-falas-curtas li {
+  display: flex;
+  gap: var(--espaco-2);
+  align-items: flex-start;
+  font: 400 15px/22px var(--font-texto);
+}
+.app-queixa {
+  border: 2px solid var(--petroleo);
+}
+.app-queixa .al-queixa-nome {
+  margin-bottom: 0;
+  font-size: 24px;
+  line-height: 30px;
+}
+.app-queixa .app-legenda {
+  margin-bottom: var(--espaco-3);
+}
+
+/* Hipóteses do aluno em chips numerados. */
+.app-hipotese-campo {
+  display: flex;
+  gap: var(--espaco-2);
+  align-items: flex-end;
+}
+.app-botao-icone {
+  width: 48px;
+  padding: 0;
+  justify-content: center;
+}
+.app-chips-hipoteses {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+}
+.app-chip-hipotese {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  min-height: 48px;
+  padding: var(--espaco-1) var(--espaco-1) var(--espaco-1) var(--espaco-3);
+  border-radius: var(--raio-md);
+  background: var(--petroleo-suave);
+  color: var(--tinta);
+  font-weight: 600;
+  animation: app-surgir-escala 0.3s cubic-bezier(0.2, 0, 0, 1) both;
+}
+.app-chip-numero {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--raio-pilula);
+  background: var(--petroleo);
+  color: var(--on-petroleo);
+  font: 700 12px/1 var(--font-texto);
+}
+.app-chip-texto {
+  flex: 1;
+  min-width: 0;
+}
+.app-chip-remover {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--raio-sm);
+  background: transparent;
+  color: var(--tinta-suave);
+  cursor: pointer;
+}
+
+/* Correção: placar, itens e sugestões. */
+.app-placar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  padding: var(--espaco-4);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-placar-linha {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-4);
+}
+.app-placar-numero {
+  min-width: 2ch;
+  font: 700 64px/1 var(--font-display);
+  letter-spacing: -0.03em;
+  color: var(--tinta);
+}
+.app-placar-lado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espaco-1);
+}
+.app-placar-rotulo {
+  font: 600 15px/20px var(--font-texto);
+  color: var(--tinta-suave);
+}
+.app-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-1);
+  padding: 2px var(--espaco-3);
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-pilula);
+  font: 600 14px/20px var(--font-texto);
+  color: var(--tinta);
+}
+
+.app-itens {
+  list-style: none;
+  padding: 0;
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-itens[hidden] {
+  display: none;
+}
+.app-itens > li + li {
+  border-top: 1px solid var(--linha);
+}
+.app-item {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: var(--espaco-3);
+  padding: var(--espaco-3) var(--espaco-2) var(--espaco-3) var(--espaco-4);
+}
+.app-item .al-item-status {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--raio-sm);
+  display: grid;
+  place-items: center;
+}
+.app-item .al-item-status .al-icone {
+  width: 18px;
+  height: 18px;
+}
+.app-item-titulo {
+  font: 500 16px/22px var(--font-texto);
+  color: var(--tinta);
+}
+.app-item-titulo .al-item-rotulo {
+  font: 700 16px/22px var(--font-texto);
+}
+.app-fala {
+  font-size: 16px;
+  line-height: 24px;
+}
+.app-item-bandeira {
+  align-self: start;
+  width: 44px;
+  height: 44px;
+  margin-top: -8px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--raio-sm);
+  background: transparent;
+  color: var(--tinta-suave);
+  cursor: pointer;
+}
+.app-item-bandeira:hover {
+  color: var(--petroleo);
+}
+
+.app-sugestao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  padding: var(--espaco-3) var(--espaco-4);
+  border: 1px dashed var(--linha-forte);
+  border-radius: var(--raio-md);
+}
+.app-sugestao-rotulo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  font: 600 13px/18px var(--font-texto);
+  color: var(--sugestao);
+}
+.app-sugestao-rotulo .al-icone {
+  width: 16px;
+  height: 16px;
+}
+
+.app-cartao-branco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  padding: var(--espaco-3) var(--espaco-4);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-hipoteses-ia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  padding: var(--espaco-3) var(--espaco-4);
+  border: 1px dashed var(--linha-forte);
+  border-radius: var(--raio-md);
+}
+.app-hipoteses-ia .app-hipotese {
+  border: 0;
+  border-top: 1px solid var(--linha);
+  border-radius: 0;
+  padding: var(--espaco-3) 0 0;
+}
+.app-hipotese-linha {
+  font: 400 15px/22px var(--font-texto);
+  color: var(--tinta-suave);
+}
+.app-hipotese-linha b {
+  color: var(--tinta);
+  font-weight: 600;
+}
+
+.app-troca {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: var(--espaco-4);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+  color: var(--tinta-suave);
+}
+.app-troca-pessoa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espaco-1);
+  font: 500 13px/18px var(--font-texto);
+}
+.app-troca .app-avatar {
+  animation: app-trocar 0.6s 0.2s cubic-bezier(0.2, 0, 0, 1) both;
+}
+@keyframes app-trocar {
+  from {
+    transform: translateY(-6px) scale(0.85);
+    opacity: 0;
+  }
+}
+
+/* ---------- molas ---------- */
+
+:root {
+  /* Sem quique: sai rápido e assenta devagar. */
+  --mola: cubic-bezier(0.2, 0, 0, 1);
+  --mola-folha: cubic-bezier(0.2, 0.9, 0.1, 1);
+  /* Com um quique leve (passa uns 8% e volta), para toques e confirmações. */
+  --mola-quique: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --saida: cubic-bezier(0.4, 0, 1, 1);
+  interpolate-size: allow-keywords;
+}
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    /* Mola amortecida de verdade (amortecimento 0,62), amostrada em linear(). */
+    --mola-quique: linear(0, 0.039, 0.138, 0.269, 0.414, 0.558, 0.689, 0.803, 0.897, 0.969, 1.021, 1.055, 1.075, 1.083, 1.082, 1.076, 1.066, 1.054, 1.042, 1.03, 1.02, 1.012, 1.005, 1, 0.996, 0.994, 0.993, 0.993, 0.993, 0.994, 0.995, 0.996, 0.997, 1);
+  }
+}
+
+@keyframes app-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+@keyframes app-pulo {
+  40% {
+    transform: scale(0.82);
+  }
+}
+
+/* ---------- transição entre telas (View Transitions) ---------- */
+
+/* Com transição de tela, ela já faz a entrada; a moldura não anima de novo. */
+@supports (view-transition-name: none) {
+  .app-tela {
+    animation: none;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.44s;
+  animation-timing-function: var(--mola);
+}
+/* Avançar: a tela nova entra pela direita por cima; a antiga recua um terço e escurece. */
+:root[data-direcao="avancar"]::view-transition-old(root) {
+  animation-name: app-vt-recua;
+}
+:root[data-direcao="avancar"]::view-transition-new(root) {
+  animation-name: app-vt-entra;
+}
+/* Voltar: o contrário, com a tela que sai por cima. */
+:root[data-direcao="voltar"]::view-transition-old(root) {
+  z-index: 1;
+  animation-name: app-vt-sai;
+}
+:root[data-direcao="voltar"]::view-transition-new(root) {
+  animation-name: app-vt-volta;
+}
+/* Abas: some e aparece no lugar (fade through), sem deslizar. A barra fica de fora,
+   viva, para o fundo da aba ativa deslizar por transição comum. */
+:root[data-direcao="aba"]::view-transition-old(root) {
+  animation: app-vt-some 0.12s ease-in both;
+}
+:root[data-direcao="aba"]::view-transition-new(root) {
+  animation: app-vt-aparece 0.32s 0.08s var(--mola) both;
+}
+:root[data-direcao="aba"] .app-abas {
+  view-transition-name: app-abas;
+}
+::view-transition-old(app-abas) {
+  display: none;
+}
+::view-transition-new(app-abas) {
+  animation: none;
+}
+
+@keyframes app-vt-entra {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes app-vt-recua {
+  to {
+    transform: translateX(-30%);
+    filter: brightness(0.94);
+  }
+}
+@keyframes app-vt-sai {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes app-vt-volta {
+  from {
+    transform: translateX(-30%);
+    filter: brightness(0.94);
+  }
+}
+@keyframes app-vt-some {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes app-vt-aparece {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+/* Título que troca na mesma tela (Gravar → Gravando) entra de novo. */
+.app-tela-gravar .app-titulo {
+  animation: app-subir 0.36s var(--mola) both;
+}
+
+/* ---------- contador que rola (nota, cronômetro, segundos) ---------- */
+
+.app-tic {
+  display: inline-flex;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+}
+.app-tic-casa {
+  display: inline-block;
+  height: 1.2em;
+  height: 1lh;
+  overflow: hidden;
+  overflow: clip;
+}
+.app-tic-coluna {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.7s var(--mola-quique);
+}
+.app-tic-coluna > span {
+  display: block;
+  height: 1.2em;
+  height: 1lh;
+  text-align: center;
+}
+
+/* ---------- barra de abas ---------- */
+
+.app-tela-abas {
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+.app-abas {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  padding: var(--espaco-1) max(var(--espaco-4), env(safe-area-inset-right))
+    max(var(--espaco-2), env(safe-area-inset-bottom)) max(var(--espaco-4), env(safe-area-inset-left));
+  background: var(--papel);
+  border-top: 1px solid var(--linha);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .app-abas {
+    background: color-mix(in srgb, var(--papel) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(1.5);
+  }
+}
+.app-abas-trilho {
+  position: relative;
+  max-width: 448px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+/* Fundo da aba ativa: desliza até a aba tocada com mola. */
+.app-abas-marca {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  width: calc(100% / 3);
+  transform: translateX(calc(var(--aba, 0) * 100%));
+  transition: transform 0.5s var(--mola-quique);
+  pointer-events: none;
+}
+.app-abas-marca::before {
+  content: "";
+  position: absolute;
+  inset: 0 18px;
+  border-radius: var(--raio-pilula);
+  background: var(--petroleo-suave);
+}
+.app-aba {
+  position: relative;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font: 600 12px/16px var(--font-texto);
+  color: var(--tinta-suave);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s;
+}
+.app-aba .al-icone {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.35s var(--mola-quique);
+}
+.app-aba:active .al-icone {
+  transform: scale(0.84);
+}
+.app-aba[aria-current="page"] {
+  color: var(--petroleo);
+}
+.app-aba[aria-current="page"] .al-icone {
+  animation: app-pulo 0.5s var(--mola-quique);
+}
+
+.app-topo-canto {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+}
+.app-topo-canto a {
+  display: inline-flex;
+  border-radius: var(--raio-pilula);
+  transition: transform 0.3s var(--mola-quique);
+}
+.app-topo-canto a:active {
+  transform: scale(0.9);
+}
+
+/* ---------- evolução ---------- */
+
+.app-grafico {
+  position: relative;
+  margin: 0;
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+  animation: app-surgir-escala 0.4s var(--mola) both;
+}
+.app-grafico svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.app-grafico-eixo line {
+  stroke: var(--linha);
+  stroke-dasharray: 2 4;
+}
+.app-grafico-eixo text,
+.app-grafico-rotulo {
+  fill: var(--tinta-suave);
+  font: 500 10px var(--font-texto);
+}
+.app-grafico-linha {
+  fill: none;
+  stroke: var(--petroleo);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: app-desenhar 1s 0.25s var(--mola) forwards;
+}
+.app-grafico-ponto {
+  fill: var(--papel-elevado);
+  stroke: var(--petroleo);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: app-pop 0.45s var(--mola-quique) backwards;
+}
+.app-grafico-ponto.is-ultimo {
+  fill: var(--petroleo);
+}
+/* A última nota ganha uma etiqueta que salta do ponto. */
+.app-grafico-etiqueta {
+  position: absolute;
+  translate: -50% calc(-100% - 12px);
+  padding: 2px var(--espaco-2);
+  border-radius: var(--raio-pilula);
+  background: var(--petroleo);
+  color: var(--on-petroleo);
+  font: 700 15px/20px var(--font-display);
+  transform-origin: 50% 100%;
+  animation: app-pop 0.5s 1.05s var(--mola-quique) backwards;
+}
+
+.app-esquecido {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  padding: var(--espaco-3) var(--espaco-4);
+  background: var(--faltou-suave);
+  border-radius: var(--raio-md);
+  color: var(--tinta);
+}
+.app-esquecido.app-surge {
+  animation-delay: 0.9s;
+}
+.app-esquecido-rotulo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  font: 600 13px/18px var(--font-texto);
+  color: var(--faltou);
+}
+.app-esquecido-rotulo .al-icone {
+  width: 16px;
+  height: 16px;
+}
+
+.app-vazio-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  padding: var(--espaco-5) var(--espaco-4);
+  border: 1px dashed var(--linha-forte);
+  border-radius: var(--raio-md);
+  text-align: center;
+}
+
+/* ---------- perfil ---------- */
+
+.app-perfil-topo {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-4);
+}
+.app-perfil-topo .app-avatar {
+  box-shadow:
+    0 0 0 4px var(--papel),
+    0 0 0 5px var(--linha);
+}
+.app-perfil-topo .app-avatar-letra {
+  animation: app-pop 0.5s 0.15s var(--mola-quique) backwards;
+}
+.app-avatar-letra {
+  display: inline-block;
+}
+
+.app-numeros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--espaco-2);
+}
+.app-numeros > div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 2px;
+  padding: var(--espaco-3);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-numeros dt {
+  font: 500 13px/18px var(--font-texto);
+  color: var(--tinta-suave);
+}
+.app-numeros dd {
+  margin: 0;
+  font: 700 28px/32px var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--tinta);
+}
+
+.app-periodos {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--espaco-2);
+  margin-top: var(--espaco-1);
+}
+.app-periodo {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-md);
+  background: var(--papel-elevado);
+  font: 600 15px/1 var(--font-texto);
+  color: var(--tinta);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.3s var(--mola-quique);
+}
+.app-periodo:active {
+  transform: scale(0.9);
+}
+.app-periodo.is-marcada {
+  background: var(--petroleo);
+  border-color: var(--petroleo);
+  color: var(--on-petroleo);
+  animation: app-pulo 0.45s var(--mola-quique);
+}
+.app-periodo:has(input:focus-visible) {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+/* ---------- boas-vindas, cadastro e entrar ---------- */
+
+.app-boas-vindas > .app-topo-linha,
+.app-entrar > .app-topo-linha {
+  padding-top: max(var(--espaco-2), env(safe-area-inset-top));
+}
+.app-boas-vindas .app-conteudo,
+.app-entrar .app-conteudo {
+  gap: var(--espaco-4);
+  padding-bottom: max(var(--espaco-5), env(safe-area-inset-bottom));
+}
+
+/* Pontos dos passos: o ativo vira pílula. */
+.app-passos {
+  display: inline-flex;
+  gap: 6px;
+}
+.app-passos span {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--raio-pilula);
+  background: var(--linha-forte);
+  transition:
+    width 0.5s var(--mola-quique),
+    background-color 0.3s;
+}
+.app-passos span.is-ativo {
+  width: 24px;
+  background: var(--petroleo);
+}
+
+/* Cada passo entra deslizando da direita. */
+.app-passo {
+  animation: app-passo-entra 0.5s var(--mola) both;
+}
+@keyframes app-passo-entra {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+
+.app-marca-anima {
+  margin-top: var(--espaco-6);
+}
+.app-marca-anima img {
+  display: block;
+  animation: app-marca-pop 0.8s 0.05s var(--mola-quique) both;
+}
+@keyframes app-marca-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-25deg);
+  }
+}
+.app-marca-pequena {
+  margin-top: var(--espaco-3);
+}
+
+.app-boas-titulo {
+  font: 700 44px/48px var(--font-display);
+  letter-spacing: -0.03em;
+  color: var(--tinta);
+}
+.app-boas-titulo > span,
+.app-boas-titulo > b {
+  display: inline-block;
+  font-weight: 700;
+  animation: app-sobe-palavra 0.6s 0.2s var(--mola) both;
+}
+.app-boas-titulo > b {
+  color: var(--petroleo);
+  animation-delay: 0.3s;
+}
+@keyframes app-sobe-palavra {
+  from {
+    opacity: 0;
+    transform: translateY(0.45em);
+    filter: blur(4px);
+  }
+}
+.app-boas-vindas .app-assinatura {
+  margin-top: 0;
+  font-size: 26px;
+  line-height: 32px;
+}
+.app-revela {
+  animation: app-subir 0.5s 0.45s var(--mola) both;
+}
+.app-revela + .app-revela {
+  animation-delay: 0.55s;
+}
+.app-revela-tarde {
+  animation: app-subir 0.5s 1.05s var(--mola) both;
+}
+
+.app-pontos {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--espaco-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+.app-pontos li {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--espaco-3);
+  align-items: center;
+  font: 400 15px/22px var(--font-texto);
+  color: var(--tinta);
+}
+.app-pontos .al-icone {
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  border-radius: var(--raio-md);
+  background: var(--petroleo-suave);
+  color: var(--petroleo);
+}
+.app-cascata-lenta > * {
+  animation-duration: 0.55s;
+}
+.app-cascata-lenta > :nth-child(1) { --atraso: 650ms; }
+.app-cascata-lenta > :nth-child(2) { --atraso: 760ms; }
+.app-cascata-lenta > :nth-child(3) { --atraso: 870ms; }
+.app-cascata-lenta > :nth-child(n + 4) { --atraso: 980ms; }
+
+.app-empurra {
+  flex: 1;
+  min-height: var(--espaco-3);
+}
+
+/* "Tudo pronto": círculo que salta, check que se desenha e um anel que se abre. */
+.app-pronto {
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaco-3);
+  text-align: center;
+}
+.app-pronto-circulo {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--raio-pilula);
+  background: var(--petroleo);
+  color: var(--on-petroleo);
+  animation:
+    app-marca-pop 0.6s var(--mola-quique) both,
+    app-anel-pronto 0.9s 0.35s ease-out;
+}
+.app-pronto-circulo .al-icone {
+  width: 48px;
+  height: 48px;
+  stroke-width: 2.5;
+}
+.app-pronto-circulo .app-check-desenha path {
+  animation-delay: 0.3s;
+  animation-duration: 0.5s;
+}
+@keyframes app-anel-pronto {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--petroleo) 40%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 28px color-mix(in srgb, var(--petroleo) 0%, transparent);
+  }
+}
+.app-pronto .app-boas-titulo {
+  margin-top: var(--espaco-3);
+  font-size: 32px;
+  line-height: 38px;
+  animation: app-subir 0.5s 0.4s var(--mola) both;
+}
+.app-pronto .app-descritor {
+  animation: app-subir 0.5s 0.5s var(--mola) both;
+}
+
+/* Link enviado: o envelope chega voando e fica boiando. */
+.app-enviado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+.app-envelope {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--raio-lg);
+  background: var(--petroleo-suave);
+  color: var(--petroleo);
+  animation:
+    app-envelope 0.8s var(--mola-quique) both,
+    app-boiar 3.2s 1s ease-in-out infinite;
+}
+.app-envelope .al-icone {
+  width: 30px;
+  height: 30px;
+}
+@keyframes app-envelope {
+  from {
+    opacity: 0;
+    transform: translate(-40px, 32px) rotate(-18deg) scale(0.5);
+  }
+}
+@keyframes app-boiar {
+  50% {
+    transform: translateY(-4px) rotate(2deg);
+  }
+}
+
+/* Botão esperando: um brilho passa por ele. */
+.al-botao.is-enviando {
+  position: relative;
+  overflow: hidden;
+}
+.al-botao.is-enviando::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.28) 50%, transparent 70%);
+  animation: app-varrer 1.1s ease-in-out infinite;
+}
+@keyframes app-varrer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Texto carregando com brilho que passa (em vez de reticências paradas). */
+.app-brilho,
+.app-etapa.is-atual > span:nth-child(2) {
+  background: linear-gradient(90deg, var(--tinta-suave) 40%, var(--tinta) 50%, var(--tinta-suave) 60%) 0 0 / 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: app-brilho 1.6s linear infinite;
+}
+@keyframes app-brilho {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* ---------- toques e trocas nas telas da sessão ---------- */
+
+/* Origem do caso: o petróleo cresce em círculo a partir do ponto tocado. */
+.app-origem {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+.app-origem::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  width: 300%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--petroleo);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s var(--mola);
+}
+.app-origem.is-marcada::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+.app-origem-conteudo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+}
+.app-origem.is-marcada .al-icone {
+  animation: app-pulo 0.45s var(--mola-quique);
+}
+
+/* Cartão sorteado: costas com o dado; vira em 3D para mostrar o caso. */
+.app-virar {
+  perspective: 1200px;
+}
+.app-virar-miolo {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.75s var(--mola-quique);
+}
+.app-virar.is-virado .app-virar-miolo {
+  transform: rotateY(180deg);
+}
+.app-virar-face {
+  grid-area: 1 / 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.app-virar-costas {
+  min-height: 240px;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espaco-5) var(--espaco-4);
+  border-radius: var(--raio-lg);
+  background:
+    repeating-linear-gradient(45deg, transparent 0 10px, color-mix(in srgb, var(--mostarda) 14%, transparent) 10px 11px),
+    var(--mostarda-suave);
+  text-align: center;
+  color: var(--tinta);
+  animation: app-cartao-chega 0.6s var(--mola-quique) both;
+}
+@keyframes app-cartao-chega {
+  from {
+    opacity: 0;
+    transform: translateY(24px) rotate(-3deg) scale(0.94);
+  }
+}
+.app-virar-frente {
+  transform: rotateY(180deg);
+}
+.app-virar-dado {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--raio-md);
+  background: var(--mostarda);
+  color: var(--on-mostarda);
+  animation: app-dado 0.9s 0.1s var(--mola-quique) both;
+}
+.app-virar-dado .al-icone {
+  width: 28px;
+  height: 28px;
+}
+@keyframes app-dado {
+  from {
+    opacity: 0;
+    transform: rotate(-200deg) scale(0.4);
+  }
+}
+
+/* Gravar: os ícones do botão trocam com escala e giro. */
+.app-gravar-icone {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: scale(0.4) rotate(-90deg);
+  transition:
+    opacity 0.16s,
+    transform 0.45s var(--mola-quique);
+}
+.app-gravar-icone.is-visivel {
+  opacity: 1;
+  transform: none;
+}
+.app-gravar-parar .al-icone {
+  width: 34px;
+  height: 34px;
+}
+/* As barras da onda nascem do centro para as pontas. */
+.app-onda span {
+  animation: app-barra-nasce 0.45s var(--mola-quique) backwards;
+}
+@keyframes app-barra-nasce {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+/* Etapas: a marca da etapa feita salta quando o check chega. */
+.app-etapa.is-feita .app-etapa-marca {
+  animation: app-pulo 0.45s var(--mola-quique);
+}
+
+/* Queixa encontrada na transcrição chega com destaque. */
+.app-queixa {
+  animation: app-surgir-escala 0.5s 0.2s var(--mola-quique) both;
+}
+
+/* Correção: o placar sobe, e cada item marca o ícone depois de entrar. */
+.app-placar {
+  animation: app-surgir-escala 0.45s var(--mola) both;
+}
+.app-item .al-item-status {
+  animation: app-pop 0.45s var(--mola-quique) backwards;
+  animation-delay: calc(var(--atraso, 0ms) + 120ms);
+}
+.app-item .al-item-status path {
+  stroke-dasharray: 34;
+  stroke-dashoffset: 34;
+  animation: app-check 0.45s var(--mola) forwards;
+  animation-delay: calc(var(--atraso, 0ms) + 240ms);
+}
+
+/* Hipótese removida: desliza para a direita e a lista fecha o espaço. */
+.app-chip-hipotese.is-saindo {
+  --desloca: 40px;
+  overflow: hidden;
+  animation: app-chip-sai 0.36s var(--saida) forwards;
+}
+@keyframes app-chip-sai {
+  55% {
+    opacity: 0;
+    transform: translateX(var(--desloca));
+  }
+  to {
+    opacity: 0;
+    transform: translateX(var(--desloca));
+    height: 0;
+    min-height: 0;
+    padding-block: 0;
+    margin-bottom: calc(-1 * var(--espaco-2));
+  }
+}
+
+/* Trocar de papel: os avatares cruzam em arco e trocam de cor. */
+.app-troca > .al-icone {
+  transition: transform 0.6s var(--mola-quique);
+}
+.app-troca.is-trocando > .al-icone {
+  transform: rotate(180deg);
+}
+.app-troca.is-trocando .app-troca-pessoa:first-child .app-avatar {
+  animation: app-troca-ida 0.7s var(--mola) forwards;
+}
+.app-troca.is-trocando .app-troca-pessoa:last-child .app-avatar {
+  animation: app-troca-volta 0.7s var(--mola) forwards;
+}
+@keyframes app-troca-ida {
+  50% {
+    transform: translate(calc(var(--dx) / 2), -22px) scale(1.12);
+  }
+  to {
+    transform: translateX(var(--dx));
+    background: var(--mostarda);
+    color: var(--on-mostarda);
+  }
+}
+@keyframes app-troca-volta {
+  50% {
+    transform: translate(calc(var(--dx) / -2), 22px) scale(0.92);
+  }
+  to {
+    transform: translateX(calc(-1 * var(--dx)));
+    background: var(--petroleo);
+    color: var(--on-petroleo);
+  }
+}
+
 /* ---------- movimento reduzido ---------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -755,6 +2508,107 @@ legend {
   }
   .app-barra-progresso span {
     transition: none;
+  }
+  /* Deslocamento vira fade curto; anéis, onda, molas e contagens ficam parados. */
+  .app-cascata > *,
+  .app-surge,
+  .app-ultima,
+  .app-cartao,
+  .app-chip-hipotese,
+  .app-troca .app-avatar,
+  .app-folha,
+  .app-recado,
+  .app-passo,
+  .app-revela,
+  .app-revela-tarde,
+  .app-grafico,
+  .app-grafico-etiqueta,
+  .app-placar,
+  .app-queixa,
+  .app-virar-costas,
+  .app-pronto .app-boas-titulo,
+  .app-pronto .app-descritor {
+    animation: app-surgir 0.15s linear both;
+    animation-delay: 0s;
+  }
+  .app-recado {
+    --recado-desce: 0px;
+    transform: translateX(-50%);
+  }
+  /* Saídas mantêm o nome da animação: o fim dela é que remove o elemento. */
+  .app-recado.is-saindo {
+    animation: app-recado-sai 0.15s linear forwards;
+  }
+  .app-chip-hipotese.is-saindo {
+    --desloca: 0px;
+    animation: app-chip-sai 0.15s linear forwards;
+  }
+  .app-gravar-bloco.is-gravando .app-gravar-aneis,
+  .app-gravar-bloco.is-gravando .app-gravar-aneis::after,
+  .app-tela-gravar:has(.app-gravar-bloco.is-gravando) .app-titulo::before,
+  .app-etapa.is-atual .app-etapa-marca,
+  .app-etapa.is-feita .app-etapa-marca,
+  .app-onda.is-parada,
+  .app-onda span,
+  .app-brilho,
+  .app-etapa.is-atual > span:nth-child(2),
+  .al-botao.is-enviando::after,
+  .app-tela-gravar .app-titulo,
+  .app-marca-anima img,
+  .app-boas-titulo > span,
+  .app-boas-titulo > b,
+  .app-pronto-circulo,
+  .app-envelope,
+  .app-virar-dado,
+  .app-grafico-ponto,
+  .app-item .al-item-status,
+  .app-perfil-topo .app-avatar-letra,
+  .app-aba[aria-current="page"] .al-icone,
+  .app-periodo.is-marcada,
+  .app-origem.is-marcada .al-icone {
+    animation: none;
+  }
+  .app-brilho,
+  .app-etapa.is-atual > span:nth-child(2) {
+    color: var(--tinta-suave);
+    background: none;
+  }
+  .app-linha-traco,
+  .app-grafico-linha,
+  .app-check-desenha path,
+  .app-item .al-item-status path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .app-tic-coluna,
+  .app-abas-marca,
+  .app-passos span,
+  .app-virar-miolo,
+  .app-gravar-icone,
+  .app-origem::before,
+  .app-folha {
+    transition: none;
+  }
+  .app-virar-face {
+    -webkit-backface-visibility: visible;
+    backface-visibility: visible;
+  }
+  .app-virar-miolo,
+  .app-virar.is-virado .app-virar-miolo,
+  .app-virar-frente {
+    transform: none;
+  }
+  .app-virar.is-virado .app-virar-costas,
+  .app-virar:not(.is-virado) .app-virar-frente {
+    visibility: hidden;
+  }
+  .al-botao:not(:disabled):active,
+  .app-origem:active,
+  .app-gravar-bloco .al-gravar:active,
+  .app-aba:active .al-icone,
+  .app-periodo:active,
+  .app-topo-canto a:active {
+    transform: none;
   }
 }
 
