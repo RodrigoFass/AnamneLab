@@ -87,6 +87,7 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
   melhorar os produtos dele e ter pessoas revisando; o termo avisa disso. Para conferir a
   chave e os modelos, rode `uv run python -m app.testar_ia` dentro de `backend/` (no Windows
   sem uv: `.venv\Scripts\python -m app.testar_ia`); `--modelos` lista os modelos da chave.
+- **Teste real de ponta a ponta:** roteiro e script em [docs/teste-real.md](docs/teste-real.md).
 - **Whisper local:** `uv pip install -e ".[local]"` e `TRANSCRICAO=local`. O tamanho do
   modelo vem de `WHISPER_MODELO_LOCAL` (padrão `small`). No Windows com placa NVIDIA, o
   Whisper usa a placa e precisa de `nvidia-cublas-cu12` e `nvidia-cudnn-cu12` (cuDNN 9) com
