@@ -148,3 +148,30 @@ export const IconeTrocar = ({ className }: P) => (
     <path d="M20 16H6l3 3" />
   </Svg>
 );
+
+export const IconeCasa = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M4 10.5L12 4l8 6.5V20h-5v-6H9v6H4z" />
+  </Svg>
+);
+
+export const IconeGrafico = ({ className }: P) => (
+  <Svg className={className}>
+    <path d="M4 4v16h16" />
+    <path d="M7 15l4-4 3 3 5-6" />
+  </Svg>
+);
+
+export const IconePessoa = ({ className }: P) => (
+  <Svg className={className}>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
+  </Svg>
+);
+
+export const IconeEnvelope = ({ className }: P) => (
+  <Svg className={className}>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="M3.5 6.5L12 13l8.5-6.5" />
+  </Svg>
+);

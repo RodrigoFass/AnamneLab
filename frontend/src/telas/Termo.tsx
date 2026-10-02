@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type { Consentimento, Papel, Termo as TipoTermo } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
@@ -16,6 +16,7 @@ import {
 import { Carregando, Tela } from "../componentes/Tela";
 import { lerNomes, ROTULO_ORIGEM } from "../util/nomes";
 import { rotaDaSessao, useSessao } from "../util/sessao";
+import { useNavegar } from "../util/movimento";
 
 const PAPEIS: { papel: Papel; rotulo: string; frase: string }[] = [
   { papel: "medico", rotulo: "Faz o médico", frase: "Você vai fazer o médico nesta sessão." },
@@ -129,7 +130,7 @@ function FolhaAceite({ papel, frase, nomeInicial, termo, sessaoId, ultimo, onReg
 
 export function Termo() {
   const { id } = useParams();
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { sessao, erro: erroSessao, definir } = useSessao(id);
   const [termo, setTermo] = useState<TipoTermo | null>(null);
   const [erroTermo, setErroTermo] = useState<string | null>(null);

@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import { Aviso } from "../componentes/Aviso";
 import { BotaoGravar } from "../componentes/BotaoGravar";
+import { Contador } from "../componentes/Contador";
 import { IconeAviso } from "../componentes/Icones";
 import { Onda } from "../componentes/Onda";
 import { Carregando, Tela } from "../componentes/Tela";
 import { formatarTempo } from "../util/formato";
 import { linhaDaDupla } from "../util/nomes";
 import { rotaDaSessao, useSessao } from "../util/sessao";
+import { useNavegar } from "../util/movimento";
 
 /** 20 minutos. */
 const DURACAO_MAXIMA_S = 20 * 60;
@@ -57,7 +59,7 @@ interface Gravacao {
 
 export function Gravar() {
   const { id } = useParams();
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { sessao, erro: erroSessao } = useSessao(id);
 
   const [fase, setFase] = useState<Fase>("pronto");
@@ -259,6 +261,7 @@ export function Gravar() {
       voltar={fase === "gravando" ? undefined : "/"}
       rotuloVoltar="Voltar ao início"
       className="app-tela-gravar"
+      chaveTitulo={titulo}
     >
       {erroSessao && <Aviso tipo="erro">{erroSessao}</Aviso>}
       {!sessao && !erroSessao && <Carregando />}
@@ -266,7 +269,7 @@ export function Gravar() {
       {sessao && (
         <>
           <p className={`app-cronometro app-tabular${fase === "gravando" ? " is-gravando" : ""}`} aria-hidden="true">
-            {formatarTempo(tempo)}
+            <Contador texto={formatarTempo(tempo)} />
           </p>
           <Onda fluxo={fase === "gravando" ? fluxoAtivo : null} />
 

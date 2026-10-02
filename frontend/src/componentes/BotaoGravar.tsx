@@ -1,4 +1,5 @@
 import type { MouseEvent, PointerEvent } from "react";
+import { vibrar } from "../util/movimento";
 import { IconeArco, IconeMicrofone, IconeQuadrado } from "./Icones";
 
 export type EstadoBotaoGravar = "pronto" | "gravando" | "processando";
@@ -24,6 +25,7 @@ export function BotaoGravar({ estado, legendaProcessando, onAlternar, desativado
     if (desativado || processando) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
     e.preventDefault();
+    vibrar(estado === "gravando" ? [8, 50, 8] : 14);
     onAlternar();
   };
   // Clique sem ponteiro (detail 0) vem do teclado ou de leitor de tela.
@@ -49,7 +51,16 @@ export function BotaoGravar({ estado, legendaProcessando, onAlternar, desativado
         onPointerDown={aoPressionar}
         onClick={aoClicar}
       >
-        {processando ? <IconeArco className="app-girando" /> : gravando ? <IconeQuadrado /> : <IconeMicrofone />}
+        {/* Os três ícones ficam sobrepostos e trocam com escala e giro (morph). */}
+        <span className={`app-gravar-icone${!gravando && !processando ? " is-visivel" : ""}`}>
+          <IconeMicrofone />
+        </span>
+        <span className={`app-gravar-icone app-gravar-parar${gravando ? " is-visivel" : ""}`}>
+          <IconeQuadrado />
+        </span>
+        <span className={`app-gravar-icone${processando ? " is-visivel" : ""}`}>
+          <IconeArco className="app-girando" />
+        </span>
       </button>
       <span className="app-so-leitor" aria-live="polite">
         {gravando ? "Gravando" : processando ? (legendaProcessando ?? "Processando") : ""}

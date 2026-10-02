@@ -1,19 +1,23 @@
 import { useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import { Aviso } from "../componentes/Aviso";
 import { IconeArco, IconeCheck, IconeMais, IconeX } from "../componentes/Icones";
 import { Carregando, Tela } from "../componentes/Tela";
+import { movimentoReduzido, vibrar } from "../util/movimento";
 import { rotaDaSessao, useSessao } from "../util/sessao";
+import { useNavegar } from "../util/movimento";
 
 const MAXIMO = 10;
 
 export function Hipoteses() {
   const { id } = useParams();
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { sessao, erro: erroSessao } = useSessao(id, (s) => s.status === "corrigindo");
   const [hipoteses, setHipoteses] = useState<string[]>([]);
   const [rascunho, setRascunho] = useState("");
+  /** Hipótese que está saindo (encolhe antes de sumir da lista). */
+  const [saindo, setSaindo] = useState<number | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -30,10 +34,18 @@ export function Hipoteses() {
   const adicionar = () => {
     const h = rascunho.trim();
     if (!h || cheia) return;
+    vibrar(8);
     setHipoteses((hs) => [...hs, h]);
     setRascunho("");
   };
-  const remover = (i: number) => setHipoteses((hs) => hs.filter((_, j) => j !== i));
+  const tirar = (i: number) => {
+    setHipoteses((hs) => hs.filter((_, j) => j !== i));
+    setSaindo(null);
+  };
+  const remover = (i: number) => {
+    if (movimentoReduzido()) tirar(i);
+    else setSaindo(i);
+  };
 
   const enviar = async () => {
     setEnviando(true);
@@ -112,7 +124,13 @@ export function Hipoteses() {
           {hipoteses.length > 0 && (
             <ol className="app-chips-hipoteses">
               {hipoteses.map((h, i) => (
-                <li key={`${i}-${h}`} className="app-chip-hipotese">
+                <li
+                  key={`${i}-${h}`}
+                  className={`app-chip-hipotese${saindo === i ? " is-saindo" : ""}`}
+                  onAnimationEnd={(e) => {
+                    if (saindo === i && e.animationName === "app-chip-sai") tirar(i);
+                  }}
+                >
                   <span className="app-chip-numero" aria-hidden="true">
                     {i + 1}
                   </span>
@@ -122,6 +140,7 @@ export function Hipoteses() {
                     type="button"
                     aria-label={`Remover a hipótese ${h}`}
                     onClick={() => remover(i)}
+                    disabled={saindo !== null}
                   >
                     <IconeX />
                   </button>

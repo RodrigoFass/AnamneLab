@@ -62,6 +62,7 @@ export function Onda({ fluxo }: { fluxo: MediaStream | null }) {
       {Array.from({ length: BARRAS }, (_, i) => (
         <span
           key={i}
+          style={{ animationDelay: `${Math.abs(i - BARRAS / 2) * 14}ms` }}
           ref={(el) => {
             barras.current[i] = el;
           }}

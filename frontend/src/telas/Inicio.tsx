@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type { SessaoResumo } from "../api/tipos";
-import { useAuth } from "../auth/Autenticacao";
 import { Aviso } from "../componentes/Aviso";
+import { Avatar } from "../componentes/Avatar";
 import { SeloDemonstracao } from "../componentes/AvisoDemonstracao";
+import { Contador } from "../componentes/Contador";
 import { LinhaNotas } from "../componentes/Grafico";
 import { IconeArco, IconeAviso, IconeMicrofone, IconeSeta } from "../componentes/Icones";
 import { Logotipo } from "../componentes/Logotipo";
 import { formatarRelativo } from "../util/formato";
-import { useContagem } from "../util/movimento";
+import { marcarDirecao, movimentoReduzido, useNavegar } from "../util/movimento";
+import { linhaDoPerfil, primeiroNome, usePerfil } from "../util/perfil";
 import { nomesDasQueixas, useQueixas } from "../util/sessao";
 
 function Situacao({ s }: { s: SessaoResumo }) {
@@ -34,17 +36,23 @@ function UltimaSessao({ sessoes, nome }: { sessoes: SessaoResumo[]; nome: string
   // A lista chega da mais nova para a mais antiga; o gráfico vai da antiga para a nova.
   const comNota = sessoes.filter((s) => typeof s.notas?.geral === "number");
   const ultima = comNota[0];
-  const nota = useContagem(ultima?.notas?.geral ?? null);
   if (!ultima) return null;
   const linha = comNota
     .slice(0, 6)
     .map((s) => s.notas?.geral as number)
     .reverse();
   return (
-    <Link className="app-ultima" to={`/sessao/${ultima.id}`}>
+    <Link
+      className="app-ultima"
+      to={`/sessao/${ultima.id}`}
+      viewTransition={!movimentoReduzido()}
+      onClick={() => marcarDirecao("avancar")}
+    >
       <div>
         <p className="app-legenda">Última sessão</p>
-        <p className="app-ultima-nota app-tabular">{nota}</p>
+        <p className="app-ultima-nota app-tabular">
+          <Contador texto={String(ultima.notas?.geral)} doZero />
+        </p>
         <p className="app-legenda">
           {nome} · {formatarRelativo(ultima.criada_em)}
         </p>
@@ -55,8 +63,8 @@ function UltimaSessao({ sessoes, nome }: { sessoes: SessaoResumo[]; nome: string
 }
 
 export function Inicio() {
-  const navegar = useNavigate();
-  const { loginAtivo, email, sair } = useAuth();
+  const navegar = useNavegar();
+  const perfil = usePerfil();
   const { queixas } = useQueixas();
   const [sessoes, setSessoes] = useState<SessaoResumo[] | null>(null);
   const [erro, setErro] = useState<string | null>(null);
@@ -78,14 +86,24 @@ export function Inicio() {
   const ultimaComNota = sessoes?.find((s) => typeof s.notas?.geral === "number");
 
   return (
-    <div className="app-tela app-inicio">
+    <div className="app-tela app-inicio app-tela-abas">
       <header className="app-inicio-topo">
         <div className="app-topo-linha">
           <Logotipo tamanho={28} />
-          <SeloDemonstracao />
+          <span className="app-topo-canto">
+            <SeloDemonstracao />
+            <Link
+              to="/perfil"
+              aria-label="Perfil"
+              viewTransition={!movimentoReduzido()}
+              onClick={() => marcarDirecao("aba")}
+            >
+              <Avatar nome={perfil.nome} papel="medico" tamanho={32} />
+            </Link>
+          </span>
         </div>
-        <h1 className="app-assinatura">Pergunte melhor.</h1>
-        <p className="app-descritor">Treino de anamnese com correção na hora.</p>
+        <h1 className="app-assinatura">Olá, {primeiroNome(perfil.nome)}</h1>
+        <p className="app-descritor">{linhaDoPerfil(perfil) || "Pergunte melhor."}</p>
       </header>
 
       <main className="app-conteudo">
@@ -115,7 +133,12 @@ export function Inicio() {
             <ul className="app-lista app-cascata">
               {sessoes.map((s) => (
                 <li key={s.id}>
-                  <Link className="app-lista-linha" to={`/sessao/${s.id}`}>
+                  <Link
+                    className="app-lista-linha"
+                    to={`/sessao/${s.id}`}
+                    viewTransition={!movimentoReduzido()}
+                    onClick={() => marcarDirecao("avancar")}
+                  >
                     <span className="app-lista-texto">
                       <span className="app-lista-titulo">{nomeDa(s)}</span>
                       <span className="app-lista-meta">
@@ -135,14 +158,6 @@ export function Inicio() {
           )}
         </section>
 
-        {loginAtivo && (
-          <p className="app-conta">
-            {email ? `Conectado como ${email}. ` : ""}
-            <button className="al-botao al-botao-texto" type="button" onClick={() => void sair()}>
-              Sair
-            </button>
-          </p>
-        )}
       </main>
     </div>
   );

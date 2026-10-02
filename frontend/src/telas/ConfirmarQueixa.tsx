@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type { QueixaConfirmar } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
@@ -10,10 +10,11 @@ import { Carregando, Tela } from "../componentes/Tela";
 import { nomesDaSessao } from "../util/nomes";
 import { nomesDasQueixas, rotaDaSessao, useQueixas, useSessao } from "../util/sessao";
 import { etapasDoAudio } from "./Processando";
+import { useNavegar } from "../util/movimento";
 
 export function ConfirmarQueixa() {
   const { id } = useParams();
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { sessao, erro: erroSessao } = useSessao(id);
   const { queixas, erro: erroQueixas } = useQueixas();
 

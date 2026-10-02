@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type { Fala, PapelFala } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
 import { Carregando, Tela } from "../componentes/Tela";
 import { rotaDaSessao, useSessao } from "../util/sessao";
+import { useNavegar } from "../util/movimento";
 
 const PAPEIS: { valor: PapelFala; rotulo: string }[] = [
   { valor: "entrevistador", rotulo: "Entrevistador" },
@@ -13,7 +14,7 @@ const PAPEIS: { valor: PapelFala; rotulo: string }[] = [
 
 export function Transcricao() {
   const { id } = useParams();
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { sessao, erro: erroSessao } = useSessao(id);
   const [falas, setFalas] = useState<Fala[] | null>(null);
   const [salvando, setSalvando] = useState(false);
@@ -45,7 +46,7 @@ export function Transcricao() {
         .map((f) => ({ papel: f.papel, texto: f.texto.trim() }))
         .filter((f) => f.texto.length > 0);
       await api.editarTranscricao(id, { falas: limpas });
-      navegar(voltar);
+      navegar(voltar, { direcao: "voltar" });
     } catch (e) {
       setErro(textoDoErro(e));
       setSalvando(false);

@@ -1,5 +1,5 @@
-import { useCallback, useId, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useCallback, useId, useRef, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type {
   AnamneseEstruturada,
@@ -18,11 +18,12 @@ import { IconeArco, IconeAviso, IconeCheck, IconeLampada, IconeTrocar } from "..
 import { ItemChecklist, ItemSugestao } from "../componentes/ItemChecklist";
 import { Recado } from "../componentes/Recado";
 import { Selo } from "../componentes/Selo";
+import { Contador } from "../componentes/Contador";
 import { Carregando, Tela } from "../componentes/Tela";
 import { formatarRelativo, humanizar, normalizar } from "../util/formato";
-import { useContagem } from "../util/movimento";
 import { guardarNomes, nomesDaSessao } from "../util/nomes";
 import { nomesDasQueixas, rotaDaSessao, useQueixas, useSessao } from "../util/sessao";
+import { movimentoReduzido, useNavegar, vibrar } from "../util/movimento";
 
 const ID_GERAL = "geral";
 
@@ -315,18 +316,17 @@ function ChecklistCorrigido({ grupo: g, sessao, queixas, onContestar }: PropsChe
 function Placar({ sessao, nomeQueixa }: { sessao: Sessao; nomeQueixa: string }) {
   const geral = sessao.notas?.geral ?? null;
   const queixa = sessao.notas?.queixa ?? null;
-  const numero = useContagem(geral);
   const avaliacoesGerais = sessao.avaliacoes.filter((a) => a.checklist_id === ID_GERAL);
   return (
     <section className="app-placar" aria-label="Notas da sessão">
       <div className="app-placar-linha">
-        <p className="app-placar-numero app-tabular" aria-label={geral === null ? "Sem nota" : `${geral} de 100`}>
-          {geral === null ? "–" : numero}
+        <p className="app-placar-numero app-tabular">
+          {geral === null ? "–" : <Contador texto={String(geral)} rotulo={`${geral} de 100`} doZero />}
         </p>
         <div className="app-placar-lado">
           <p className="app-placar-rotulo">Técnica geral</p>
           <span className="app-chip app-tabular">
-            {nomeQueixa} {queixa === null ? "sem nota" : queixa}
+            {nomeQueixa} {queixa === null ? "sem nota" : <Contador texto={String(queixa)} doZero />}
           </span>
         </div>
       </div>
@@ -378,7 +378,7 @@ function PerguntasSugeridas({ perguntas }: { perguntas: string[] }) {
 
 export function Correcao() {
   const { id } = useParams();
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { sessao, erro: erroSessao, definir } = useSessao(id, (s) => s.status === "gerando_sugestoes");
   const { queixas } = useQueixas();
   const [contestando, setContestando] = useState<Avaliacao | null>(null);
@@ -386,6 +386,8 @@ export function Correcao() {
   const [confirmarExclusao, setConfirmarExclusao] = useState(false);
   const [excluindo, setExcluindo] = useState(false);
   const [erroExclusao, setErroExclusao] = useState<string | null>(null);
+  const [trocando, setTrocando] = useState(false);
+  const troca = useRef<HTMLDivElement>(null);
   const fecharContestar = useCallback(() => setContestando(null), []);
   const sumirRecado = useCallback(() => setRecado(null), []);
 
@@ -399,7 +401,7 @@ export function Correcao() {
     setErroExclusao(null);
     try {
       await api.excluirSessao(id);
-      navegar("/", { replace: true });
+      navegar("/", { replace: true, direcao: "voltar" });
     } catch (e) {
       setErroExclusao(textoDoErro(e));
       setExcluindo(false);
@@ -432,9 +434,19 @@ export function Correcao() {
     );
   };
 
+  // As letras trocam de lugar sobre os círculos (a cor fica com o papel) e só então a nova sessão abre.
   const trocarPapel = () => {
     guardarNomes({ medico: nomes.paciente, paciente: nomes.medico });
-    navegar("/sessao/nova");
+    const avatares = troca.current?.querySelectorAll<HTMLElement>(".app-avatar");
+    if (!avatares || avatares.length < 2 || movimentoReduzido()) {
+      navegar("/sessao/nova");
+      return;
+    }
+    const [a, b] = [avatares[0]!.getBoundingClientRect(), avatares[1]!.getBoundingClientRect()];
+    troca.current?.style.setProperty("--dx", `${b.left - a.left}px`);
+    vibrar(10);
+    setTrocando(true);
+    window.setTimeout(() => navegar("/sessao/nova"), 750);
   };
 
   return (
@@ -543,19 +555,24 @@ export function Correcao() {
 
       <section className="app-secao app-acoes-finais" aria-label="Próximos passos">
         {nomes.medico && nomes.paciente && (
-          <div className="app-troca" aria-hidden="true">
+          <div className={`app-troca${trocando ? " is-trocando" : ""}`} ref={troca} aria-hidden="true">
             <span className="app-troca-pessoa">
-              <Avatar nome={nomes.paciente} papel="medico" tamanho={40} />
+              <Avatar nome={nomes.medico} papel="medico" tamanho={40} />
               Faz o médico
             </span>
             <IconeTrocar />
             <span className="app-troca-pessoa">
-              <Avatar nome={nomes.medico} papel="paciente" tamanho={40} />
+              <Avatar nome={nomes.paciente} papel="paciente" tamanho={40} />
               Faz o paciente
             </span>
           </div>
         )}
-        <button className="al-botao al-botao-principal app-botao-largo" type="button" onClick={trocarPapel}>
+        <button
+          className="al-botao al-botao-principal app-botao-largo"
+          type="button"
+          onClick={trocarPapel}
+          disabled={trocando}
+        >
           <IconeTrocar />
           Trocar de papel e gravar
         </button>

@@ -1,5 +1,4 @@
-import { useState, type ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, type PointerEvent, type ReactNode } from "react";
 import { api, textoDoErro } from "../api/cliente";
 import type { Cartao, OrigemCaso, Papel } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
@@ -9,6 +8,7 @@ import { IconeDado, IconeGlobo, IconeLapis, IconeLivro } from "../componentes/Ic
 import { Tela } from "../componentes/Tela";
 import { guardarNomes, lerNomes, type Nomes } from "../util/nomes";
 import { useQueixas } from "../util/sessao";
+import { useNavegar, vibrar } from "../util/movimento";
 
 const ORIGENS: { valor: OrigemCaso; rotulo: string; icone: ReactNode }[] = [
   { valor: "livro", rotulo: "Livro", icone: <IconeLivro /> },
@@ -30,7 +30,7 @@ const PAPEIS: { papel: Papel; rotulo: string }[] = [
 ];
 
 export function NovaSessao() {
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { queixas } = useQueixas();
   const [nomes, setNomes] = useState<Nomes>(lerNomes);
   const [origem, setOrigem] = useState<OrigemCaso | null>(null);
@@ -53,7 +53,15 @@ export function NovaSessao() {
     }
   };
 
+  // O preenchimento da opção nasce do ponto tocado (revelação radial).
+  const marcarToque = (e: PointerEvent<HTMLLabelElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--x", `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty("--y", `${e.clientY - r.top}px`);
+  };
+
   const escolherOrigem = (valor: OrigemCaso) => {
+    vibrar(6);
     setOrigem(valor);
     setErro(null);
     if (valor !== "cartao") {
@@ -124,7 +132,11 @@ export function NovaSessao() {
         <legend className="app-subtitulo">De onde vem o caso</legend>
         <div className="app-grade-origem">
           {ORIGENS.map((o) => (
-            <label key={o.valor} className={`app-origem${origem === o.valor ? " is-marcada" : ""}`}>
+            <label
+              key={o.valor}
+              className={`app-origem${origem === o.valor ? " is-marcada" : ""}`}
+              onPointerDown={marcarToque}
+            >
               <input
                 className="app-so-leitor"
                 type="radio"
@@ -133,8 +145,10 @@ export function NovaSessao() {
                 checked={origem === o.valor}
                 onChange={() => escolherOrigem(o.valor)}
               />
-              {o.icone}
-              {o.rotulo}
+              <span className="app-origem-conteudo">
+                {o.icone}
+                {o.rotulo}
+              </span>
             </label>
           ))}
         </div>
@@ -170,38 +184,47 @@ export function NovaSessao() {
             </>
           )}
 
-          {cartao && !cartaoVisivel && (
-            <div className="app-cartao-oculto">
-              <p>
-                Cartão sorteado. Só quem faz o paciente pode ver: passe o celular para{" "}
-                {nomes.paciente.trim() || "o seu colega"}.
-              </p>
-              <button
-                className="al-botao al-botao-secundario"
-                type="button"
-                onClick={() => setCartaoVisivel(true)}
-              >
-                Sou o paciente, mostrar cartão
-              </button>
+          {cartao && (
+            <div className={`app-virar${cartaoVisivel ? " is-virado" : ""}`}>
+              <div className="app-virar-miolo">
+                <div className="app-virar-face app-virar-costas" inert={cartaoVisivel}>
+                  <span className="app-virar-dado" aria-hidden="true">
+                    <IconeDado />
+                  </span>
+                  <p className="app-subtitulo">Cartão sorteado</p>
+                  <p className="app-centro">
+                    Só quem faz o paciente pode ver. Passe o celular para{" "}
+                    {nomes.paciente.trim() || "o seu colega"}.
+                  </p>
+                  <button
+                    className="al-botao al-botao-secundario"
+                    type="button"
+                    onClick={() => {
+                      vibrar(10);
+                      setCartaoVisivel(true);
+                    }}
+                  >
+                    Sou o paciente, mostrar cartão
+                  </button>
+                </div>
+                <div className="app-virar-face app-virar-frente" inert={!cartaoVisivel}>
+                  <CartaoPaciente
+                    key={cartao.id}
+                    cartao={cartao}
+                    nomePaciente={nomes.paciente.trim()}
+                    onSortearOutro={() => void sortear()}
+                    sorteando={sorteando}
+                  />
+                  <button
+                    className="al-botao al-botao-texto app-link"
+                    type="button"
+                    onClick={() => setCartaoVisivel(false)}
+                  >
+                    Esconder o cartão
+                  </button>
+                </div>
+              </div>
             </div>
-          )}
-
-          {cartao && cartaoVisivel && (
-            <>
-              <CartaoPaciente
-                cartao={cartao}
-                nomePaciente={nomes.paciente.trim()}
-                onSortearOutro={() => void sortear()}
-                sorteando={sorteando}
-              />
-              <button
-                className="al-botao al-botao-texto app-link"
-                type="button"
-                onClick={() => setCartaoVisivel(false)}
-              >
-                Esconder o cartão
-              </button>
-            </>
           )}
         </section>
       )}

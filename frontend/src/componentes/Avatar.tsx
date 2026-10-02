@@ -9,7 +9,7 @@ export function Avatar({ nome, papel, tamanho = 32 }: { nome: string; papel: Pap
       style={{ width: tamanho, height: tamanho, fontSize: Math.round(tamanho * 0.42) }}
       aria-hidden="true"
     >
-      {inicial}
+      <span className="app-avatar-letra">{inicial}</span>
     </span>
   );
 }

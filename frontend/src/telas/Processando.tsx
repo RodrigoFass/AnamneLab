@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import { api, textoDoErro } from "../api/cliente";
 import type { Sessao } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
@@ -7,6 +7,7 @@ import { Etapas, type Etapa } from "../componentes/Etapas";
 import { IconeLixeira } from "../componentes/Icones";
 import { Carregando, Tela } from "../componentes/Tela";
 import { rotaDaSessao, useSessao } from "../util/sessao";
+import { useNavegar } from "../util/movimento";
 
 /** As três etapas do processamento do áudio, pelo progresso que o backend informa. */
 export function etapasDoAudio(s: Pick<Sessao, "progresso" | "status">): Etapa[] {
@@ -23,15 +24,18 @@ export function etapasDoAudio(s: Pick<Sessao, "progresso" | "status">): Etapa[] 
 
 export function Processando() {
   const { id } = useParams();
-  const navegar = useNavigate();
+  const navegar = useNavegar();
   const { sessao, erro } = useSessao(id, (s) => s.status === "processando_audio");
   const [recomecando, setRecomecando] = useState(false);
   const [erroRecomecar, setErroRecomecar] = useState<string | null>(null);
 
+  const destino = sessao ? rotaDaSessao(sessao) : null;
+  // Quando o áudio termina, a tela da queixa entra deslizando (as etapas ficam no lugar).
+  useEffect(() => {
+    if (id && destino && destino !== `/sessao/${id}/processando`) navegar(destino, { replace: true });
+  }, [id, destino, navegar]);
+
   if (!id) return <Navigate to="/" replace />;
-  if (sessao && rotaDaSessao(sessao) !== `/sessao/${id}/processando`) {
-    return <Navigate to={rotaDaSessao(sessao)} replace />;
-  }
 
   // Gravar de novo abre uma sessão nova com o mesmo caso: o termo é aceito de novo.
   const gravarDeNovo = async () => {
@@ -67,7 +71,7 @@ export function Processando() {
           >
             {recomecando ? "Abrindo nova sessão…" : "Gravar de novo"}
           </button>
-          <button className="al-botao al-botao-texto" type="button" onClick={() => navegar("/")}>
+          <button className="al-botao al-botao-texto" type="button" onClick={() => navegar("/", { direcao: "voltar" })}>
             Voltar ao início
           </button>
         </div>
