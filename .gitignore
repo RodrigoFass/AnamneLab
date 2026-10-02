@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Histórico local (BANCO=arquivo): transcrições e notas, nunca vão para o git.
+backend/dados/
+
 # Python
 __pycache__/
 *.py[cod]

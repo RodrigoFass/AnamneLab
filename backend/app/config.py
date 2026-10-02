@@ -43,7 +43,10 @@ class Settings(BaseSettings):
     openai_api_key: SecretStr | None = None
 
     # Banco e login
-    banco: Literal["memoria", "supabase"] = "memoria"
+    banco: Literal["memoria", "arquivo", "supabase"] = "memoria"
+    """memoria some ao fechar o app; arquivo guarda o histórico num JSON no computador."""
+    arquivo_historico: Path = Path("dados/historico.json")
+    """Onde BANCO=arquivo guarda as sessões. Fica fora do git."""
     auth: Literal["dev", "supabase"] = "dev"
     supabase_url: str | None = None
     supabase_service_key: SecretStr | None = None

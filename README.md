@@ -92,6 +92,9 @@ Tudo se liga no `backend/.env` (e no `frontend/.env.local` para o login):
   Whisper usa a placa e precisa de `nvidia-cublas-cu12` e `nvidia-cudnn-cu12` (cuDNN 9) com
   as pastas `bin` deles no `PATH`.
 - **Whisper pela API:** `uv pip install -e ".[api]"`, `TRANSCRICAO=api` e `OPENAI_API_KEY`.
+- **Histórico no computador, sem Supabase:** `BANCO=arquivo` guarda as sessões em
+  `backend/dados/historico.json` (fora do git) e o histórico continua depois de fechar o app.
+  Bom para o protótipo e para uma demonstração. Excluir uma sessão no app tira ela do arquivo.
 - **Supabase:** crie o projeto e aplique a migração seguindo `supabase/README.md`. Depois
   `uv pip install -e ".[supabase]"`, `BANCO=supabase`, `AUTH=supabase`, `SUPABASE_URL` e
   `SUPABASE_SERVICE_KEY` no backend, e `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no
@@ -114,7 +117,8 @@ Backend (`backend/.env`, modelo em `backend/.env.example`):
 | `TRANSCRICAO` | `local`, `api`, `falso` | `falso` |
 | `WHISPER_MODELO_LOCAL` | tamanho do faster-whisper | `small` |
 | `OPENAI_API_KEY` | chave da API (Whisper) | |
-| `BANCO` | `memoria`, `supabase` | `memoria` |
+| `BANCO` | `memoria`, `arquivo`, `supabase` | `memoria` |
+| `ARQUIVO_HISTORICO` | onde `BANCO=arquivo` guarda as sessões | `dados/historico.json` |
 | `AUTH` | `dev`, `supabase` | `dev` |
 | `SUPABASE_URL` | URL do projeto | |
 | `SUPABASE_SERVICE_KEY` | chave service_role (só no backend) | |

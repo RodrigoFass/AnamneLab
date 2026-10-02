@@ -1,4 +1,4 @@
-"""Fluxo completo pela API: LLM falso, transcrição falsa e banco em memória."""
+"""Fluxo completo pela API: LLM falso, transcrição falsa, banco em memória e em arquivo."""
 
 import time
 from pathlib import Path
@@ -12,13 +12,16 @@ from app.llm.base import ErroLLM
 from app.llm.falso import ClienteFalso
 from app.main import criar_app
 from app.pipeline.transcrever import Transcritor, TranscritorFalso
+from app.repositorio.arquivo import RepositorioArquivo
 from app.repositorio.memoria import RepositorioMemoria
 
 AUDIO = ("gravacao.webm", b"\x1a\x45\xdf\xa3" + b"0" * 2048, "audio/webm;codecs=opus")
 
 
-@pytest.fixture
-def repositorio() -> RepositorioMemoria:
+@pytest.fixture(params=["memoria", "arquivo"])
+def repositorio(request, tmp_path) -> RepositorioMemoria:
+    if request.param == "arquivo":
+        return RepositorioArquivo(tmp_path / "dados" / "historico.json")
     return RepositorioMemoria()
 
 
