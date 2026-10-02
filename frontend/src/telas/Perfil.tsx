@@ -53,6 +53,17 @@ export function CamposPerfil({ perfil, onMudar }: { perfil: TipoPerfil; onMudar:
         />
       </label>
       <label className="app-campo">
+        <span className="app-campo-rotulo">Faculdade</span>
+        <input
+          type="text"
+          autoComplete="organization"
+          maxLength={80}
+          value={perfil.faculdade}
+          placeholder="Por exemplo: UFES"
+          onChange={(e) => onMudar({ ...perfil, faculdade: e.target.value })}
+        />
+      </label>
+      <label className="app-campo">
         <span className="app-campo-rotulo">Disciplina</span>
         <input
           type="text"
@@ -211,8 +222,8 @@ export function Perfil() {
         ) : (
           <>
             <p className="app-ajuda">
-              Sem conta: o perfil e as sessões ficam neste aparelho. Com o app publicado, você entra com o
-              seu e-mail.
+              Sem conta: o perfil e as sessões ficam neste aparelho. Com o login ligado, você entra com e-mail
+              e senha, e o perfil vai junto para outro aparelho.
             </p>
             <button
               className="al-botao al-botao-secundario app-botao-largo"

@@ -2088,6 +2088,49 @@ a.app-lista-linha:active {
 
 /* ---------- boas-vindas, cadastro e entrar ---------- */
 
+/* Entrar ou criar conta: duas metades de uma pílula. */
+.app-alternar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: var(--raio-pilula);
+  background: var(--papel-elevado);
+  border: 1px solid var(--linha-forte);
+}
+.app-alternar button {
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--raio-pilula);
+  background: none;
+  font: 600 16px/1 var(--font-texto);
+  color: var(--tinta-suave);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.app-alternar button[aria-pressed="true"] {
+  background: var(--petroleo);
+  color: var(--on-petroleo);
+}
+.app-alternar button:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+.app-senha {
+  position: relative;
+  display: block;
+}
+.app-senha input {
+  width: 100%;
+  padding-right: 104px;
+}
+.app-senha button {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  min-height: 40px;
+}
+
 .app-boas-vindas > .app-topo-linha,
 .app-entrar > .app-topo-linha {
   padding-top: max(var(--espaco-2), env(safe-area-inset-top));

@@ -12,7 +12,7 @@ import { Correcao } from "./telas/Correcao";
 import { Gravar } from "./telas/Gravar";
 import { Hipoteses } from "./telas/Hipoteses";
 import { Inicio } from "./telas/Inicio";
-import { Login } from "./telas/Login";
+import { Login, NovaSenha } from "./telas/Login";
 import { NaoEncontrada } from "./telas/NaoEncontrada";
 import { NovaSessao } from "./telas/NovaSessao";
 import { Processando } from "./telas/Processando";
@@ -71,7 +71,7 @@ function ComAbas() {
 }
 
 function Telas() {
-  const { carregando, logado, loginAtivo } = useAuth();
+  const { carregando, logado, loginAtivo, recuperandoSenha } = useAuth();
   const perfil = usePerfil();
   const { pathname } = useLocation();
 
@@ -83,6 +83,7 @@ function Telas() {
     );
   }
   if (!logado) return <Login />;
+  if (recuperandoSenha) return <NovaSenha />;
   // Sem login (demonstração), /entrar mostra a tela de entrar só para ver o visual.
   if (!loginAtivo && pathname === "/entrar") return <Login />;
   if (!perfil.nome) return <BoasVindas />;
