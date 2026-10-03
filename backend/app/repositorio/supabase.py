@@ -83,6 +83,13 @@ class RepositorioSupabase(Repositorio):
         linhas = self._tabela("sessoes").select("*").eq("dono_id", dono_id).order("criada_em", desc=True).execute().data
         return [self._montar(linha, completa=False) for linha in linhas]
 
+    def listar_todas_sessoes(self, limite: int = 5000) -> list[Sessao]:
+        colunas = "id, dono_id, criada_em, status, origem_caso, cartao_id, queixas_confirmadas, descricao_outra, notas"
+        linhas = (
+            self._tabela("sessoes").select(colunas).order("criada_em", desc=True).limit(limite).execute().data
+        )
+        return [self._montar(linha, completa=False) for linha in linhas]
+
     def atualizar_sessao(self, sessao_id: str, **campos: Any) -> None:
         conferir_campos(campos)
         if campos:

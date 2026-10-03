@@ -3305,3 +3305,108 @@ html[data-movimento="reduzido"] .app-gota {
   color: var(--papel);
   border-color: var(--tinta);
 }
+
+/* ---------- painel de atividade (só o administrador) ---------- */
+.app-painel-barras {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  padding: var(--espaco-4);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-painel-barras-area {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  align-items: end;
+  gap: 4px;
+  height: 120px;
+}
+.app-painel-barra {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  border-bottom: 1px solid var(--linha);
+}
+.app-painel-barra-cheia {
+  width: 100%;
+  min-height: 0;
+  background: var(--petroleo);
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom;
+  animation: app-painel-cresce 0.6s var(--mola-quique, ease-out) backwards;
+}
+.app-painel-barra-valor {
+  font: 600 11px/14px var(--font-texto);
+  color: var(--tinta-suave);
+}
+.app-painel-barras-eixo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+@keyframes app-painel-cresce {
+  from {
+    transform: scaleY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-painel-barra-cheia {
+    animation: none;
+  }
+}
+.app-painel-pessoas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+}
+.app-painel-pessoa {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: var(--espaco-3);
+  padding: var(--espaco-3) var(--espaco-4);
+  background: var(--papel-elevado);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-cartao);
+}
+.app-painel-pessoa-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.app-painel-pessoa-texto p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.app-painel-pessoa-numeros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-1) var(--espaco-3);
+  font: 500 14px/20px var(--font-texto);
+  color: var(--tinta);
+}
+.app-painel-pessoa-numeros span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-1);
+}
+.app-painel-pessoa-numeros .al-icone {
+  width: 14px;
+  height: 14px;
+  color: var(--petroleo);
+}
+.app-painel-pessoa-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

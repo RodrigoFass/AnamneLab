@@ -41,6 +41,10 @@ class Repositorio(ABC):
         """Sessões do dono, mais recente primeiro. Falas e avaliações podem vir vazias."""
 
     @abstractmethod
+    def listar_todas_sessoes(self, limite: int = 5000) -> list[Sessao]:
+        """Sessões de todos os alunos, mais recente primeiro, para o painel. Falas e avaliações vêm vazias."""
+
+    @abstractmethod
     def atualizar_sessao(self, sessao_id: str, **campos: Any) -> None:
         """Atualiza só os campos de CAMPOS_SESSAO."""
 

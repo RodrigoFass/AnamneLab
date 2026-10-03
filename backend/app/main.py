@@ -30,6 +30,7 @@ from app.pipeline.transcrever import (
     transcrever_pergunta_e_apagar,
 )
 from app.pipeline.voz import ErroVoz, VozPaciente
+from app.painel import rotas_painel
 from app.processamento import Processador
 from app.repositorio import Repositorio
 from app.schemas.conteudo import Cartao, Queixa
@@ -752,6 +753,7 @@ def criar_app(
         )
 
     app.include_router(rotas)
+    app.include_router(rotas_painel)
     # O último adicionado fica por fora: CORS envolve tudo, inclusive as respostas de erro.
     app.add_middleware(ProtegerErros)
     app.add_middleware(LimiteAudio, limite_bytes=settings.tamanho_maximo_bytes)

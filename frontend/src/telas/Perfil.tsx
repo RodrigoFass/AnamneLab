@@ -105,9 +105,14 @@ export function Perfil() {
   const [perfil, setPerfil] = useState(salvo);
   const [recado, setRecado] = useState<string | null>(null);
   const [sessoes, setSessoes] = useState<SessaoResumo[] | null>(null);
+  const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
     let ativo = true;
+    api.acesso().then(
+      (a) => ativo && setAdmin(a.admin),
+      () => undefined,
+    );
     api.sessoes().then(
       (s) => ativo && setSessoes(s),
       () => ativo && setSessoes([]),
@@ -179,6 +184,22 @@ export function Perfil() {
           )}
         </button>
       </form>
+
+      {admin && (
+        <section className="app-secao" aria-labelledby="titulo-painel">
+          <h2 className="app-subtitulo" id="titulo-painel">
+            Painel
+          </h2>
+          <p className="app-ajuda">Veja quem tem conta e o que cada pessoa está fazendo no app. Só você vê isto.</p>
+          <button
+            className="al-botao al-botao-secundario app-botao-largo"
+            type="button"
+            onClick={() => navegar("/painel")}
+          >
+            Abrir o painel
+          </button>
+        </section>
+      )}
 
       <section className="app-secao" aria-labelledby="titulo-termo">
         <h2 className="app-subtitulo" id="titulo-termo">
