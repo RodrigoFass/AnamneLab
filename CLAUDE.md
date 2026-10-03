@@ -6,6 +6,7 @@ App de treino de anamnese para estudantes de Medicina. Dois alunos simulam uma c
 
 - Só **Modo Livre**. O app vale para qualquer queixa: checklist geral + um checklist por queixa da biblioteca (`content/queixas.json`). Queixa nova é só um JSON em `content/checklists/`; o código não depende de queixa nenhuma.
 - Paciente pela IA (protótipo, pedido do Rodrigo em 2026-10-02): o aluno entrevista um paciente simulado, por escrito ou por voz. O caso parte de um cartão de `content/cartoes/`; a IA monta uma ficha fictícia (`caso_ia`, escondida até o fim da conversa) e responde só pela ficha. A conversa vira as falas da sessão e passa pela mesma correção. Sem colega. Dois modos: chat (o aluno escreve ou manda áudio; o paciente responde por escrito) e voz (conversa contínua, sem botão: o app percebe a pausa da fala e o paciente responde falando). Áudio só com o aceite do termo do dono na sessão; o Whisper do app transcreve e o áudio é apagado em seguida. A voz do paciente vem do backend (`VOZ_PACIENTE=edge` ou `piper`) ou do navegador.
+- Painel de atividade (pedido do Rodrigo em 2026-10-03): tela `/painel`, aberta pelo Perfil só para os e-mails em `ADMIN_EMAILS`. Mostra contas, sessões de cada uma, datas, queixas e notas; nunca transcrição, ficha do caso ou correção. Não é painel de professor.
 - Não implementar: Modo Caso, Modo Aula, painel ou conta de professor, pagamento, app nativo, gravação offline.
 - Usuários: só estudantes de Medicina. Nunca paciente real; o app avisa antes de cada gravação.
 

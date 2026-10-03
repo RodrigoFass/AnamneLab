@@ -61,6 +61,9 @@ class Settings(BaseSettings):
     auth: Literal["dev", "supabase"] = "dev"
     supabase_url: str | None = None
     supabase_service_key: SecretStr | None = None
+    admin_emails: str = ""
+    """E-mails (separados por vírgula) que veem o painel de atividade. Vazio: ninguém,
+    a não ser o aluno de desenvolvimento quando AUTH=dev."""
 
     # Correção
     contar_rascunho: bool = True
@@ -102,6 +105,10 @@ class Settings(BaseSettings):
     @property
     def lista_modelos_gemini_leves(self) -> list[str]:
         return [modelo.strip() for modelo in self.gemini_modelos_leves.split(",") if modelo.strip()]
+
+    @property
+    def lista_admin_emails(self) -> set[str]:
+        return {e.strip().lower() for e in self.admin_emails.split(",") if e.strip()}
 
     @property
     def tamanho_maximo_bytes(self) -> int:

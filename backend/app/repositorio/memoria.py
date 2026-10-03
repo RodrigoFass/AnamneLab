@@ -29,6 +29,14 @@ class RepositorioMemoria(Repositorio):
             sessoes = [s.model_copy(deep=True) for s in self._sessoes.values() if s.dono_id == dono_id]
         return sorted(sessoes, key=lambda s: s.criada_em, reverse=True)
 
+    def listar_todas_sessoes(self, limite: int = 5000) -> list[Sessao]:
+        with self._trava:
+            sessoes = [
+                s.model_copy(update={"falas": [], "avaliacoes": [], "consentimentos": []}, deep=True)
+                for s in self._sessoes.values()
+            ]
+        return sorted(sessoes, key=lambda s: s.criada_em, reverse=True)[:limite]
+
     def _alterar(self, sessao_id: str, **campos: Any) -> None:
         with self._trava:
             sessao = self._sessoes.get(sessao_id)

@@ -239,3 +239,57 @@ export interface SessaoResumo {
   queixas_confirmadas: string[];
   notas: Notas | null;
 }
+
+// ---------- painel de atividade (só ADMIN_EMAILS) ----------
+
+export interface Acesso {
+  admin: boolean;
+}
+
+export interface ContaPainel {
+  id: string;
+  email: string | null;
+  nome: string | null;
+  faculdade: string | null;
+  periodo: string | null;
+  avatar: string | null;
+  criada_em: string | null;
+  ultimo_login: string | null;
+  ultima_sessao: string | null;
+  sessoes: number;
+  /** Gravadas com um colega (todas as origens menos paciente pela IA). */
+  com_colega: number;
+  paciente_ia: number;
+  concluidas: number;
+  media_geral: number | null;
+}
+
+export interface SessaoPainel {
+  id: string;
+  conta_id: string;
+  criada_em: string;
+  origem_caso: OrigemCaso;
+  status: StatusSessao;
+  queixas_confirmadas: string[];
+  descricao_outra: string | null;
+  nota_geral: number | null;
+}
+
+export interface Painel {
+  gerado_em: string;
+  /** False sem Supabase: só aparece quem já abriu sessão. */
+  contas_completas: boolean;
+  resumo: {
+    contas: number;
+    ativas_7_dias: number;
+    sessoes: number;
+    sessoes_7_dias: number;
+    paciente_ia: number;
+    concluidas: number;
+  };
+  contas: ContaPainel[];
+  recentes: SessaoPainel[];
+  /** Últimos 14 dias, do mais antigo para hoje. */
+  por_dia: { dia: string; sessoes: number }[];
+  queixas: { queixa: string; vezes: number }[];
+}
