@@ -523,6 +523,31 @@ def test_paciente_ia_conversa_e_segue_para_a_correcao(cliente):
     esperar(cliente, sessao_id, "aguardando_hipoteses")
 
 
+def test_paciente_ia_exame_fisico_e_despedida(cliente):
+    sessao_id = paciente_ia(cliente)["id"]
+    assert perguntar(cliente, sessao_id, "O que te traz aqui hoje?").json()["consulta_ia"]["etapa"] == "anamnese"
+
+    grave = perguntar(cliente, sessao_id, "Você vai morrer amanhã.").json()
+    notas = grave["consulta_ia"]["notas_guia"]
+    assert len(notas) == 1 and notas[0]["depois_da_fala"] == 3 and notas[0]["texto"]
+
+    anuncio = perguntar(cliente, sessao_id, "Vou examinar o senhor agora.").json()
+    assert anuncio["consulta_ia"]["etapa"] == "exame_fisico"
+    exame = cliente.post(f"/api/sessoes/{sessao_id}/exame", json={"texto": "Ausculta cardíaca"})
+    assert exame.status_code == 200, exame.text
+    consulta = exame.json()["consulta_ia"]
+    assert consulta["exame_fisico"][0]["pedido"] == "Ausculta cardíaca"
+    assert "bulhas" in consulta["exame_fisico"][0]["achado"]
+    assert exame.json()["caso_ia"] is None
+    assert len(exame.json()["falas"]) == 6  # o exame não entra nas falas da correção
+
+    assert perguntar(cliente, sessao_id, "Obrigado, até logo!").json()["consulta_ia"]["etapa"] == "despedida"
+    encerrada = cliente.post(f"/api/sessoes/{sessao_id}/encerrar").json()
+    assert encerrada["consulta_ia"]["exame_fisico"]
+    assert encerrada["caso_ia"]["exame_fisico"]
+    assert cliente.post(f"/api/sessoes/{sessao_id}/exame", json={"texto": "Abdome"}).status_code == 409
+
+
 def falar(cliente: TestClient, sessao_id: str):
     return cliente.post(f"/api/sessoes/{sessao_id}/conversa/audio", files={"audio": AUDIO})
 
@@ -556,6 +581,9 @@ def test_paciente_ia_pergunta_falada_pede_o_aceite_e_apaga_o_audio(cliente, sett
     assert [f["papel"] for f in falas] == ["entrevistador", "paciente"]
     assert falas[0]["texto"] == PERGUNTAS_EXEMPLO[0]
     assert falar(cliente, sessao_id).json()["falas"][2]["texto"] == PERGUNTAS_EXEMPLO[1]
+    exame = cliente.post(f"/api/sessoes/{sessao_id}/exame/audio", files={"audio": AUDIO})
+    assert exame.status_code == 200, exame.text
+    assert len(exame.json()["consulta_ia"]["exame_fisico"]) == 1
     assert not list(settings.pasta_audio_temp.glob("anamnelab-*"))
 
 

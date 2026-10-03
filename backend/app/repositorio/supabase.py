@@ -5,7 +5,7 @@ Tabelas e colunas usadas (a migração fica em supabase/migrations/):
 - sessoes: id, dono_id, criada_em, status, progresso, mensagem_erro, origem_caso, cartao_id,
   queixa_detectada, queixa_trecho, queixas_confirmadas, descricao_outra, sexo_paciente,
   checklists_usados (jsonb), anamnese (jsonb), hipoteses_aluno (jsonb), notas (jsonb),
-  sugestoes (jsonb)
+  sugestoes (jsonb), caso_ia (jsonb), consulta_ia (jsonb)
 - consentimentos: id, sessao_id, papel, nome_informado, versao_termo, aceito_em, forma
 - transcricoes: sessao_id (único), falas (jsonb), editada
 - avaliacoes: sessao_id, ordem, item_id, checklist_id, checklist_versao, secao, texto, status,
@@ -47,7 +47,11 @@ class RepositorioSupabase(Repositorio):
 
     def criar_sessao(self, sessao: Sessao) -> None:
         self._tabela("usuarios").upsert({"id": sessao.dono_id}, ignore_duplicates=True).execute()
-        linha = sessao.model_dump(mode="json", exclude={"consentimentos", "falas", "transcricao_editada", "avaliacoes"})
+        fora = {"consentimentos", "falas", "transcricao_editada", "avaliacoes"}
+        # Coluna nova só entra quando tem valor: banco sem a migração continua criando sessões.
+        if sessao.consulta_ia is None:
+            fora.add("consulta_ia")
+        linha = sessao.model_dump(mode="json", exclude=fora)
         self._tabela("sessoes").insert(linha).execute()
 
     def _montar(self, linha: dict[str, Any], completa: bool) -> Sessao:

@@ -60,6 +60,12 @@ class PerguntaPaciente(BaseModel):
     texto: str = Field(min_length=1, max_length=1000)
 
 
+class PedidoExame(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    texto: str = Field(min_length=1, max_length=1000)
+
+
 class TranscricaoEditar(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -161,6 +167,32 @@ class Notas(BaseModel):
     """True quando entrou checklist em rascunho na conta (CONTAR_RASCUNHO=true)."""
 
 
+EtapaConsulta = Literal["anamnese", "exame_fisico", "despedida"]
+
+
+class ExameFeito(BaseModel):
+    pedido: str
+    achado: str
+    depois_da_fala: int = -1
+    """Índice da última fala (em `falas`) antes deste pedido, para a conversa sair na ordem."""
+
+
+class NotaGuia(BaseModel):
+    depois_da_fala: int
+    """Índice da fala (em `falas`) depois da qual a nota aparece."""
+    texto: str
+
+
+class ConsultaIA(BaseModel):
+    """O que acontece na consulta com o paciente pela IA além das falas da anamnese."""
+
+    etapa: EtapaConsulta = "anamnese"
+    """despedida: o paciente se despediu; a interface oferece encerrar."""
+    exame_fisico: list[ExameFeito] = []
+    """Partes do exame que o aluno pediu, com o achado que o guia deu. Fica fora da nota."""
+    notas_guia: list[NotaGuia] = []
+
+
 class Sessao(BaseModel):
     id: str
     dono_id: str
@@ -189,6 +221,8 @@ class Sessao(BaseModel):
     sugestoes: SugestoesIA | None = None
     caso_ia: CasoPaciente | None = None
     """Ficha do paciente pela IA (caso fictício). O aluno só vê depois de encerrar a conversa."""
+    consulta_ia: ConsultaIA | None = None
+    """Exame físico e notas do guia no paciente pela IA. Visível durante a conversa."""
 
 
 class SessaoResumo(BaseModel):

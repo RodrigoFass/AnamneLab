@@ -139,9 +139,35 @@ class CasoPaciente(BaseModel):
     familia: list[str]
     vida_social: list[str]
     jeito_de_falar: str
+    sinais_vitais: list[str] = []
+    """Pressão, frequências, temperatura, saturação, peso e altura. Vazio em fichas antigas."""
+    exame_fisico: list[str] = []
+    """Achados do exame físico, um por região ou sistema ("Ausculta cardíaca: ..."). Vazio em fichas antigas."""
+
+
+class FichaGerada(CasoPaciente):
+    """Saída pedida ao LLM: o exame físico é obrigatório na ficha nova."""
+
+    sinais_vitais: list[str]
+    exame_fisico: list[str]
+
+
+ProximoPasso = Literal["seguir", "exame_fisico", "despedida"]
 
 
 class RespostaPaciente(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     resposta: str
+    proximo: ProximoPasso
+    """exame_fisico: o estudante anunciou o exame. despedida: a consulta terminou e o paciente se despediu."""
+    nota_guia: str
+    """Observação curta do guia, fora do papel do paciente. Vazia na maior parte das respostas."""
+
+
+class AchadoExame(BaseModel):
+    """O guia descreve o que o estudante encontra na parte do exame físico que pediu."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    achado: str

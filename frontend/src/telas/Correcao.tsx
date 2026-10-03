@@ -713,7 +713,49 @@ export function Correcao() {
                 <dd>{sessao.caso_ia?.[campo].join(" ")}</dd>
               </div>
             ))}
+            {Boolean(sessao.caso_ia.sinais_vitais?.length) && (
+              <div>
+                <dt>Sinais vitais</dt>
+                <dd>{sessao.caso_ia.sinais_vitais?.join(", ")}</dd>
+              </div>
+            )}
+            {Boolean(sessao.caso_ia.exame_fisico?.length) && (
+              <div>
+                <dt>Exame físico completo</dt>
+                <dd>
+                  <ul className="app-lista-simples">
+                    {sessao.caso_ia.exame_fisico?.map((achado) => <li key={achado}>{achado}</li>)}
+                  </ul>
+                </dd>
+              </div>
+            )}
           </dl>
+        </details>
+      )}
+
+      {sessao.origem_caso === "paciente_ia" && (
+        <details className="app-recolhivel">
+          <summary>O exame físico que você fez</summary>
+          {sessao.consulta_ia?.exame_fisico.length ? (
+            <>
+              <p className="app-ajuda">
+                O exame fica fora da nota. Compare com o exame completo na ficha do paciente.
+              </p>
+              <dl className="app-anamnese">
+                {sessao.consulta_ia.exame_fisico.map((e, i) => (
+                  <div key={i}>
+                    <dt>{e.pedido}</dt>
+                    <dd>{e.achado}</dd>
+                  </div>
+                ))}
+              </dl>
+            </>
+          ) : (
+            <p className="app-ajuda">
+              Você não examinou o paciente. Na próxima, depois das perguntas, diga que vai examinar e peça uma parte do
+              exame de cada vez.
+            </p>
+          )}
         </details>
       )}
 

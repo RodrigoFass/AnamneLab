@@ -4,7 +4,7 @@ import { api, textoDoErro } from "../api/cliente";
 import { Aviso } from "../componentes/Aviso";
 import { Avatar } from "../componentes/Avatar";
 import { Folha } from "../componentes/Folha";
-import type { Consentimento, Termo as TipoTermo } from "../api/tipos";
+import type { Consentimento, ExameFeito, Fala, NotaGuia, Sessao, Termo as TipoTermo } from "../api/tipos";
 import {
   IconeAviso,
   IconeBalao,
@@ -20,6 +20,7 @@ import { useNavegar, vibrar } from "../util/movimento";
 import { aceitarComoDono, useAceiteDono } from "../util/aceites";
 import { usePerfil } from "../util/perfil";
 import { FolhaAceite } from "./Termo";
+import { Guia, resumoDaConsulta } from "../componentes/Guia";
 
 /** Igual a MAXIMO_PERGUNTA no backend. */
 const LIMITE_PERGUNTA = 1000;
@@ -28,6 +29,8 @@ const LIMITE_PERGUNTA = 1000;
 const FALA_MAXIMA_S = 60;
 /** Toque mais curto que isso liga o microfone até o próximo toque, em vez de segurar. */
 const TOQUE_CURTO_MS = 350;
+/** A partir daqui o guia lembra que a consulta tem fim. */
+const PERGUNTAS_PARA_LEMBRAR = 25;
 const FORMATOS = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg;codecs=opus"];
 
 function escolherFormato(): string | undefined {
@@ -56,9 +59,9 @@ type Microfone = "parado" | "ligando" | "segurando" | "tocado";
 
 const PONTOS = [
   { icone: <IconeBalao />, texto: "Você faz o médico. A IA responde como o paciente." },
-  { icone: <IconeLampada />, texto: "Ela só conta o que você perguntar, do jeito de quem não é da saúde." },
+  { icone: <IconeLampada />, texto: "Ela só conta o que você perguntar e reage ao que você diz, como gente de verdade." },
   { icone: <IconeSom />, texto: "Por chat, você escreve ou manda áudio. Por voz, vocês conversam falando." },
-  { icone: <IconeSelo />, texto: "No fim, a correção é a mesma da gravação, item a item." },
+  { icone: <IconeSelo />, texto: "Depois das perguntas, anuncie o exame físico: um guia dá os achados do que você examinar." },
 ];
 
 /** Escolha do caso: uma queixa da biblioteca ou qualquer uma, sorteada. */
@@ -156,6 +159,9 @@ export function Conversa() {
   const [segundos, setSegundos] = useState(0);
   const [termo, setTermo] = useState<TipoTermo | null>(null);
   const [pedirAceite, setPedirAceite] = useState(false);
+  const [etapa, setEtapa] = useState<"anamnese" | "exame_fisico">("anamnese");
+  const [despediu, setDespediu] = useState(false);
+  const etapaLida = useRef(false);
   const fim = useRef<HTMLDivElement>(null);
   const campo = useRef<HTMLTextAreaElement>(null);
   const fluxo = useRef<MediaStream | null>(null);
@@ -168,7 +174,10 @@ export function Conversa() {
   const toqueInicio = useRef(0);
 
   const falas = sessao?.falas ?? [];
+  const consulta = sessao?.consulta_ia;
+  const exames = consulta?.exame_fisico ?? [];
   const perguntas = falas.filter((f) => f.papel === "entrevistador").length;
+  const examinando = etapa === "exame_fisico";
   const tamanho = texto.trim().length;
   const passou = tamanho > LIMITE_PERGUNTA;
   const gravando = microfone === "segurando" || microfone === "tocado";
@@ -176,7 +185,14 @@ export function Conversa() {
 
   useEffect(() => {
     fim.current?.scrollIntoView({ block: "end", behavior: "smooth" });
-  }, [falas.length, esperando, ouvindo]);
+  }, [falas.length, exames.length, etapa, esperando, ouvindo]);
+
+  // Ao abrir (ou voltar da conversa por voz), a consulta segue na etapa em que estava.
+  useEffect(() => {
+    if (!sessao || etapaLida.current) return;
+    etapaLida.current = true;
+    if (sessao.consulta_ia?.etapa === "exame_fisico") setEtapa("exame_fisico");
+  }, [sessao]);
 
   useEffect(() => {
     let ativo = true;
@@ -205,9 +221,15 @@ export function Conversa() {
     [soltarMicrofone],
   );
 
-  const responder = (atualizada: NonNullable<typeof sessao>) => {
+  const responder = (atualizada: Sessao) => {
     definir(() => atualizada);
     vibrar(6);
+    const nova = atualizada.consulta_ia?.etapa;
+    if (nova === "exame_fisico") setEtapa("exame_fisico");
+    if (nova === "despedida") {
+      setDespediu(true);
+      setConfirmar(true);
+    }
   };
 
   if (!id) return <Navigate to="/" replace />;
@@ -220,7 +242,9 @@ export function Conversa() {
     setTexto("");
     setErro(null);
     try {
-      responder(await api.perguntarAoPaciente(id, pergunta));
+      responder(
+        examinando ? await api.examinarPaciente(id, pergunta) : await api.perguntarAoPaciente(id, pergunta),
+      );
     } catch (e) {
       setErro(textoDoErro(e));
       setTexto(pergunta); // a pergunta volta para o campo, para tentar de novo
@@ -234,7 +258,8 @@ export function Conversa() {
     setOuvindo(true);
     setErro(null);
     try {
-      responder(await api.perguntarFalando(id, audio, `pergunta.${extensao(mime)}`));
+      const nome = `pergunta.${extensao(mime)}`;
+      responder(examinando ? await api.examinarFalando(id, audio, nome) : await api.perguntarFalando(id, audio, nome));
     } catch (e) {
       setErro(textoDoErro(e));
     } finally {
@@ -427,7 +452,13 @@ export function Conversa() {
           <button
             className={`al-botao app-botao-icone app-botao-falar${gravando ? " is-gravando" : ""}`}
             type="button"
-            aria-label={gravando ? "Parar e enviar a pergunta" : "Segure para falar a pergunta"}
+            aria-label={
+              gravando
+                ? "Parar e enviar"
+                : examinando
+                  ? "Segure para dizer o que quer examinar"
+                  : "Segure para falar a pergunta"
+            }
             aria-pressed={gravando}
             disabled={!sessao || ocupado}
             onPointerDown={(e) => void aoApertar(e)}
@@ -448,8 +479,8 @@ export function Conversa() {
             <textarea
               ref={campo}
               rows={1}
-              placeholder="Escreva a pergunta"
-              aria-label="Pergunta ao paciente"
+              placeholder={examinando ? "O que você quer examinar?" : "Escreva a pergunta"}
+              aria-label={examinando ? "Parte do exame físico" : "Pergunta ao paciente"}
               aria-invalid={passou || undefined}
               aria-describedby={tamanho > LIMITE_PERGUNTA * 0.8 ? "tamanho-pergunta" : undefined}
               value={texto}
@@ -467,7 +498,7 @@ export function Conversa() {
             <button
               className="al-botao al-botao-principal app-botao-icone"
               type="submit"
-              aria-label="Enviar pergunta"
+              aria-label={examinando ? "Examinar" : "Enviar pergunta"}
               disabled={!tamanho || passou || ocupado || !sessao}
             >
               <IconeEnviar />
@@ -493,31 +524,68 @@ export function Conversa() {
             <IconeSom />
             Mudar para conversa por voz
           </button>
-          {falas.map((f, i) =>
-            f.papel === "entrevistador" ? (
-              <p key={i} className="app-bolha app-bolha-medico">
-                {f.texto}
-              </p>
-            ) : (
-              <div key={i} className="app-bolha-linha">
-                <Avatar nome="Paciente" papel="paciente" tamanho={28} avatar="" />
-                <p className="app-bolha app-bolha-paciente">{f.texto}</p>
-              </div>
-            ),
+          {perguntas > 0 && (
+            <button
+              className="al-botao al-botao-texto app-alternar-voz"
+              type="button"
+              onClick={() => setEtapa(examinando ? "anamnese" : "exame_fisico")}
+              disabled={ocupado || gravando}
+            >
+              <IconeSelo />
+              {examinando ? "Voltar às perguntas ao paciente" : "Ir para o exame físico"}
+            </button>
+          )}
+          {montarLinhaDoTempo(falas, consulta?.notas_guia ?? [], exames, examinando).map((item) => {
+            if (item.tipo === "fala") {
+              return item.fala.papel === "entrevistador" ? (
+                <p key={item.chave} className="app-bolha app-bolha-medico">
+                  {item.fala.texto}
+                </p>
+              ) : (
+                <div key={item.chave} className="app-bolha-linha">
+                  <Avatar nome="Paciente" papel="paciente" tamanho={28} avatar="" />
+                  <p className="app-bolha app-bolha-paciente">{item.fala.texto}</p>
+                </div>
+              );
+            }
+            if (item.tipo === "inicio_exame") return <InicioExame key={item.chave} />;
+            if (item.tipo === "exame") {
+              return (
+                <div key={item.chave} className="app-chat-par">
+                  <p className="app-bolha app-bolha-medico">{item.exame.pedido}</p>
+                  <Guia>{item.exame.achado}</Guia>
+                </div>
+              );
+            }
+            return <Guia key={item.chave}>{item.texto}</Guia>;
+          })}
+          {!examinando && perguntas >= PERGUNTAS_PARA_LEMBRAR && exames.length === 0 && (
+            <Guia>
+              Você já fez {perguntas} perguntas. Numa consulta de verdade o tempo é curto: quando sentir que cobriu a
+              história, anuncie o exame físico ou se despeça do paciente.
+            </Guia>
           )}
           {(esperando || ouvindo) && (
             <>
               <p className={`app-bolha app-bolha-medico is-enviando${ouvindo ? " is-transcrevendo" : ""}`}>
-                {esperando ?? "Transcrevendo a sua pergunta…"}
+                {esperando ?? (examinando ? "Transcrevendo o seu pedido…" : "Transcrevendo a sua pergunta…")}
               </p>
-              <div className="app-bolha-linha">
-                <Avatar nome="Paciente" papel="paciente" tamanho={28} avatar="" />
-                <p className="app-bolha app-bolha-paciente app-digitando" aria-label="O paciente está respondendo">
+              {examinando ? (
+                <p className="app-guia app-digitando" aria-label="O guia está respondendo">
                   <span />
                   <span />
                   <span />
                 </p>
-              </div>
+              ) : (
+                <div className="app-bolha-linha">
+                  <Avatar nome="Paciente" papel="paciente" tamanho={28} avatar="" />
+                  <p className="app-bolha app-bolha-paciente app-digitando" aria-label="O paciente está respondendo">
+                    <span />
+                    <span />
+                    <span />
+                  </p>
+                </div>
+              )}
             </>
           )}
           {aviso && <Aviso tipo="info">{aviso}</Aviso>}
@@ -539,9 +607,12 @@ export function Conversa() {
 
       {confirmar && (
         <Folha
-          titulo="Encerrar a consulta?"
-          subtitulo={`Você fez ${perguntas} ${perguntas === 1 ? "pergunta" : "perguntas"}. Depois de encerrar, não dá para perguntar mais.`}
-          onFechar={() => setConfirmar(false)}
+          titulo={despediu ? "O paciente se despediu" : "Encerrar a consulta?"}
+          subtitulo={resumoDaConsulta(perguntas, exames.length)}
+          onFechar={() => {
+            setConfirmar(false);
+            setDespediu(false);
+          }}
         >
           <div className="app-grupo">
             <button
@@ -555,13 +626,58 @@ export function Conversa() {
             <button
               className="al-botao al-botao-texto app-botao-largo"
               type="button"
-              onClick={() => setConfirmar(false)}
+              onClick={() => {
+                setConfirmar(false);
+                setDespediu(false);
+              }}
             >
-              Continuar a consulta
+              {despediu ? "Chamar o paciente de volta" : "Continuar a consulta"}
             </button>
           </div>
         </Folha>
       )}
     </Tela>
   );
+}
+
+function InicioExame() {
+  return (
+    <>
+      <p className="app-chat-divisor">Exame físico</p>
+      <Guia>
+        Diga o que quer examinar, uma parte de cada vez: sinais vitais, ausculta cardíaca, palpação do abdome. Eu conto o
+        que você encontra.
+      </Guia>
+    </>
+  );
+}
+
+type ItemLinha =
+  | { tipo: "fala"; chave: string; fala: Fala }
+  | { tipo: "nota"; chave: string; texto: string }
+  | { tipo: "inicio_exame"; chave: string }
+  | { tipo: "exame"; chave: string; exame: ExameFeito };
+
+/** Falas, notas do guia e exame físico na ordem em que aconteceram. */
+function montarLinhaDoTempo(falas: Fala[], notas: NotaGuia[], exames: ExameFeito[], examinando: boolean): ItemLinha[] {
+  const itens: ItemLinha[] = [];
+  let exameComecou = false;
+  const depoisDa = (indice: number) => {
+    notas.forEach((n, j) => {
+      if (n.depois_da_fala === indice) itens.push({ tipo: "nota", chave: `nota-${j}`, texto: n.texto });
+    });
+    exames.forEach((e, j) => {
+      if (e.depois_da_fala !== indice) return;
+      if (!exameComecou) itens.push({ tipo: "inicio_exame", chave: "inicio-exame" });
+      exameComecou = true;
+      itens.push({ tipo: "exame", chave: `exame-${j}`, exame: e });
+    });
+  };
+  depoisDa(-1);
+  falas.forEach((f, i) => {
+    itens.push({ tipo: "fala", chave: `fala-${i}`, fala: f });
+    depoisDa(i);
+  });
+  if (examinando && !exameComecou) itens.push({ tipo: "inicio_exame", chave: "inicio-exame" });
+  return itens;
 }

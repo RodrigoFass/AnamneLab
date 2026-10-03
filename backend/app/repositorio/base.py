@@ -17,6 +17,7 @@ CAMPOS_SESSAO = frozenset(
         "descricao_outra",
         "sexo_paciente",
         "caso_ia",
+        "consulta_ia",
         "checklists_usados",
         "anamnese",
         "hipoteses_aluno",

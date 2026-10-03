@@ -4,7 +4,7 @@ import { api, ErroApi, textoDoErro } from "../api/cliente";
 import type { Consentimento, Sessao, Sexo, Termo as TipoTermo } from "../api/tipos";
 import { Aviso } from "../componentes/Aviso";
 import { Folha } from "../componentes/Folha";
-import { IconeBalao, IconeEnviar, IconeMicrofone, IconeMicrofoneMudo, IconeX } from "../componentes/Icones";
+import { IconeBalao, IconeEnviar, IconeMicrofone, IconeMicrofoneMudo, IconeSelo, IconeX } from "../componentes/Icones";
 import { Carregando, Tela } from "../componentes/Tela";
 import { aceitarComoDono, useAceiteDono } from "../util/aceites";
 import { Escuta } from "../util/escuta";
@@ -13,6 +13,7 @@ import { usePerfil } from "../util/perfil";
 import { rotaDaSessao, useSessao } from "../util/sessao";
 import { destravarSom, falarPaciente, pararVoz } from "../util/vozPaciente";
 import { FolhaAceite } from "./Termo";
+import { Guia, resumoDaConsulta } from "../componentes/Guia";
 
 /** Igual a MAXIMO_PERGUNTA no backend. */
 const LIMITE_PERGUNTA = 1000;
@@ -91,12 +92,18 @@ export function ConversaVoz() {
   const [pedirAceite, setPedirAceite] = useState(false);
   const [confirmar, setConfirmar] = useState(false);
   const [encerrando, setEncerrando] = useState(false);
+  const [despediu, setDespediu] = useState(false);
+  const [notaGuia, setNotaGuia] = useState<string | null>(null);
+  const [horaDoExame, setHoraDoExame] = useState(false);
   const esfera = useRef<HTMLDivElement>(null);
   const escuta = useRef<Escuta | null>(null);
   const ativo = useRef(true);
   // As funções da escuta rodam fora do React; estas refs trazem os valores atuais.
   const atual = useRef({ vozesPiper, sexo: "feminino" as Sexo });
   atual.current = { vozesPiper, sexo: sessao?.sexo_paciente ?? "feminino" };
+  // Quantas notas do guia já estavam na consulta: só a nota nova aparece na tela.
+  const notasVistas = useRef<number | null>(null);
+  if (sessao && notasVistas.current === null) notasVistas.current = sessao.consulta_ia?.notas_guia.length ?? 0;
 
   useEffect(() => {
     ativo.current = true;
@@ -120,8 +127,12 @@ export function ConversaVoz() {
   const responder = useCallback(
     async (atualizada: Sessao) => {
       if (!ativo.current) return;
+      const notasAntes = notasVistas.current ?? 0;
       definir(() => atualizada);
       vibrar(6);
+      const notas = atualizada.consulta_ia?.notas_guia ?? [];
+      notasVistas.current = notas.length;
+      setNotaGuia(notas.length > notasAntes ? (notas[notas.length - 1]?.texto ?? null) : null);
       const ultima = atualizada.falas.length - 1;
       const fala = atualizada.falas[ultima];
       if (fala?.papel === "paciente") {
@@ -133,6 +144,19 @@ export function ConversaVoz() {
         }
       }
       if (!ativo.current) return;
+      // Exame físico e despedida: a escuta para e a tela mostra o próximo passo.
+      const etapa = atualizada.consulta_ia?.etapa;
+      if (etapa === "exame_fisico" || etapa === "despedida") {
+        escuta.current?.parar();
+        escuta.current = null;
+        setEstado("inicio");
+        if (etapa === "exame_fisico") setHoraDoExame(true);
+        else {
+          setDespediu(true);
+          setConfirmar(true);
+        }
+        return;
+      }
       // Uma pausa curta, para o fim da voz do paciente não entrar no microfone.
       window.setTimeout(() => {
         if (!ativo.current) return;
@@ -283,6 +307,7 @@ export function ConversaVoz() {
   };
 
   const falas = sessao?.falas ?? [];
+  const exames = sessao?.consulta_ia?.exame_fisico.length ?? 0;
   const perguntas = falas.filter((f) => f.papel === "entrevistador").length;
   const ultimaPergunta = [...falas].reverse().find((f) => f.papel === "entrevistador");
   const ultimaResposta =
@@ -371,7 +396,23 @@ export function ConversaVoz() {
           <p className="app-voz-estado" aria-live="polite">
             {mudo && estado === "ouvindo" ? "Microfone silenciado." : LEGENDA[estado]}
           </p>
-          {estado === "inicio" && (
+          {horaDoExame && estado === "inicio" && (
+            <>
+              <Guia>
+                Hora do exame físico. Ele segue pelo chat: diga o que quer examinar, uma parte de cada vez, e eu conto o
+                que você encontra.
+              </Guia>
+              <button
+                className="al-botao al-botao-principal app-voz-comecar"
+                type="button"
+                onClick={() => navegar(`/sessao/${id}/conversa`, { replace: true })}
+              >
+                <IconeSelo />
+                Ir para o exame físico
+              </button>
+            </>
+          )}
+          {estado === "inicio" && !horaDoExame && (
             <button
               className="al-botao al-botao-principal app-voz-comecar"
               type="button"
@@ -387,6 +428,7 @@ export function ConversaVoz() {
               {ultimaResposta && <p className="app-voz-paciente">Paciente: {ultimaResposta.texto}</p>}
             </div>
           )}
+          {notaGuia && <Guia>{notaGuia}</Guia>}
           {aviso && <Aviso tipo="info">{aviso}</Aviso>}
           {erro && <Aviso tipo="erro">{erro}</Aviso>}
         </div>
@@ -405,9 +447,12 @@ export function ConversaVoz() {
 
       {confirmar && (
         <Folha
-          titulo="Encerrar a consulta?"
-          subtitulo={`Você fez ${perguntas} ${perguntas === 1 ? "pergunta" : "perguntas"}. Depois de encerrar, não dá para perguntar mais.`}
-          onFechar={() => setConfirmar(false)}
+          titulo={despediu ? "O paciente se despediu" : "Encerrar a consulta?"}
+          subtitulo={resumoDaConsulta(perguntas, exames)}
+          onFechar={() => {
+            setConfirmar(false);
+            setDespediu(false);
+          }}
         >
           <div className="app-grupo">
             <button
@@ -421,9 +466,12 @@ export function ConversaVoz() {
             <button
               className="al-botao al-botao-texto app-botao-largo"
               type="button"
-              onClick={() => setConfirmar(false)}
+              onClick={() => {
+                setConfirmar(false);
+                setDespediu(false);
+              }}
             >
-              Continuar a consulta
+              {despediu ? "Chamar o paciente de volta" : "Continuar a consulta"}
             </button>
           </div>
         </Folha>

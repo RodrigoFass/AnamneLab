@@ -213,6 +213,30 @@ export interface Sessao {
   sugestoes: SugestoesIA | null;
   /** Ficha do paciente pela IA; só vem depois que a conversa termina. */
   caso_ia?: CasoPaciente | null;
+  /** Exame físico e notas do guia no paciente pela IA. Vem durante a conversa. */
+  consulta_ia?: ConsultaIA | null;
+}
+
+export type EtapaConsulta = "anamnese" | "exame_fisico" | "despedida";
+
+export interface ExameFeito {
+  pedido: string;
+  achado: string;
+  /** Índice da última fala antes deste pedido. */
+  depois_da_fala: number;
+}
+
+export interface NotaGuia {
+  /** Índice da fala depois da qual a nota aparece. */
+  depois_da_fala: number;
+  texto: string;
+}
+
+export interface ConsultaIA {
+  /** despedida: o paciente se despediu e a interface oferece encerrar. */
+  etapa: EtapaConsulta;
+  exame_fisico: ExameFeito[];
+  notas_guia: NotaGuia[];
 }
 
 /** Paciente fictício que a IA interpreta. */
@@ -230,6 +254,9 @@ export interface CasoPaciente {
   familia: string[];
   vida_social: string[];
   jeito_de_falar: string;
+  /** Vazios em fichas antigas. */
+  sinais_vitais?: string[];
+  exame_fisico?: string[];
 }
 
 export interface SessaoResumo {
