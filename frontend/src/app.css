@@ -2194,6 +2194,57 @@ a.app-lista-linha:active {
   background: var(--mostarda-suave);
   color: var(--tinta);
 }
+/* O guia: preceptor discreto, fora do papel do paciente. Sem mostarda (que é do paciente). */
+.app-guia {
+  align-self: center;
+  max-width: 92%;
+  margin: 0;
+  padding: var(--espaco-3) var(--espaco-4);
+  border: 1px solid var(--linha-forte);
+  border-left: 3px solid var(--petroleo);
+  border-radius: var(--raio-md);
+  background: var(--papel-elevado);
+  color: var(--tinta);
+  font-size: 16px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  animation: app-surgir-escala 0.3s cubic-bezier(0.2, 0, 0, 1) both;
+}
+.app-guia-rotulo {
+  display: block;
+  margin-bottom: 2px;
+  font: 600 13px/18px var(--font-texto);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--petroleo);
+}
+.app-guia.app-digitando {
+  align-self: center;
+}
+.app-chat-par {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+.app-chat-divisor {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  margin: var(--espaco-2) 0 0;
+  font: 600 14px/20px var(--font-display);
+  color: var(--tinta-suave);
+}
+.app-chat-divisor::before,
+.app-chat-divisor::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--linha);
+}
+.app-lista-simples {
+  margin: 0;
+  padding-left: 1.2em;
+}
 .app-digitando {
   display: inline-flex;
   gap: 5px;

@@ -26,9 +26,11 @@ Toda rota de sessão só enxerga sessões do próprio dono (quem fez o médico).
 | GET | `/api/sessoes/{id}` | | `Sessao` | Estado atual; o frontend consulta a cada 2 s enquanto processa |
 | DELETE | `/api/sessoes/{id}` | | 204 | Apaga sessão, transcrição, avaliações e consentimentos |
 | POST | `/api/sessoes/{id}/consentimentos` | `ConsentimentoCriar` | `Consentimento` | Registra o aceite de quem abriu a sessão (`forma: "aceite"`, o padrão) ou o aviso ao colega (`forma: "declarado_pelo_dono"`, que exige antes o aceite do dono no outro papel; senão 409). Antes da gravação; no paciente pela IA, só o aceite, durante a conversa |
-| POST | `/api/sessoes/{id}/conversa` | `PerguntaPaciente` (`texto`, até 1000 caracteres) | `Sessao` | Paciente pela IA: manda uma pergunta e recebe a sessão com a pergunta e a resposta nas falas. Só com status `conversando`; 422 para pergunta vazia ou longa, 503 se a IA não responder (a pergunta não fica) |
+| POST | `/api/sessoes/{id}/conversa` | `PerguntaPaciente` (`texto`, até 1000 caracteres) | `Sessao` | Paciente pela IA: manda uma pergunta e recebe a sessão com a pergunta e a resposta nas falas. Atualiza `consulta_ia.etapa` (`exame_fisico` quando o aluno anuncia o exame, `despedida` quando o paciente se despede, senão `anamnese`) e, quando o guia comenta, acrescenta uma nota em `consulta_ia.notas_guia`. Só com status `conversando`; 422 para pergunta vazia ou longa, 503 se a IA não responder (a pergunta não fica) |
 | POST | `/api/sessoes/{id}/conversa/audio` | multipart `audio` (até 5 MB) | `Sessao` | Paciente pela IA, pergunta falada: o Whisper transcreve, o áudio é apagado (também em falha) e a pergunta segue como a escrita. 409 sem o aceite do termo (`forma: "aceite"`, versão atual) na sessão; 422 se não deu para entender. No modo de demonstração, a pergunta é uma de exemplo |
 | GET | `/api/sessoes/{id}/voz/{indice}` | | `audio/mpeg` (Edge) ou `audio/wav` (Piper) | Paciente pela IA: a fala `indice` do paciente com a voz do backend. 404 sem voz no backend (o navegador fala) ou se a fala não é do paciente; 503 se a voz falhar |
+| POST | `/api/sessoes/{id}/exame` | `PedidoExame` (`texto`, até 1000 caracteres) | `Sessao` | Paciente pela IA, exame físico: o guia dá o achado da parte pedida, pela ficha. O pedido e o achado vão para `consulta_ia.exame_fisico` (fora das falas e da nota). Só com status `conversando`; 422 para pedido vazio ou longo ou acima de 60 partes, 503 se a IA não responder |
+| POST | `/api/sessoes/{id}/exame/audio` | multipart `audio` (até 5 MB) | `Sessao` | Exame físico com o pedido falado; mesmas regras de `/conversa/audio` |
 | POST | `/api/sessoes/{id}/encerrar` | | `Sessao` | Paciente pela IA: fim da entrevista. Status vai para `aguardando_queixa` com a queixa do cartão sugerida; a ficha `caso_ia` passa a vir na sessão |
 | POST | `/api/sessoes/{id}/audio` | multipart `audio` | `Sessao` | Exige um registro por papel (médico e paciente) na versão vigente do termo. Status vai para `processando_audio` e o processamento roda em segundo plano |
 | PUT | `/api/sessoes/{id}/transcricao` | `TranscricaoEditar` | `Sessao` | Corrige quem disse o quê ou um erro de transcrição; marca `transcricao_editada` |
@@ -44,6 +46,7 @@ criada
                                    └──────────────► aguardando_queixa
 conversando (paciente pela IA)
   └─ POST conversa (repete) ─► conversando
+  └─ POST exame (repete) ────► conversando
   └─ POST encerrar ──────────► aguardando_queixa
   POST queixa ─────────────────► corrigindo        (anamnese, correção, conferência dos trechos, notas)
                                    └──────────────► aguardando_hipoteses
@@ -56,7 +59,7 @@ qualquer etapa com falha ───────► erro (mensagem_erro em PT-BR)
 - `avaliacoes` e `notas` só aparecem na resposta a partir de `gerando_sugestoes`: o aluno
   escreve as hipóteses antes de ver a correção.
 - Enquanto `aguardando_queixa`, o aluno pode editar a transcrição.
-- Paciente pela IA: `caso_ia` vem `null` enquanto `conversando` (é o gabarito do caso) e aparece depois de encerrar.
+- Paciente pela IA: `caso_ia` vem `null` enquanto `conversando` (é o gabarito do caso, com o exame físico completo) e aparece depois de encerrar. `consulta_ia` (etapa, exame feito e notas do guia) vem sempre.
 - Duração máxima do áudio: 20 minutos; tamanho máximo: 25 MB.
 
 ## Sugestões da IA

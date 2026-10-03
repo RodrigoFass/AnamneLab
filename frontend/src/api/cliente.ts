@@ -126,6 +126,13 @@ export const api = {
     corpo.append("audio", audio, nomeArquivo);
     return requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/conversa/audio`, { method: "POST", body: corpo });
   },
+  examinarPaciente: (id: string, texto: string) =>
+    requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/exame`, json("POST", { texto })),
+  examinarFalando: (id: string, audio: Blob, nomeArquivo: string) => {
+    const corpo = new FormData();
+    corpo.append("audio", audio, nomeArquivo);
+    return requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/exame/audio`, { method: "POST", body: corpo });
+  },
   /** WAV da fala `indice` do paciente pela IA, com a voz do Piper. */
   vozDoPaciente: (id: string, indice: number) =>
     requisitar<Blob>(`/sessoes/${encodeURIComponent(id)}/voz/${indice}`, {}, true),

@@ -5,6 +5,7 @@ no mesmo formato do provedor real, então passa pela mesma validação.
 """
 
 import re
+import unicodedata
 from typing import Any
 
 from pydantic import BaseModel
@@ -75,6 +76,7 @@ class ClienteFalso(ClienteLLM):
             "verificar_contestacao": _verificar_contestacao,
             "paciente_caso": _paciente_caso,
             "paciente_resposta": _paciente_resposta,
+            "paciente_exame": _paciente_exame,
         }
         if tarefa not in respostas:
             raise ValueError(f"tarefa desconhecida para o provedor falso: {tarefa}")
@@ -231,6 +233,15 @@ def _paciente_caso(contexto: dict[str, Any]) -> dict[str, Any]:
         "familia": ["Meu pai teve infarto aos 60 anos."],
         "vida_social": ["Moro com a família e trabalho de dia."],
         "jeito_de_falar": "Tranquilo, responde direto.",
+        "sinais_vitais": ["PA 138 x 86 mmHg", "FC 88 bpm", "FR 18 irpm", "Temperatura 36,8 °C", "Saturação 97%"],
+        "exame_fisico": [
+            "Estado geral: bom estado geral, lúcido e orientado, corado e hidratado.",
+            "Aparelho cardiovascular: ritmo regular em dois tempos, bulhas normofonéticas, sem sopros.",
+            "Aparelho respiratório: murmúrio vesicular presente bilateralmente, sem ruídos adventícios.",
+            "Abdome: plano, flácido, indolor à palpação, ruídos hidroaéreos presentes.",
+            "Membros: sem edema, pulsos periféricos presentes e simétricos.",
+            "Neurológico: sem déficits focais.",
+        ],
     }
 
 
@@ -248,21 +259,79 @@ _TEMAS_PACIENTE: list[tuple[tuple[str, ...], str]] = [
 ]
 
 
+_ANUNCIA_EXAME = ("examinar", "maca", "exame fisico", "auscultar")
+_DESPEDIDA = ("tchau", "ate logo", "pode ir", "ate a proxima", "ate mais")
+_NOTICIA_GRAVE = ("de vida", "vai morrer", "diagnostico e", "voce tem cancer", "e cancer")
+_PEDE_AJUDA = ("guia", "dica", "o que mais pergunto", "nao sei o que perguntar")
+
+
+def _simples(texto: str) -> str:
+    """Normalizado e sem acentos, para casar palavras-chave escritas de qualquer jeito."""
+    decomposto = unicodedata.normalize("NFD", normalizar(texto))
+    return "".join(c for c in decomposto if not unicodedata.combining(c))
+
+
 def _paciente_resposta(contexto: dict[str, Any]) -> dict[str, Any]:
     """Responde pela primeira palavra-chave que casar; o resto vira um fato da história."""
+    pergunta = _simples(contexto.get("pergunta", ""))
+    if any(t in pergunta for t in _ANUNCIA_EXAME):
+        return {"resposta": "Tá bom, doutor. Pode examinar.", "proximo": "exame_fisico", "nota_guia": ""}
+    if any(t in pergunta for t in _DESPEDIDA):
+        return {"resposta": "Obrigado, doutor. Até logo.", "proximo": "despedida", "nota_guia": ""}
+    if any(t in pergunta for t in _NOTICIA_GRAVE):
+        return {
+            "resposta": "Como assim, doutor? O senhor nem me examinou ainda. Como sabe disso?",
+            "proximo": "seguir",
+            "nota_guia": "Diagnóstico e prognóstico vêm depois da anamnese e do exame físico. Notícia difícil tem "
+            "jeito certo de ser dada.",
+        }
+    if any(t in pergunta for t in _PEDE_AJUDA):
+        return {
+            "resposta": "Não entendi, doutor.",
+            "proximo": "seguir",
+            "nota_guia": "Você ainda pode explorar antecedentes, medicações, hábitos e família.",
+        }
+    return {"resposta": _resposta_pelo_tema(contexto), "proximo": "seguir", "nota_guia": ""}
+
+
+def _resposta_pelo_tema(contexto: dict[str, Any]) -> str:
     caso: dict[str, Any] = contexto.get("caso", {})
     pergunta = normalizar(contexto.get("pergunta", ""))
     for termos, tema in _TEMAS_PACIENTE:
         if any(t in pergunta for t in termos):
             if tema == "nome":
-                return {"resposta": f"Meu nome é {caso.get('nome', '')}."}
+                return f"Meu nome é {caso.get('nome', '')}."
             if tema == "idade":
-                return {"resposta": f"Tenho {caso.get('idade')} anos."}
+                return f"Tenho {caso.get('idade')} anos."
             if tema == "profissao":
-                return {"resposta": f"Trabalho como {caso.get('profissao', '')}."}
+                return f"Trabalho como {caso.get('profissao', '')}."
             if tema == "queixa":
-                return {"resposta": caso.get("queixa_nas_palavras_dele", "")}
-            return {"resposta": " ".join(caso.get(tema, [])) or "Não que eu saiba."}
+                return str(caso.get("queixa_nas_palavras_dele", ""))
+            return " ".join(caso.get(tema, [])) or "Não que eu saiba."
     historia: list[str] = caso.get("historia_da_doenca", [])
     indice = sum(map(ord, pergunta)) % len(historia) if historia else 0
-    return {"resposta": historia[indice] if historia else "Não sei dizer."}
+    return historia[indice] if historia else "Não sei dizer."
+
+
+_REGIOES_EXAME: list[tuple[tuple[str, ...], str]] = [
+    (("pressao", "sinais vitais", "frequencia", "temperatura", "saturacao"), "sinais vitais"),
+    (("coracao", "cardiac", "precordio", "bulha"), "cardiovascular"),
+    (("pulmao", "pulmonar", "respirat", "torax"), "respiratorio"),
+    (("abdome", "barriga", "abdominal"), "abdome"),
+    (("perna", "membro", "edema", "pulso"), "membros"),
+    (("neurolog", "reflexo", "forca"), "neurologico"),
+    (("geral", "ectoscopia", "inspecao"), "estado geral"),
+]
+
+
+def _paciente_exame(contexto: dict[str, Any]) -> dict[str, Any]:
+    """O achado da ficha cuja região casar com o pedido; sem região, pede para escolher uma."""
+    caso: dict[str, Any] = contexto.get("caso", {})
+    pedido = _simples(contexto.get("pedido", ""))
+    for termos, regiao in _REGIOES_EXAME:
+        if any(t in pedido for t in termos):
+            if regiao == "sinais vitais":
+                return {"achado": ", ".join(caso.get("sinais_vitais", [])) or "Sinais vitais normais."}
+            achado = next((a for a in caso.get("exame_fisico", []) if regiao in _simples(a)), None)
+            return {"achado": achado or "Sem alterações."}
+    return {"achado": "Escolha uma parte do exame de cada vez, por exemplo a ausculta cardíaca ou o abdome."}

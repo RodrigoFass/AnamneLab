@@ -21,7 +21,7 @@ from app.conteudo import QUEIXA_OUTRA, ErroConteudo
 from app.llm import ClienteLLM, ErroLLM
 from app.pipeline.comum import ErroPipeline
 from app.pipeline.corrigir import ErroContestacao, contestar, item_do_checklist
-from app.pipeline.paciente_ia import montar_caso, responder
+from app.pipeline.paciente_ia import examinar, montar_caso, responder
 from app.pipeline.transcrever import (
     ErroTranscricao,
     Transcritor,
@@ -37,8 +37,12 @@ from app.schemas.llm import Fala
 from app.schemas.sessao import (
     Consentimento,
     ConsentimentoCriar,
+    ConsultaIA,
     ContestacaoCriar,
+    ExameFeito,
     HipotesesAluno,
+    NotaGuia,
+    PedidoExame,
     PerguntaPaciente,
     QueixaConfirmar,
     Saude,
@@ -342,8 +346,45 @@ def _perguntar(servicos: Servicos, sessao: Sessao, texto: str) -> Sessao:
     except ErroLLM:
         logger.warning("paciente pela IA: sem resposta (sessao=%s)", sessao.id)
         raise HTTPException(503, MENSAGEM_PACIENTE_FORA) from None
-    falas = [*sessao.falas, Fala(papel="entrevistador", texto=texto.strip()), Fala(papel="paciente", texto=resposta)]
+    falas = [
+        *sessao.falas,
+        Fala(papel="entrevistador", texto=texto.strip()),
+        Fala(papel="paciente", texto=resposta.resposta),
+    ]
     servicos.repositorio.salvar_transcricao(sessao.id, falas, editada=False)
+    consulta = sessao.consulta_ia or ConsultaIA()
+    etapa = {"exame_fisico": "exame_fisico", "despedida": "despedida"}.get(resposta.proximo, "anamnese")
+    notas = consulta.notas_guia
+    if resposta.nota_guia:
+        notas = [*notas, NotaGuia(depois_da_fala=len(falas) - 1, texto=resposta.nota_guia)]
+    servicos.repositorio.atualizar_sessao(
+        sessao.id, consulta_ia=consulta.model_copy(update={"etapa": etapa, "notas_guia": notas})
+    )
+    return _recarregar(servicos, sessao.id)
+
+
+@rotas.post("/sessoes/{sessao_id}/exame", response_model=Sessao)
+def examinar_paciente(sessao_id: str, corpo: PedidoExame, servicos: ServicosDep, usuario: UsuarioDep) -> Sessao:
+    sessao = _em_conversa(servicos, sessao_id, usuario)
+    return _examinar(servicos, sessao, corpo.texto)
+
+
+def _examinar(servicos: Servicos, sessao: Sessao, pedido: str) -> Sessao:
+    """O guia dá o achado da parte do exame físico pedida; o pedido e o achado ficam na sessão."""
+    assert sessao.caso_ia is not None
+    consulta = sessao.consulta_ia or ConsultaIA()
+    try:
+        achado = examinar(sessao.caso_ia, consulta.exame_fisico, pedido, servicos.llm)
+    except ErroPipeline as erro:
+        raise HTTPException(422, erro.mensagem) from None
+    except ErroLLM:
+        logger.warning("paciente pela IA: exame sem resposta (sessao=%s)", sessao.id)
+        raise HTTPException(503, "O guia não respondeu agora. Tente de novo em alguns instantes.") from None
+    feito = ExameFeito(pedido=pedido.strip(), achado=achado, depois_da_fala=len(sessao.falas) - 1)
+    feitos = [*consulta.exame_fisico, feito]
+    servicos.repositorio.atualizar_sessao(
+        sessao.id, consulta_ia=consulta.model_copy(update={"etapa": "exame_fisico", "exame_fisico": feitos})
+    )
     return _recarregar(servicos, sessao.id)
 
 
@@ -356,6 +397,23 @@ def perguntar_falando(
 ) -> Sessao:
     """Pergunta falada: o Whisper transcreve, o áudio é apagado e a pergunta segue como a escrita."""
     sessao = _em_conversa(servicos, sessao_id, usuario)
+    return _perguntar(servicos, sessao, _ouvir(servicos, sessao, audio))
+
+
+@rotas.post("/sessoes/{sessao_id}/exame/audio", response_model=Sessao)
+def examinar_falando(
+    sessao_id: str,
+    servicos: ServicosDep,
+    usuario: UsuarioDep,
+    audio: Annotated[UploadFile, File()],
+) -> Sessao:
+    """Pedido de exame falado: transcrito como a pergunta falada e respondido pelo guia."""
+    sessao = _em_conversa(servicos, sessao_id, usuario)
+    return _examinar(servicos, sessao, _ouvir(servicos, sessao, audio))
+
+
+def _ouvir(servicos: Servicos, sessao: Sessao, audio: UploadFile) -> str:
+    """Transcreve a fala do aluno (com o aceite do termo na sessão) e apaga o áudio."""
     versao_termo = servicos.conteudo.termo.versao
     if not any(c.forma == "aceite" and c.versao_termo == versao_termo for c in sessao.consentimentos):
         raise HTTPException(409, "Antes de falar com o paciente, aceite o termo de gravação.")
@@ -377,14 +435,13 @@ def perguntar_falando(
         if total == 0:
             raise HTTPException(422, "Não deu para ouvir a pergunta. Segure o botão enquanto fala.")
         numero = sum(1 for f in sessao.falas if f.papel == "entrevistador")
-        texto = transcrever_pergunta_e_apagar(
+        return transcrever_pergunta_e_apagar(
             caminho, servicos.transcritor, numero=numero, dica=montar_dica(servicos.conteudo.queixas)
         )
     except ErroTranscricao:
         raise HTTPException(422, "Não deu para entender a pergunta. Fale de novo, perto do microfone.") from None
     finally:
         apagar_audio(caminho)
-    return _perguntar(servicos, sessao, texto)
 
 
 @rotas.get("/sessoes/{sessao_id}/voz/{indice}")
