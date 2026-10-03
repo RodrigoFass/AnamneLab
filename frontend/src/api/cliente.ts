@@ -1,10 +1,12 @@
 import { tokenAtual } from "../auth/supabase";
 import type {
+  Acesso,
   Cartao,
   Consentimento,
   ConsentimentoCriar,
   ContestacaoCriar,
   HipotesesAluno,
+  Painel,
   Queixa,
   QueixaConfirmar,
   Saude,
@@ -137,6 +139,9 @@ export const api = {
     requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/queixa`, json("POST", dados)),
   enviarHipoteses: (id: string, dados: HipotesesAluno) =>
     requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/hipoteses`, json("POST", dados)),
+  /** Se a conta logada vê o painel de atividade. */
+  acesso: () => requisitar<Acesso>("/eu/acesso"),
+  painel: () => requisitar<Painel>("/painel"),
   contestar: (id: string, dados: ContestacaoCriar) =>
     requisitar<Sessao>(`/sessoes/${encodeURIComponent(id)}/contestacoes`, json("POST", dados)),
 };

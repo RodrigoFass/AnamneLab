@@ -27,6 +27,7 @@ _bearer = HTTPBearer(auto_error=False)
 @dataclass(frozen=True)
 class Usuario:
     id: str
+    email: str | None = None
 
 
 def _settings(request: Request) -> Settings:
@@ -53,7 +54,15 @@ async def conferir_token_supabase(settings: Settings, token: str) -> Usuario:
     usuario_id = resposta.json().get("id")
     if not usuario_id:
         raise HTTPException(401, MENSAGEM_SEM_LOGIN, headers={"WWW-Authenticate": "Bearer"})
-    return Usuario(id=str(usuario_id))
+    email = resposta.json().get("email")
+    return Usuario(id=str(usuario_id), email=str(email) if email else None)
+
+
+def e_admin(settings: Settings, usuario: Usuario) -> bool:
+    """Quem vê o painel de atividade: e-mail em ADMIN_EMAILS ou, sem login, o aluno de desenvolvimento."""
+    if settings.auth == "dev":
+        return usuario.id == ALUNO_DEV_ID
+    return bool(usuario.email) and usuario.email.lower() in settings.lista_admin_emails
 
 
 async def usuario_atual(
